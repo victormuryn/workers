@@ -1,6 +1,6 @@
 import React from 'react';
 
-import "./footer.scss";
+import './footer.scss';
 
 const Footer = () => {
   return (
@@ -8,12 +8,13 @@ const Footer = () => {
       <div className="footer__wrapper">
         <div className="footer__column">
           <h2 className="footer__logo"><a href="/">Workers</a></h2>
-          <p className="footer__copy">© 2021 workers.com.ua — всі права захищені</p>
+          <p className="footer__copy">© 2021 workers.com.ua — всі права
+            захищені</p>
         </div>
 
         <div className="footer__column">
           <a href="#">Реклама на сайті</a>
-          <a href="#">Зв'язатися з адміністрацією</a>
+          <a href="#">Зв&apos;язатися з адміністрацією</a>
         </div>
 
         <div className="footer__column">
@@ -29,7 +30,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
-  )
+  );
 };
 
 export default Footer;

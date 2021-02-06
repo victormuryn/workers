@@ -5,7 +5,7 @@ module.exports = {
   entry: `./src/index.js`,
   output: {
     filename: `bundle.js`,
-    path: path.join(__dirname, `public`)
+    path: path.join(__dirname, `public`),
   },
 
   devServer: {
@@ -19,8 +19,8 @@ module.exports = {
       test: /\.(js|jsx)$/,
       exclude: /node_modules/,
       use: {
-        loader: `babel-loader`
-      }
+        loader: `babel-loader`,
+      },
     }, { // sass|scss
       test: /\.(scss|sass)$/,
       use: [
@@ -60,10 +60,13 @@ module.exports = {
   },
 
   devtool: `eval`,
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
 
   plugins: [
     new MiniCssExtractPlugin({
       filename: `./css/style.bundle.css`,
     }),
-  ]
+  ],
 };
