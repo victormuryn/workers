@@ -20,7 +20,6 @@
   --bs-gray-dark: #343a40;
   --bs-primary: #0d6efd;
   --bs-secondary: #6c757d;
-  --bs-success: #198754;
   --bs-info: #0dcaf0;
   --bs-warning: #ffc107;
   --bs-danger: #dc3545;
@@ -32,7 +31,13 @@
 
   --animate-duration: 1.5s;
   --animate-delay: 1s;
-  --animate-repeat: 1
+  --animate-repeat: 1;
+
+  --desktop: 1100px;
+  --tablet-wide: 768px;
+  --tablet: 576px;
+  --main-color: #198754;
+  --bs-success: var(--main-color);
 }
 
 @font-face {
@@ -96,7 +101,13 @@ body {
   -webkit-tap-highlight-color: transparent;
   overflow-x: hidden;
   padding: 0;
-  background: #fafafa
+  background: #fafafa;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 [tabindex='-1']:focus:not(:focus-visible) {
