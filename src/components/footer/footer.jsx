@@ -1,10 +1,19 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './footer.scss';
 
-const Footer = () => {
+const Footer = ({color = `#fff`}) => {
+  const background = `linear-gradient(
+      179deg,
+      transparent 0,
+      transparent 45px,
+      ${color} 45px,
+      ${color} 100%
+    )`;
+
   return (
-    <footer className="footer">
+    <footer className="footer" style={{background}}>
       <div className="footer__wrapper">
         <div className="footer__column">
           <h2 className="footer__logo"><a href="/">Workers</a></h2>
@@ -31,6 +40,10 @@ const Footer = () => {
       </div>
     </footer>
   );
+};
+
+Footer.propTypes = {
+  color: PropTypes.string,
 };
 
 export default Footer;

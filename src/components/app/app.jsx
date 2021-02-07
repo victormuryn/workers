@@ -6,5 +6,7 @@ import './app.scss';
 import AuthPage from '../auth-page/auth-page';
 
 const App = () => <AuthPage />;
+// const App = () => <MainPage />;
+
 
 export default App;

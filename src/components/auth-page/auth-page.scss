@@ -4,24 +4,59 @@
   --color-ink-high-contrast: #121212;
 }
 
+body {
+  background: #fff;
+}
+
+.auth-header {
+  text-align: center;
+  padding: 4rem 1rem 4rem;
+  max-width: var(--desktop);
+  width: 100%;
+  margin: 0 auto;
+  border-bottom: 2px dashed rgba(#198754, .7);
+}
+
+.auth-header__logo a {
+  color: var(--main-color);
+  text-shadow: none;
+  font-size: 3rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all .2s;
+
+  &:hover,
+  &:active {
+    opacity: .6;
+  }
+
+  &:focus {
+    opacity: .8;
+  }
+
+}
+
+.auth-header__text {
+  font-size: 1.25rem;
+  max-width: 30rem;
+  margin: 1rem auto 0;
+}
+
 .auth-form {
-  margin: 7rem 0 0;
-  padding: 0 calc((100vw - var(--desktop)) / 2);
+  padding: 3rem calc((100vw - var(--desktop)) / 2);
 }
 
 .auth-form__label {
-  display: flex;
-  margin: 0 0 2rem;
+  margin: 0 0 3rem;
   font-size: 1.2rem;
-  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 .auth-form__label-text {
-  width: 20rem;
-  text-align: right;
-  padding-right: 3rem;
-  margin-left: -7rem;
+  padding: 0 3rem;
 }
 
 .auth-page__input-radio {
@@ -37,12 +72,14 @@
 
 .auth-page__submit {
   width: 12rem;
+  display: block;
+  margin: 0 auto;
   padding: .6rem 1rem;
 }
 
 div.auth-page__input-group {
   position: relative;
-  width: 18rem;
+  width: 16rem;
 
   &--rules {
     font-size: .9rem;
@@ -82,6 +119,7 @@ div.auth-page__input-group {
   line-height: 147.6%;
   color: var(--color-ink-medium-contrast);
   transition: all .3s;
+  user-select: none;
 }
 
 .auth-page__input-helper {
@@ -93,7 +131,8 @@ div.auth-page__input-group {
 
 .auth-page__input-underlined > input:focus + .auth-page__input-label,
 .auth-page__input-underlined > input:active + .auth-page__input-label,
-.auth-page__input-underlined > input:valid + .auth-page__input-label {
+.auth-page__input-underlined > input:valid + .auth-page__input-label,
+.auth-page__input-underlined > input:not([value=""]):invalid + .auth-page__input-label {
   top: 0;
   font-size: 0.85rem;
   margin-bottom: 32px;
@@ -101,4 +140,36 @@ div.auth-page__input-group {
 
 .auth-page__input-underlined > input:focus + .auth-page__input-label {
   color: var(--main-color);
+}
+
+@media screen and (min-width: 576px) {
+  .auth-header {
+    padding: 7rem 1rem 4rem;
+  }
+
+  .auth-header__text {
+    font-size: 1.5rem;
+  }
+
+
+  .auth-form__label {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+
+  .auth-form__label-text {
+    margin-left: -7rem;
+    padding: 0 3rem 0 0;
+    text-align: right;
+    width: 20rem;
+  }
+
+  div.auth-page__input-group {
+    width: 18rem;
+  }
+
+  .auth-page__submit {
+    margin: 0;
+    padding: .6rem 1rem;
+  }
 }

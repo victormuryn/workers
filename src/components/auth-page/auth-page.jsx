@@ -4,24 +4,40 @@ import './auth-page.scss';
 import Footer from '../footer/footer';
 
 const AuthPage = () => {
-  const [data, setData] = useState({});
+  // Form data (default values)
+  const [data, setData] = useState({
+    name: ``,
+    email: ``,
+    tel: ``,
+    password: ``,
+    confirmPassword: ``,
+    accountType: ``,
+  });
 
-  const confirmPassword = useRef(null);
+  // Confirm password element (to check is it equals to first one)
+  const confirmPasswordElement = useRef(null);
 
-  const onChange = (event) => {
+  const onInputChange = (event) => {
+    const {value, name} = event.target;
+
+    // set new data (prevState + new value)
     setData((prevState) => ({
       ...prevState,
-      [event.target.name]: event.target.value,
+      [name]: value,
     }));
   };
 
+  // on confirmPassword change
   useEffect(() => {
-    if (data.password !== data.confirmPassword) {
-      confirmPassword.current.setCustomValidity(`Паролі не співпадають`);
+    const {password, confirmPassword} = data;
+
+    // if passwords are equals and confirmPassword is not empty
+    if (password !== confirmPassword && confirmPassword) {
+      confirmPasswordElement.current.setCustomValidity(`Паролі не співпадають`);
     } else {
-      confirmPassword.current.setCustomValidity(``);
+      confirmPasswordElement.current.setCustomValidity(``);
     }
-  }, [data]);
+  }, [data.confirmPassword]);
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -30,9 +46,18 @@ const AuthPage = () => {
 
   return (
     <>
+      <header className="auth-header">
+        <h2 className="header__logo auth-header__logo">
+          <a href="/">Workers</a>
+        </h2>
+        <p className="auth-header__text">Зареєструйся у декілька кліків та
+          отримай безліч переваг</p>
+      </header>
+
+
       <form className="auth-form" method="POST" onSubmit={onSubmit}>
         <label className="auth-form__label">
-          <span className="auth-form__label-text">Ім&apos;я</span>
+          <span className="auth-form__label-text">Ім&apos;я:</span>
 
           <div className="auth-page__input-group">
             <div className="auth-page__input-underlined">
@@ -42,7 +67,8 @@ const AuthPage = () => {
                 name="name"
                 minLength={1}
                 maxLength={20}
-                onChange={onChange}
+                onChange={onInputChange}
+                value={data.name}
               />
               <span className="auth-page__input-label">Ваше ім&apos;я</span>
             </div>
@@ -50,7 +76,7 @@ const AuthPage = () => {
         </label>
 
         <label className="auth-form__label">
-          <span className="auth-form__label-text">Електронна пошта</span>
+          <span className="auth-form__label-text">Електронна пошта:</span>
 
           <div className="auth-page__input-group">
             <div className="auth-page__input-underlined">
@@ -58,15 +84,16 @@ const AuthPage = () => {
                 required
                 type="email"
                 name="email"
-                onChange={onChange}
+                onChange={onInputChange}
+                value={data.email}
               />
-              <span className="auth-page__input-label">Ваш email</span>
+              <span className="auth-page__input-label">Ваш email:</span>
             </div>
           </div>
         </label>
 
         <label className="auth-form__label">
-          <span className="auth-form__label-text">Телефон</span>
+          <span className="auth-form__label-text">Телефон:</span>
 
           <div className="auth-page__input-group">
             <div className="auth-page__input-underlined">
@@ -75,7 +102,8 @@ const AuthPage = () => {
                 name="tel"
                 type="tel"
                 pattern="^\+?3?8?(0\d{9})$"
-                onChange={onChange}
+                onChange={onInputChange}
+                value={data.tel}
               />
               <span className="auth-page__input-label">Ваш телефон</span>
             </div>
@@ -83,7 +111,7 @@ const AuthPage = () => {
         </label>
 
         <label className="auth-form__label">
-          <span className="auth-form__label-text">Пароль</span>
+          <span className="auth-form__label-text">Пароль:</span>
 
           <div className="auth-page__input-group">
             <div className="auth-page__input-underlined">
@@ -92,7 +120,8 @@ const AuthPage = () => {
                 name="password"
                 type="password"
                 minLength={4}
-                onChange={onChange}
+                onChange={onInputChange}
+                value={data.password}
               />
               <span className="auth-page__input-label">Ваш пароль</span>
             </div>
@@ -100,7 +129,7 @@ const AuthPage = () => {
         </label>
 
         <label className="auth-form__label">
-          <span className="auth-form__label-text">Повторіть пароль</span>
+          <span className="auth-form__label-text">Повторіть пароль:</span>
 
           <div className="auth-page__input-group">
             <div className="auth-page__input-underlined">
@@ -109,8 +138,9 @@ const AuthPage = () => {
                 name="confirmPassword"
                 type="password"
                 minLength={4}
-                ref={confirmPassword}
-                onChange={onChange}
+                ref={confirmPasswordElement}
+                value={data.confirmPassword}
+                onChange={onInputChange}
               />
 
               <span className="auth-page__input-label">
@@ -129,8 +159,8 @@ const AuthPage = () => {
                 required
                 type="radio"
                 value="master"
-                name="account-type"
-                onChange={onChange}
+                name="accountType"
+                onChange={onInputChange}
               />
               <span>Виконавець</span>
             </label>
@@ -140,8 +170,8 @@ const AuthPage = () => {
                 required
                 type="radio"
                 value="client"
-                name="account-type"
-                onChange={onChange}
+                name="accountType"
+                onChange={onInputChange}
               />
               <span>Замовник</span>
             </label>
@@ -157,6 +187,7 @@ const AuthPage = () => {
               id="rules"
               name="rules"
               type="checkbox"
+              value={data.rules}
             />
 
             Я погоджуюся з <a href="#" target="_blank">правилами використання
@@ -175,7 +206,7 @@ const AuthPage = () => {
         </div>
       </form>
 
-      <Footer/>
+      <Footer color="#fafafa"/>
     </>
   );
 };
