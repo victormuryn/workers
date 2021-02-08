@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Workers Project",
   "private": true,
+  "proxy": "http://localhost:5000",
   "main": "index.js",
   "author": "Victor Muryn",
   "license": "ISC",

@@ -3,13 +3,16 @@ import {Link} from 'react-router-dom';
 
 import './auth-page.scss';
 import Footer from '../footer/footer';
+import {useHttp} from '../../../hooks/http.hook';
 
 const AuthPage = () => {
+  const {request} = useHttp();
+
   // Form data (default values)
   const [data, setData] = useState({
     name: ``,
     email: ``,
-    tel: ``,
+    phone: ``,
     password: ``,
     confirmPassword: ``,
     accountType: ``,
@@ -40,9 +43,13 @@ const AuthPage = () => {
     }
   }, [data.confirmPassword]);
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
     console.log(data);
+
+    const response = await request(`/api/auth/register`, `POST`, {...data});
+
+    console.log(response);
   };
 
   return (
@@ -100,11 +107,11 @@ const AuthPage = () => {
             <div className="auth-page__input-underlined">
               <input
                 required
-                name="tel"
+                name="phone"
                 type="tel"
                 pattern="^\+?3?8?(0\d{9})$"
                 onChange={onInputChange}
-                value={data.tel}
+                value={data.phone}
               />
               <span className="auth-page__input-label">Ваш телефон</span>
             </div>
