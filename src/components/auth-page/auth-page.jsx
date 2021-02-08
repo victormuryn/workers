@@ -1,4 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react';
+import {Link} from 'react-router-dom';
 
 import './auth-page.scss';
 import Footer from '../footer/footer';
@@ -32,7 +33,7 @@ const AuthPage = () => {
     const {password, confirmPassword} = data;
 
     // if passwords are equals and confirmPassword is not empty
-    if (password !== confirmPassword && confirmPassword) {
+    if (confirmPassword && password !== confirmPassword) {
       confirmPasswordElement.current.setCustomValidity(`Паролі не співпадають`);
     } else {
       confirmPasswordElement.current.setCustomValidity(``);
@@ -47,8 +48,8 @@ const AuthPage = () => {
   return (
     <>
       <header className="auth-header">
-        <h2 className="header__logo auth-header__logo">
-          <a href="/">Workers</a>
+        <h2 className="auth-header__logo">
+          <Link to="/">Workers</Link>
         </h2>
         <p className="auth-header__text">Зареєструйся у декілька кліків та
           отримай безліч переваг</p>

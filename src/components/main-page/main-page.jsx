@@ -1,4 +1,6 @@
 import React, {useEffect} from 'react';
+import {Link} from 'react-router-dom';
+
 import {WOW} from 'wowjs';
 
 import './main-page.scss';
@@ -21,8 +23,13 @@ const MainPage = () => {
           <h2 className="header__logo"><a href="/">Workers</a></h2>
 
           <div className="header__btns-wrapper">
-            <a href="#" className="header__btn btn btn-success">Регістрація</a>
-            <a href="#" className="header__btn btn btn-primary">Увійти</a>
+            <Link to="/auth" className="header__btn btn btn-success">
+              Регістрація
+            </Link>
+
+            <Link to="/login" className="header__btn btn btn-primary">
+              Увійти
+            </Link>
           </div>
         </div>
 

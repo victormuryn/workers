@@ -4,14 +4,16 @@ const MiniCssExtractPlugin = require(`mini-css-extract-plugin`);
 module.exports = {
   entry: `./src/index.js`,
   output: {
-    filename: `bundle.js`,
     path: path.join(__dirname, `public`),
+    filename: `bundle.js`,
+    publicPath: '/',
   },
 
   devServer: {
     contentBase: path.join(__dirname, `public`),
-    overlay: true,
+    historyApiFallback: true,
     compress: false,
+    overlay: true,
   },
 
   module: {
