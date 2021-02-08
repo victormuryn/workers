@@ -1,0 +1,169 @@
+.msg-container {
+  width: 35%;
+  padding: 1em 2em;
+  margin: 0 auto;
+}
+
+.xd-message {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  height: 100%;
+  min-height: 60px;
+  background: #FFF;
+  border: 1px solid #455870;
+  margin-top: 2rem;
+  box-shadow: 2px 4px 10px rgba(0,0,0,0.1);
+
+  &-icon {
+    background: #455870;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    color: #FFF;
+    font-size: 1.6rem;
+    margin: 0 0 0 -1px;
+  }
+
+  &-content {
+    flex: 6;
+    padding-left: 1.5rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+
+    p {
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  &-close {
+    color: #455870;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    transition: color .4s ease;
+
+    .close-icon {
+      transition: color .4s ease;
+      &:hover {
+        color: darken(#455870, 30%);
+      }
+    }
+  }
+}
+
+.msg-danger {
+  border: 1px solid #b05150;
+
+  .xd-message-icon {
+    background: #b05150;
+  }
+
+  .xd-message-content,
+  .xd-message-close {
+    color: #b05150;
+  }
+
+  .xd-message-close {
+    .close-icon {
+      &:hover {
+        color: darken(#b05150, 10%);
+      }
+    }
+  }
+}
+
+.msg-success {
+  border: 1px solid #47ae74;
+
+  .xd-message-icon {
+    background: #47ae74;
+  }
+
+  .xd-message-content,
+  .xd-message-close {
+    color: #47ae74;
+  }
+
+  .xd-message-close {
+    .close-icon {
+      &:hover {
+        color: darken(#47ae74, 10%);
+      }
+    }
+  }
+}
+
+.msg-warning {
+  border: 1px solid #ef974b;
+
+  .xd-message-icon {
+    background: #ef974b;
+  }
+
+  .xd-message-content,
+  .xd-message-close {
+    color: #ef974b;
+  }
+
+  .xd-message-close {
+    .close-icon {
+      &:hover {
+        color: darken(#ef974b, 10%);
+      }
+    }
+  }
+}
+
+.hide {
+  transition: all .5s;
+  opacity: 0;
+  visibility: hidden;
+  animation: hideMsgAlert 1s;
+}
+
+@keyframes hideMsgAlert {
+  0% {
+    opacity: 1;
+    transform: translateX(-20%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+
+@media only screen and (max-width: 1000px) {
+  .msg-container {
+    width: 60%;
+  }
+  .xd-message-icon,
+  .xd-message-close {
+    font-size: 1rem;
+  }
+  .xd-message-content {
+    font-size: 0.8rem;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .msg-container {
+    width: 80%;
+  }
+  .xd-message-icon,
+  .xd-message-close {
+    font-size: 1rem;
+  }
+  .xd-message-content {
+    font-size: 0.8rem;
+  }
+  .heading span {
+    display: none;
+  }
+}

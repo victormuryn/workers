@@ -89,10 +89,10 @@ router.post(
 
       const {email, password} = request.body;
 
-      const user = User.findOne({email});
+      const user = await User.findOne({email});
 
       if (!user) {
-        response
+        return response
           .status(400)
           .json({message: `Користувач з таким email не знайдений`});
       }
@@ -100,7 +100,7 @@ router.post(
       const match = await bcrypt.compare(password, user.password);
 
       if (!match) {
-        response
+        return response
           .status(400)
           .json({message: `Неправильний пароль, спробуйте знову`});
       }
@@ -108,7 +108,7 @@ router.post(
       const token = jwt.sign(
         {userId: user.id},
         config.get(`jwtPhrase`),
-        {expiredIn: `1h`},
+        {expiresIn: `1h`},
       );
 
       response.json({token, userId: user.id});
@@ -116,6 +116,7 @@ router.post(
       response
         .status(500)
         .json({message: `Щось пішло не так, спробуйте знову`});
+      console.log(e);
     }
   },
 );

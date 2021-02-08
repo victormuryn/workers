@@ -45,19 +45,6 @@ body {
   padding: 3rem calc((100vw - var(--desktop)) / 2);
 }
 
-.auth-form__label {
-  margin: 0 0 3rem;
-  font-size: 1.2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.auth-form__label-text {
-  padding: 0 3rem;
-}
-
 .auth-page__input-radio {
   display: block;
   margin-bottom: .5rem;
@@ -76,69 +63,12 @@ body {
   padding: .6rem 1rem;
 }
 
-div.auth-page__input-group {
-  position: relative;
-  width: 16rem;
+.auth-page__login {
+  text-align: center;
 
-  &--rules {
-    font-size: .9rem;
+  a {
+    text-decoration: none;
   }
-}
-
-/* Input*/
-.auth-page__input-underlined {
-  input {
-    border: none;
-    border-bottom: 0.125rem solid var(--color-ink-medium-contrast);
-    width: 100%;
-    height: 3.2rem;
-    font-size: 1rem;
-    line-height: 147.6%;
-    padding: .85rem 0 .42rem .75rem;
-    background: transparent;
-    transition: all .3s;
-
-    &:focus {
-      outline: none;
-      border-color: var(--main-color);
-    }
-
-    &:hover,
-    &:active {
-      background: var(--color-interaction-minus-two);
-      border-color: var(--color-ink-high-contrast);
-    }
-  }
-}
-
-.auth-page__input-label {
-  position: absolute;
-  top: 0.9375rem;
-  left: 0.875rem;
-  line-height: 147.6%;
-  color: var(--color-ink-medium-contrast);
-  transition: all .3s;
-  user-select: none;
-}
-
-.auth-page__input-helper {
-  font-size: 0.9375rem;
-  color: var(--color-ink-medium-contrast);
-  letter-spacing: 0.0275rem;
-  margin: 0.125rem 0.875rem;
-}
-
-.auth-page__input-underlined > input:focus + .auth-page__input-label,
-.auth-page__input-underlined > input:active + .auth-page__input-label,
-.auth-page__input-underlined > input:valid + .auth-page__input-label,
-.auth-page__input-underlined > input:not([value=""]):invalid + .auth-page__input-label {
-  top: 0;
-  font-size: 0.85rem;
-  margin-bottom: 32px;
-}
-
-.auth-page__input-underlined > input:focus + .auth-page__input-label {
-  color: var(--main-color);
 }
 
 @media screen and (min-width: 576px) {
@@ -148,23 +78,6 @@ div.auth-page__input-group {
 
   .auth-header__text {
     font-size: 1.5rem;
-  }
-
-
-  .auth-form__label {
-    flex-direction: row;
-    align-items: flex-end;
-  }
-
-  .auth-form__label-text {
-    margin-left: -7rem;
-    padding: 0 3rem 0 0;
-    text-align: right;
-    width: 20rem;
-  }
-
-  div.auth-page__input-group {
-    width: 18rem;
   }
 
   .auth-page__submit {
