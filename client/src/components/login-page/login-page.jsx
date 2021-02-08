@@ -27,7 +27,9 @@ const LoginPage = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
     clearError();
-    const result = await request(`/api/auth/login`, `POST`, {...data});
+
+    const email = data.email.toLowerCase();
+    const result = await request(`/api/auth/login`, `POST`, {...data, email});
 
     login(result.token, result.userId);
   };

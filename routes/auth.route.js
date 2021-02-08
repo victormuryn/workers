@@ -13,7 +13,9 @@ const router = new Router();
 router.post(
   `/register`,
   [
-    check(`email`, `Некоректний email`).isEmail(),
+    check(`email`, `Некоректний email`)
+      .normalizeEmail()
+      .isEmail(),
     check(`name`, `Некоректне ім'я`)
       .not()
       .custom((val) => /[^A-za-z0-9\s]/g.test(val)),
@@ -34,14 +36,20 @@ router.post(
           });
       }
 
-      const {email, name, phone, password, accountType} = request.body;
+      const {email: requestEmail, name, phone, password, accountType} = request.body;
+      const email = requestEmail.toLowerCase();
 
       const candidate = await User.findOne({email});
+      const candidatePhone = await User.findOne({phone});
 
       if (candidate) {
         return response
           .status(400)
-          .json({message: `Користувач з таким email уже існує`});
+          .json({message: `Користувач з таким email уже існує.`});
+      } else if (candidatePhone) {
+        return response
+          .status(400)
+          .json({message: `Користувач з таким телефоном уже існує.`});
       }
 
       const hashedPassword = await bcrypt.hash(password, 12);
@@ -57,12 +65,11 @@ router.post(
 
       response
         .status(201)
-        .json({message: `Користувач успішно створений`});
+        .json({message: `Користувач успішно створений.`});
     } catch (e) {
       response
         .status(500)
-        .json({message: `Щось пішло не так, спробуйте знову`});
-      console.log(e);
+        .json({message: `Щось пішло не так, спробуйте знову.`});
     }
   },
 );
@@ -83,18 +90,19 @@ router.post(
           .status(400)
           .json({
             errors: errors.array(),
-            message: `Некоректні данні при вході`,
+            message: `Некоректні данні при вході.`,
           });
       }
 
-      const {email, password} = request.body;
+      const {email: requestEmail, password} = request.body;
+      const email = requestEmail.toLowerCase();
 
       const user = await User.findOne({email});
 
       if (!user) {
         return response
           .status(400)
-          .json({message: `Користувач з таким email не знайдений`});
+          .json({message: `Користувач з таким email не знайдений.`});
       }
 
       const match = await bcrypt.compare(password, user.password);
@@ -102,7 +110,7 @@ router.post(
       if (!match) {
         return response
           .status(400)
-          .json({message: `Неправильний пароль, спробуйте знову`});
+          .json({message: `Неправильний пароль, спробуйте знову.`});
       }
 
       const token = jwt.sign(
@@ -111,12 +119,16 @@ router.post(
         {expiresIn: `1h`},
       );
 
-      response.json({token, userId: user.id});
+      response.json({
+        token,
+        name: user.name,
+        userId: user.id,
+        accountType: user.accountType,
+      });
     } catch (e) {
       response
         .status(500)
-        .json({message: `Щось пішло не так, спробуйте знову`});
-      console.log(e);
+        .json({message: `Щось пішло не так, спробуйте знову.`});
     }
   },
 );

@@ -54,12 +54,26 @@ const AuthPage = () => {
     event.preventDefault();
     clearError();
 
+    const email = data.email.toLowerCase();
+    let {phone} = data;
+
+    // +38-0**-**-**-***
+    switch (phone[0]) {
+    case `3`:
+      phone = `+${phone}`;
+      break;
+
+    case `0`:
+      phone = `+38${phone}`;
+      break;
+    }
+
     // register
-    await request(`/api/auth/register`, `POST`, {...data});
+    await request(`/api/auth/register`, `POST`, {...data, phone, email});
 
     // login after register
     const response = await request(`/api/auth/login`, `POST`, {
-      email: data.email,
+      email,
       password: data.password,
     });
 
@@ -109,7 +123,7 @@ const AuthPage = () => {
           label="Телефон:"
           value={data.phone}
           placeholder="Ваш телефон"
-          pattern="^\+?3?8?(0\d{9})$"
+          pattern="^(\+?38)?(0\d{9})$"
           onChange={onInputChange}
         />
 
