@@ -16,9 +16,7 @@ router.post(
     check(`email`, `Некоректний email`)
       .normalizeEmail()
       .isEmail(),
-    check(`name`, `Некоректне ім'я`)
-      .not()
-      .custom((val) => /[^A-za-z0-9\s]/g.test(val)),
+    check(`name`, `Некоректне ім'я`).exists(),
     check(`phone`, `Некоректний номер телефону`).isMobilePhone(),
     check(`password`, `Введіть пароль`).exists(),
     check(`accountType`, `Виберіть тип аккаунту`).exists(),
@@ -36,7 +34,13 @@ router.post(
           });
       }
 
-      const {email: requestEmail, name, phone, password, accountType} = request.body;
+      const {
+        email: requestEmail,
+        name,
+        phone,
+        password,
+        accountType,
+      } = request.body;
       const email = requestEmail.toLowerCase();
 
       const candidate = await User.findOne({email});

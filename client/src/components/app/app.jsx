@@ -5,7 +5,6 @@ import {ScrollToTop} from '../scroll-to-top/scroll-to-top';
 
 import './app.scss';
 
-
 import {useAuth} from '../../../hooks/auth.hook';
 import {useRoutes} from '../../../hooks/routes';
 import AuthContext from '../../../context/Auth.context';

@@ -10,7 +10,6 @@ import Message from '../message/message';
 import {useHttp} from '../../../hooks/http.hook';
 import AuthContext from '../../../context/Auth.context';
 
-
 const AuthPage = () => {
   const {request, loading, error, clearError} = useHttp();
   const {login} = useContext(AuthContext);
@@ -55,7 +54,7 @@ const AuthPage = () => {
     clearError();
 
     const email = data.email.toLowerCase();
-    let {phone} = data;
+    let {phone, password} = data;
 
     // +38-0**-**-**-***
     switch (phone[0]) {
@@ -73,11 +72,10 @@ const AuthPage = () => {
 
     // login after register
     const response = await request(`/api/auth/login`, `POST`, {
-      email,
-      password: data.password,
+      email, password,
     });
 
-    login(response.token, login.userId);
+    login(response.token, response.userId);
   };
 
   const onErrorClose = (event) => {

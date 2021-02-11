@@ -7,6 +7,8 @@
   "proxy": "http://localhost:5000",
   "author": "Victor Muryn",
   "devDependencies": {
+    "@babel/preset-env": "7.12.13",
+    "@babel/preset-react": "7.12.13",
     "concurrently": "5.3.0",
     "eslint": "7.19.0",
     "eslint-config-google": "0.14.0",
@@ -25,7 +27,7 @@
     "testClient": "npm test --prefix client",
     "eslint": "eslint --ext .jsx --ext .js",
     "testServer": "npm run eslint",
-    "test": "npm run testClient && npm run testServer",
+    "test": "npm run testServer",
     "server": "nodemon app.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run client\" \"npm run server\"",

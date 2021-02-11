@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InputGroup tests Input Group renders corrects 1`] = `
+<label
+  className="auth-form__label"
+>
+  <span
+    className="auth-form__label-text"
+  >
+    Test group
+  </span>
+  <div
+    className="auth-page__input-group"
+  >
+    <div
+      className="auth-page__input-underlined"
+    >
+      <input
+        minLength={1}
+        name="test"
+        onChange={[Function]}
+        required={false}
+        type="text"
+        value="test"
+      />
+      <span
+        className="auth-page__input-label"
+      >
+        Placeholder text
+      </span>
+    </div>
+  </div>
+</label>
+`;

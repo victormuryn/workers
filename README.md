@@ -9,7 +9,9 @@ _`.editorconfig`, `.gitattributes`, `.gitignore`, `package.json`._
 ---
 
 ## Installation
-Use the package manager [npm](https://nodejs.org/en/download/) to install dependencies.
+Clone repo (by ssh/https/git-cli) or download zip archive.
+
+Then use the package manager [npm](https://nodejs.org/en/download/) to install all dependencies.
 ```bash
 npm install
 
@@ -28,6 +30,9 @@ Use tests before commits. Travis will check all commits.
 ```bash
 npm test
 ```
+
+## Contributing
+This project is private, so you are not allowed to do pull/pusg requests without permission.
 
 [travis-image]: https://travis-ci.com/victormuryn/workers.svg?token=NyzPg9MpZbzo7JxssNTA&branch=main
 [travis-url]: https://travis-ci.com/victormuryn/workers

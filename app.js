@@ -21,7 +21,7 @@ const start = async () => {
 
     app.listen(PORT, () => console.log(`Server has started on port ${PORT}`));
   } catch (e) {
-    console.log(`Server Error `, e.message);
+    console.log(`Server Error: Unable to connect with DB `, e.message);
     process.exit(1);
   }
 };
