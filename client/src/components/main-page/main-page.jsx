@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Link} from 'react-router-dom';
 
 import {WOW} from 'wowjs';
@@ -7,13 +7,70 @@ import './main-page.scss';
 
 import Footer from '../footer/footer';
 
+const DELETE_SPEED = 100; // ms
+const WRITE_SPEED = 130; // ms
+const DELAY = 10000; // ms
+
 const MainPage = () => {
+  const animationRef = useRef(null);
+  const animationPhrases = [
+    `спеціаліста`,
+    `роботу`,
+  ];
+
+  const changePhrase = (element, phrases) => {
+    const changePhrase = (current) => {
+      return phrases[phrases.indexOf(current) + 1] || phrases[0];
+    };
+
+    let activePhrase = changePhrase(element.textContent);
+
+    const deleteLetters = (afterEnd) => {
+      const deleteInterval = setInterval(() => {
+        // new text content = last text content without last character
+        element.textContent = element.textContent.slice(0, -1);
+
+        // if text is empty
+        if (!element.textContent) {
+          clearInterval(deleteInterval);
+          afterEnd();
+        }
+      }, DELETE_SPEED);
+    };
+
+    const writeLetters = (phrase) => {
+      let lettersPrinted = 0;
+
+      const writeInterval = setInterval(() => {
+        // text content = currect phrase + one letter
+        element.textContent = phrase.slice(0, lettersPrinted);
+
+        if (lettersPrinted === phrase.length) {
+          clearInterval(writeInterval);
+
+          // change active phrase: if activePhrase + 1 exists or first in array
+          activePhrase = changePhrase(activePhrase);
+
+          setTimeout(() => {
+            deleteLetters(() => writeLetters(activePhrase));
+          }, DELAY);
+        }
+
+        lettersPrinted++;
+      }, WRITE_SPEED);
+    };
+
+    deleteLetters(() => writeLetters(activePhrase));
+  };
+
   useEffect(() => {
     new WOW({
       live: false,
       offset: 50,
       mobile: false,
     }).init();
+
+    changePhrase(animationRef.current, animationPhrases);
   });
 
   return (
@@ -24,7 +81,7 @@ const MainPage = () => {
 
           <div className="header__btns-wrapper">
             <Link to="/auth" className="header__btn btn btn-success">
-              Регістрація
+              Реєстрація
             </Link>
 
             <Link to="/login" className="header__btn btn btn-primary">
@@ -35,7 +92,9 @@ const MainPage = () => {
 
         <div className="header__main-text">
           <h1 className="header__title">Шукаєш <span
-            className="header__title--animation">спеціаліста</span>?</h1>
+            className="header__title--animation"
+            ref={animationRef}
+          >спеціаліста</span>?</h1>
 
           <div className="header__btns-wrapper">
             <a href="#"

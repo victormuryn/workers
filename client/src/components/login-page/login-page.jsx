@@ -45,7 +45,10 @@ const LoginPage = () => {
         <h2 className="auth-header__logo">
           <Link to="/">Workers</Link>
         </h2>
-        <p className="auth-header__text">Увійдіть та почніть ...</p>
+
+        <p className="auth-header__text">
+          Увійдіть та почніть змінювати своє життя
+        </p>
       </header>
 
       {error && <Message text={error} type="danger" onClose={onErrorClose}/>}
