@@ -9,4 +9,5 @@ notifications:
 script:
   - npm test
   - cd client/
+  - npm ci
   - npm test
