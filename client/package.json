@@ -11,7 +11,7 @@
     "build": "webpack --mode production",
     "start": "webpack serve --mode development --open",
     "eslint": "eslint --ext .jsx --ext .js src/",
-    "test": "npm run eslint && jest"
+    "test": "npm run eslint && npx jest"
   },
   "dependencies": {
     "react": "17.0.1",
