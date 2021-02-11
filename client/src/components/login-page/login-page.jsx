@@ -18,9 +18,11 @@ const LoginPage = () => {
   });
 
   const onInputChange = (event) => {
+    const {name, value} = event.target;
+
     setData({
       ...data,
-      [event.target.name]: event.target.value,
+      [name]: value,
     });
   };
 
