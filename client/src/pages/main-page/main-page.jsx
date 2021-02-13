@@ -1,11 +1,16 @@
 import React, {useEffect, useRef} from 'react';
 import {Link} from 'react-router-dom';
 
-import {WOW} from 'wowjs';
-
 import './main-page.scss';
 
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+
 import Footer from '../../components/footer/footer';
+
+import {WOW} from 'wowjs';
 
 const DELETE_SPEED = 100; // ms
 const WRITE_SPEED = 130; // ms
@@ -42,7 +47,7 @@ const MainPage = () => {
       let lettersPrinted = 0;
 
       const writeInterval = setInterval(() => {
-        // text content = currect phrase + one letter
+        // text content = current phrase + one letter
         element.textContent = phrase.slice(0, lettersPrinted);
 
         if (lettersPrinted === phrase.length) {
@@ -80,43 +85,53 @@ const MainPage = () => {
           <h2 className="header__logo"><a href="/">Workers</a></h2>
 
           <div className="header__btns-wrapper">
-            <Link to="/auth" className="header__btn btn btn-success">
-              Реєстрація
+            <Link to="/auth">
+              <Button variant="success" className="header__btn">
+                Реєстрація
+              </Button>
             </Link>
 
-            <Link to="/login" className="header__btn btn btn-primary">
-              Увійти
+            <Link to="/login">
+              <Button variant="primary" className="header__btn">
+                Увійти
+              </Button>
             </Link>
           </div>
         </div>
 
         <div className="header__main-text">
-          <h1 className="header__title">Шукаєш <span
-            className="header__title--animation"
-            ref={animationRef}
-          >спеціаліста</span>?</h1>
+          <h1 className="header__title">
+            Шукаєш <span
+              className="header__title--animation"
+              ref={animationRef}
+            >
+              спеціаліста
+            </span>?
+          </h1>
 
           <div className="header__btns-wrapper">
-            <a href="#"
-              className="header__main-btn
-              header__btn header__main-btn--get-master btn btn-success">
-              Знайти спеціаліста
-            </a>
+            <Link to="#">
+              <Button variant="success" className="header__main-btn
+              header__btn header__main-btn--get-master">
+                Знайти спеціаліста
+              </Button>
+            </Link>
 
-            <a href="#"
-              className="header__main-btn
-               header__btn header__main-btn--get-work btn btn-success">
-              Знайти роботу
-            </a>
+            <Link to="#">
+              <Button variant="success" className="header__main-btn
+              header__btn header__main-btn--get-work">
+                Знайти роботу
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
 
-      <section className="why">
+      <Container className="why text-center" as="section">
         <h2 className="why__title">Чому саме ми?</h2>
 
-        <ul className="why__list">
-          <li className="why__item">
+        <Row>
+          <Col xs={12} md={4}>
             <div className="why__item-img-wrapper">
               <img src="./img/one.svg" alt="№1 у світі"
                 className="why__item-img"/>
@@ -126,22 +141,21 @@ const MainPage = () => {
             <p className="why__item-text">На сьогодні наш сервіс має найбільшу
               базу клієнтів та немає аналогів у всьому
               світі, тому тобі швидко вдасться знайти потрібного фахівця!</p>
-          </li>
-
-          <li className="why__item">
+          </Col>
+          <Col xs={12} md={4}>
             <div className="why__item-img-wrapper">
               <img src="./img/worker.svg" alt="Перевірений професіонал"
                 className="why__item-img"/>
             </div>
 
-            <h5 className="why__item-title">Величезна кількість робітників</h5>
+            <h5 className="why__item-title">Величезна кількість
+              робітників</h5>
             <p className="why__item-text">Понад 1000 професіоналів готові
               допомогти тобі у будь-який момент. Усі
               спеціалісти проходять обов&apos;язкову перевірку, щоб ти був
               впевнений у якості роботи.</p>
-          </li>
-
-          <li className="why__item">
+          </Col>
+          <Col xs={12} md={4}>
             <div className="why__item-img-wrapper">
               <img src="./img/plane.svg" alt="Захист"
                 className="why__item-img"/>
@@ -152,11 +166,11 @@ const MainPage = () => {
               резервуються, щоб ти був переконаний в успішному
               завершенні проєкту. У разі, якщо робота не буде виконана — ми
               вернемо гроші!</p>
-          </li>
-        </ul>
-      </section>
+          </Col>
+        </Row>
+      </Container>
 
-      <section className="custom wow fadeIn">
+      <Container as="section" className="custom wow fadeIn text-center">
         <h2 className="custom__title">Працюємо так, як зручно тобі</h2>
 
         <picture>
@@ -171,9 +185,9 @@ const MainPage = () => {
         <p className="custom__text">Резервація грошей, гнучка система роботи,
           простота, швидка технічна підтримка: усе,
           що потрібно для комфортної співпраці!</p>
-      </section>
+      </Container>
 
-      <section className="how-it-works">
+      <Container as="section" className="how-it-works" fluid={true}>
         <h2 className="how-it-works__title">Робота у 5 простих кроків</h2>
 
         <ol className="how-it-works__list">
@@ -228,101 +242,104 @@ const MainPage = () => {
             <div className="visually-hidden">Кінець</div>
           </li>
         </ol>
-      </section>
+      </Container>
 
-      <section className="categories wow fadeIn">
+      <Container as="section" className="categories wow fadeIn">
         <h2 className="categories__title">Найпопулярніші категорії</h2>
 
-        <ul className="categories__list">
-          <li className="categories__item">
+        <Row lg={5}>
+          <Col xs={12} sm={6} lg={false} className="categories__item">
             <a href="#">
               <img src="./img/pipeline.svg" alt="Сантехніка"
                 className="categories__item-img"/>
               <h5 className="categories__item-title"> Сантехніка</h5>
             </a>
-          </li>
+          </Col>
 
-          <li className="categories__item">
+          <Col xs={12} sm={6} lg={false} className="categories__item">
             <a href="#">
               <img src="./img/plug.svg" alt="Електрика"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Електрика</h5>
             </a>
-          </li>
+          </Col>
 
-          <li className="categories__item">
+          <Col xs={12} sm={6} lg={false} className="categories__item">
             <a href="#">
               <img src="./img/delivery.svg" alt="Доставка"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Доставка</h5>
             </a>
-          </li>
+          </Col>
 
-          <li className="categories__item">
+          <Col xs={12} sm={6} lg={false} className="categories__item">
             <a href="#">
               <img src="./img/service.svg" alt="Автосервіс"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Автосервіс</h5>
             </a>
-          </li>
+          </Col>
 
-          <li className="categories__item">
+          <Col xs={12} sm={6} lg={false} className="categories__item">
             <a href="#">
               <img src="./img/paint-bucket.svg" alt="Ремонт"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Ремонт</h5>
             </a>
-          </li>
+          </Col>
 
-          <li className="categories__item">
+          <Col xs={12} sm={6} lg={false} className="categories__item">
             <a href="#">
               <img src="./img/book.svg" alt="Навчання"
                 className="categories__item-img"/>
-              <h5 className="categories__item-title">Навчання</h5></a></li>
-          <li className="categories__item">
+              <h5 className="categories__item-title">Навчання</h5>
+            </a>
+          </Col>
+
+          <Col xs={12} sm={6} lg={false} className="categories__item">
             <a href="#">
               <img src="./img/it.svg" alt="IT-послуги"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">IT-послуги</h5>
             </a>
-          </li>
+          </Col>
 
-          <li className="categories__item">
+          <Col xs={12} sm={6} lg={false} className="categories__item">
             <a href="#">
               <img src="./img/camera.svg" alt="Фотосесії"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Фотосесії</h5>
             </a>
-          </li>
+          </Col>
 
-          <li className="categories__item">
+          <Col xs={12} sm={6} lg={false} className="categories__item">
             <a href="#">
               <img src="./img/cleaning.svg" alt="Прибирання"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Прибирання</h5>
             </a>
-          </li>
+          </Col>
 
-          <li className="categories__item">
+          <Col xs={12} sm={6} lg={false} className="categories__item">
             <a href="#">
               <img src="./img/other.svg" alt="Інше"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Інше</h5>
             </a>
-          </li>
-
-        </ul>
+          </Col>
+        </Row>
 
         <div className="categories__link-wrapper">
           <a href="#" className="categories__all-link link-success">
             Показати всі категорії
             <span id="categories__all-link--arrow">→</span></a>
         </div>
-      </section>
+      </Container>
 
       <Footer/>
     </>
-  );
+  )
+  ;
 };
 
 export default MainPage;

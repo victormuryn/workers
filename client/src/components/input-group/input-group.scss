@@ -1,20 +1,15 @@
 .auth-form__label {
   margin: 0 0 3rem;
   font-size: 1.2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .auth-form__label-text {
-  padding: 0 3rem;
+  margin-bottom: 1rem;
+  text-align: right;
 }
 
 div.auth-page__input-group {
-  position: relative;
-  width: 16rem;
-
   &--rules {
     font-size: .9rem;
   }
@@ -74,22 +69,4 @@ div.auth-page__input-group {
 
 .auth-page__input-underlined > input:focus + .auth-page__input-label {
   color: var(--main-color);
-}
-
-@media screen and (min-width: 576px) {
-  .auth-form__label {
-    flex-direction: row;
-    align-items: flex-end;
-  }
-
-  .auth-form__label-text {
-    margin-left: -7rem;
-    padding: 0 3rem 0 0;
-    text-align: right;
-    width: 20rem;
-  }
-
-  div.auth-page__input-group {
-    width: 18rem;
-  }
 }

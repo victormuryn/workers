@@ -2,17 +2,29 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import './input-group.scss';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 const InputGroup = (props) => {
-  const {label, name, onChange, required = true,
-    value=``, type=`text`, pattern, refProp,
-    minLength, maxLength, placeholder} = props;
+  const {
+    label, name, onChange, required = true,
+    value = ``, type = `text`, pattern, refProp,
+    minLength, maxLength, placeholder,
+  } = props;
 
   return (
-    <label className="auth-form__label">
-      <span className="auth-form__label-text">{label}</span>
+    <Row as="label" className="auth-form__label">
+      <Col
+        as="span"
+        className="auth-form__label-text mb-2"
+        md={{
+          span: 4,
+          offset: 2,
+        }}>
+        {label}
+      </Col>
 
-      <div className="auth-page__input-group">
+      <Col className="position-relative mb-2" md={6} lg={3}>
         <div className="auth-page__input-underlined">
           <input
             type={type}
@@ -27,8 +39,8 @@ const InputGroup = (props) => {
           />
           <span className="auth-page__input-label">{placeholder}</span>
         </div>
-      </div>
-    </label>
+      </Col>
+    </Row>
   );
 };
 

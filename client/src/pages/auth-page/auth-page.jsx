@@ -7,8 +7,13 @@ import InputGroup from '../../components/input-group/input-group';
 import Footer from '../../components/footer/footer';
 import Message from '../../components/message/message';
 
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+
 import {useHttp} from '../../../hooks/http.hook';
 import AuthContext from '../../../context/Auth.context';
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 const AuthPage = () => {
   const {request, loading, error, clearError} = useHttp();
@@ -95,121 +100,148 @@ const AuthPage = () => {
 
       {error && <Message text={error} type="danger" onClose={onErrorClose}/>}
 
-      <form className="auth-form" method="POST" onSubmit={onSubmit}>
-        <InputGroup
-          name="name"
-          label="Ім'я:"
-          minLength={2}
-          maxLength={20}
-          value={data.name}
-          placeholder="Ваше ім'я"
-          onChange={onInputChange}
-        />
+      <Container>
+        <form onSubmit={onSubmit} method="POST" className="mt-5 auth-form">
+          <InputGroup
+            name="name"
+            label="Ім'я:"
+            minLength={2}
+            maxLength={20}
+            value={data.name}
+            placeholder="Ваше ім'я"
+            onChange={onInputChange}
+          />
 
-        <InputGroup
-          name="email"
-          type="email"
-          label="Електронна пошта:"
-          value={data.email}
-          placeholder="Ваш email"
-          onChange={onInputChange}
-        />
+          <InputGroup
+            name="email"
+            type="email"
+            label="Електронна пошта:"
+            value={data.email}
+            placeholder="Ваш email"
+            onChange={onInputChange}
+          />
 
-        <InputGroup
-          name="phone"
-          type="tel"
-          label="Телефон:"
-          value={data.phone}
-          placeholder="Ваш телефон"
-          pattern="^(\+?38)?(0\d{9})$"
-          onChange={onInputChange}
-        />
+          <InputGroup
+            name="phone"
+            type="tel"
+            label="Телефон:"
+            value={data.phone}
+            placeholder="Ваш телефон"
+            pattern="^(\+?38)?(0\d{9})$"
+            onChange={onInputChange}
+          />
 
-        <InputGroup
-          name="password"
-          type="password"
-          label="Пароль:"
-          value={data.password}
-          minLength={6}
-          placeholder="Ваш пароль"
-          onChange={onInputChange}
-        />
+          <InputGroup
+            name="password"
+            type="password"
+            label="Пароль:"
+            value={data.password}
+            minLength={6}
+            placeholder="Ваш пароль"
+            onChange={onInputChange}
+          />
 
-        <InputGroup
-          minLength={6}
-          type="password"
-          name="confirmPassword"
-          onChange={onInputChange}
-          label="Повторіть пароль:"
-          value={data.confirmPassword}
-          refProp={confirmPasswordElement}
-          placeholder="Повторіть ваш пароль"
-        />
+          <InputGroup
+            minLength={6}
+            type="password"
+            name="confirmPassword"
+            onChange={onInputChange}
+            label="Повторіть пароль:"
+            value={data.confirmPassword}
+            refProp={confirmPasswordElement}
+            placeholder="Повторіть ваш пароль"
+          />
 
-        <div className="auth-form__label">
-          <span className="auth-form__label-text"/>
+          <Row as="label" className="auth-form__label">
+            <Col
+              as="span"
+              className="text-right"
+              md={{
+                span: 2,
+                offset: 4,
+              }} />
 
-          <div className="auth-page__input-group">
-            <label className="auth-page__input-radio">
-              <input
-                required
-                type="radio"
-                value="master"
-                name="accountType"
-                onChange={onInputChange}
-              />
-              <span>Виконавець</span>
-            </label>
+            <Col className="position-relative" md={3}>
+              <label className="auth-page__input-radio">
+                <input
+                  required
+                  type="radio"
+                  value="master"
+                  name="accountType"
+                  onChange={onInputChange}
+                />
+                <span>Виконавець</span>
+              </label>
 
-            <label className="auth-page__input-radio">
-              <input
-                required
-                type="radio"
-                value="client"
-                name="accountType"
-                onChange={onInputChange}
-              />
-              <span>Замовник</span>
-            </label>
-          </div>
-        </div>
+              <label className="auth-page__input-radio">
+                <input
+                  required
+                  type="radio"
+                  value="client"
+                  name="accountType"
+                  onChange={onInputChange}
+                />
+                <span>Замовник</span>
+              </label>
+            </Col>
+          </Row>
 
-        <label className="auth-form__label">
-          <span className="auth-form__label-text"/>
+          <Row as="label" className="auth-form__label">
+            <Col
+              as="span"
+              md={{
+                span: 2,
+                offset: 4,
+              }} />
 
-          <div className="auth-page__input-group auth-page__input-group--rules">
-            <input
-              required
-              id="rules"
-              name="rules"
-              type="checkbox"
-              value={data.rules}
-            />
+            <Col className="position-relative" md={3}>
+              <div
+                className="auth-page__input-group auth-page__input-group--rules"
+              >
+                <input
+                  required
+                  id="rules"
+                  name="rules"
+                  type="checkbox"
+                  value={data.rules}
+                /> Я погоджуюся з <a href="#" target="_blank">правилами
+                використання сервісу</a>.
+              </div>
+            </Col>
+          </Row>
 
-            Я погоджуюся з <a href="#" target="_blank">правилами використання
-            сервісу</a>.
-          </div>
-        </label>
+          <Row as="label" className="auth-form__label">
+            <Col
+              as="span"
+              md={{
+                span: 2,
+                offset: 4,
+              }} />
 
-        <div className="auth-form__label">
-          <span className="auth-form__label-text"/>
+            <Col className="position-relative" md={3}>
+              <div
+                className="auth-page__input-group auth-page__input-group--rules"
+              >
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  variant="success"
+                  className="auth-page__submit btn"
+                >
+                  Зареєструватися
+                </Button>
+              </div>
+            </Col>
+          </Row>
 
-          <div className="auth-page__input-group auth-page__input-group--rules">
-            <button
-              type="submit"
-              disabled={loading}
-              className="auth-page__submit btn btn-success">
-              Зареєструватися
-            </button>
-          </div>
-        </div>
+          <p className="auth-page__login">
+            Уже зареєстровані? <Link to="/login">Увійдіть</Link>
+          </p>
+        </form>
+      </Container>
 
-        <p className="auth-page__login">
-          Уже зареєстровані? <Link to="/login">Увійдіть</Link>
-        </p>
-      </form>
 
-      <Footer color="#fafafa"/>
+      <Footer />
     </>
   );
 };

@@ -7,22 +7,27 @@ import LoginPage from '../src/pages/login-page/login-page';
 import ProjectsPage from '../src/pages/projects-page/projects-page';
 import CreatePage from '../src/pages/create-page/create-page';
 
+import Header from '../src/components/header/header';
 import Footer from '../src/components/footer/footer';
 
 export const useRoutes = (isAuthenticated) => {
   if (isAuthenticated) {
     return (
       <>
+        <Header />
+
         <Switch>
-          <Route path="/" exact>
+          <Route path="/my" exact>
             <ProjectsPage />
           </Route>
 
-          <Route path="/project/add" exact>
+          <Route path="/create" exact>
             <CreatePage />
           </Route>
 
-          <Redirect to="/" />
+          <Route>
+            <Redirect to="/my" />
+          </Route>
         </Switch>
 
         <Footer />
@@ -44,7 +49,9 @@ export const useRoutes = (isAuthenticated) => {
         <LoginPage />
       </Route>
 
-      <Redirect to="/" />
+      <Route>
+        <Redirect to="/" />
+      </Route>
     </Switch>
   );
 };

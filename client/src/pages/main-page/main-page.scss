@@ -69,11 +69,11 @@
   font-size: 1.2rem;
   font-weight: 300;
   margin: 0 .5rem 0 .5rem;
-  box-shadow: 3px 8px 24px rgba(149, 157, 165, .2)
-}
+  box-shadow: 3px 8px 24px rgba(149, 157, 165, .2);
 
-.header__btn:last-of-type {
-  margin-right: 0
+  &:last-of-type {
+    margin-right: 0
+  }
 }
 
 .header__main-text {
@@ -93,31 +93,26 @@
   font-size: 1.5rem;
   position: relative;
   margin: 0 0 .5rem 0;
-  padding: .5rem .75rem .5rem 3.2rem
-}
+  padding: .5rem .75rem .5rem 3.2rem;
 
-.header__main-btn::before {
-  position: absolute;
-  top: 50%;
-  left: 1.6rem;
-  display: block;
-  width: 1.8rem;
-  height: 1.8rem;
-  content: '';
-  transform: translate(-50%, -50%)
-}
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 1.6rem;
+    display: block;
+    width: 1.8rem;
+    height: 1.8rem;
+    content: '';
+    transform: translate(-50%, -50%)
+  }
 
-.header__main-btn--get-work::before {
-  background: url(../img/suitcase.svg) no-repeat center center
-}
+  &--get-work::before {
+    background: url(../img/suitcase.svg) no-repeat center center
+  }
 
-.header__main-btn--get-master::before {
-  background: url(../img/worker.svg) no-repeat center center
-}
-
-.why {
-  padding: 0 calc((100% - 1100px - 1rem)/ 2);
-  text-align: center
+  &--get-master::before {
+    background: url(../img/worker.svg) no-repeat center center
+  }
 }
 
 .why__title {
@@ -159,7 +154,6 @@
 .custom {
   margin-top: 7rem;
   padding: 0 1.5rem;
-  text-align: center
 }
 
 .custom__text {
@@ -190,19 +184,19 @@
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 1rem;
-  list-style: none
-}
+  list-style: none;
 
-.how-it-works__list::before {
-  position: absolute;
-  top: 50%;
-  left: 3.41rem;
-  display: block;
-  width: 2px;
-  height: 90%;
-  content: '';
-  transform: translateY(-50%);
-  border: 1px dashed #198754
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 3.41rem;
+    display: block;
+    width: 2px;
+    height: 90%;
+    content: '';
+    transform: translateY(-50%);
+    border: 1px dashed #198754;
+  }
 }
 
 .how-it-works__item {
@@ -212,52 +206,52 @@
   min-height: 5.25rem;
   margin-bottom: 3rem;
   padding-left: 7rem;
-  justify-content: center
-}
+  justify-content: center;
 
-.how-it-works__item::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  width: 5rem;
-  height: 5rem;
-  content: '';
-  border-radius: 50%;
-  background: #198754
-}
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 5rem;
+    height: 5rem;
+    content: '';
+    border-radius: 50%;
+    background: #198754
+  }
 
-.how-it-works__item--create::before {
-  background: url(../img/pencil.svg) no-repeat center center, #198754;
-  background-size: 50%
-}
+  &--create::before {
+    background: url(../img/pencil.svg) no-repeat center center, #198754;
+    background-size: 50%
+  }
 
-.how-it-works__item--choose::before {
-  background: url(../img/choose.svg) no-repeat center center, #198754;
-  background-size: 50%
-}
+  &--choose::before {
+    background: url(../img/choose.svg) no-repeat center center, #198754;
+    background-size: 50%
+  }
 
-.how-it-works__item--reserve::before {
-  background: url(../img/safe.svg) no-repeat center center, #198754;
-  background-size: 50%
-}
+  &--reserve::before {
+    background: url(../img/safe.svg) no-repeat center center, #198754;
+    background-size: 50%
+  }
 
-.how-it-works__item--follow::before {
-  background: url(../img/chat.svg) no-repeat center center, #198754;
-  background-size: 50%
-}
+  &--follow::before {
+    background: url(../img/chat.svg) no-repeat center center, #198754;
+    background-size: 50%
+  }
 
-.how-it-works__item--reviews::before {
-  background: url(../img/review.svg) no-repeat center center, #198754;
-  background-size: 50%
-}
+  &--reviews::before {
+    background: url(../img/review.svg) no-repeat center center, #198754;
+    background-size: 50%
+  }
 
-.how-it-works__item--done::before {
-  left: .7rem;
-  width: 4rem;
-  height: 4rem;
-  background: url(../img/done.svg) no-repeat center center, #198754;
-  background-size: 50%
+  &--done::before {
+    left: .7rem;
+    width: 4rem;
+    height: 4rem;
+    background: url(../img/done.svg) no-repeat center center, #198754;
+    background-size: 50%
+  }
 }
 
 .how-it-works__item-text {
@@ -280,28 +274,27 @@
   padding: 0 2rem;
   list-style: none;
   justify-content: space-between;
-  flex-wrap: wrap
+  flex-wrap: wrap;
 }
 
 .categories__item {
-  width: 100%;
   margin-bottom: 3.125%;
-  transition: all .3s;
   text-align: center;
-  border-radius: 1rem;
-  background-color: #fff;
-  box-shadow: rgba(100, 100, 111, .2) 0 7px 29px
 }
 
 .categories__item a {
   display: block;
   padding: 2rem;
   text-decoration: none;
-  color: #000
+  color: #000;
+  background-color: #fff;
+  border-radius: 1rem;
+  transition: all .3s;
+  box-shadow: rgba(100, 100, 111, .2) 0 7px 29px;
 }
 
-.categories__item:active,
-.categories__item:hover {
+.categories__item:active a,
+.categories__item:hover a {
   box-shadow: rgba(0, 0, 0, .2) 0 7px 29px
 }
 
@@ -328,7 +321,6 @@
 }
 
 .categories__link-wrapper {
-  max-width: 1100px;
   margin: 1rem auto 0;
   padding: 0 2rem;
   text-align: center
@@ -339,40 +331,6 @@
   text-decoration: none
 }
 
-@media (prefers-reduced-motion:no-preference) {
-  :root {
-    scroll-behavior: smooth
-  }
-}
-
-@media (min-width:1200px) {
-
-  .h1,
-  h1 {
-    font-size: 2.5rem
-  }
-
-  .h2,
-  h2 {
-    font-size: 2rem
-  }
-
-  .h3,
-  h3 {
-    font-size: 1.75rem
-  }
-
-  .h4,
-  h4 {
-    font-size: 1.5rem
-  }
-}
-
-@media (prefers-reduced-motion:reduce) {
-  .btn {
-    transition: none
-  }
-}
 
 @media screen and (min-width:576px) {
   .header__line {
@@ -387,16 +345,6 @@
     margin: 0 0 .5rem 1rem
   }
 
-  .why__list {
-    display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap
-  }
-
-  .categories__item {
-    width: 48%
-  }
-
   .categories__link-wrapper {
     text-align: right
   }
@@ -408,7 +356,7 @@ only screen and (min-resolution:192dpi),
 only screen and (min-resolution:2dppx) {
   .header {
     background: url(../img/main-bg@2x.jpg) no-repeat left 0;
-    background-size: cover
+    background-size: cover;
   }
 }
 
@@ -465,16 +413,6 @@ only screen and (min-resolution:2dppx) {
   .how-it-works__item:nth-last-of-type(2n+1) {
     padding-right: 5%;
     padding-left: 60%
-  }
-}
-
-@media screen and (min-width: 1100px) {
-  .why__item {
-    width: 28.5%
-  }
-
-  .categories__item {
-    width: 17.5%
   }
 }
 

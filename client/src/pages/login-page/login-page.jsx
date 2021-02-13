@@ -4,6 +4,14 @@ import {Link} from 'react-router-dom';
 import {useHttp} from '../../../hooks/http.hook';
 import AuthContext from '../../../context/Auth.context';
 
+import {useDispatch} from 'react-redux';
+import {ActionCreator} from '../../../redux/reducer';
+
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 import InputGroup from '../../components/input-group/input-group';
 import Message from '../../components/message/message';
 import Footer from '../../components/footer/footer';
@@ -11,6 +19,7 @@ import Footer from '../../components/footer/footer';
 const LoginPage = () => {
   const {request, loading, error, clearError} = useHttp();
   const {login} = useContext(AuthContext);
+  const dispatch = useDispatch();
 
   const [data, setData] = useState({
     email: ``,
@@ -55,45 +64,59 @@ const LoginPage = () => {
 
       {error && <Message text={error} type="danger" onClose={onErrorClose}/>}
 
-      <form className="auth-form" method="POST" onSubmit={onSubmit}>
-        <InputGroup
-          name="email"
-          type="email"
-          value={data.email}
-          placeholder="Ваш email"
-          onChange={onInputChange}
-          label="Електронна пошта:"
-        />
+      <Container>
+        <form className="auth-form mt-5" method="POST" onSubmit={onSubmit}>
+          <InputGroup
+            name="email"
+            type="email"
+            value={data.email}
+            placeholder="Ваш email"
+            onChange={onInputChange}
+            label="Електронна пошта:"
+          />
 
-        <InputGroup
-          minLength={6}
-          name="password"
-          type="password"
-          label="Пароль:"
-          value={data.password}
-          placeholder="Ваш пароль"
-          onChange={onInputChange}
-        />
+          <InputGroup
+            minLength={6}
+            name="password"
+            type="password"
+            label="Пароль:"
+            value={data.password}
+            placeholder="Ваш пароль"
+            onChange={onInputChange}
+          />
 
-        <div className="auth-form__label">
-          <span className="auth-form__label-text"/>
+          <Row as="label" className="auth-form__label">
+            <Col
+              as="span"
+              className="text-right"
+              md={{
+                span: 2,
+                offset: 4,
+              }} />
 
-          <div className="auth-page__input-group auth-page__input-group--rules">
-            <button
-              type="submit"
-              disabled={loading}
-              className="auth-page__submit btn btn-success">
-              Увійти
-            </button>
-          </div>
-        </div>
+            <Col className="position-relative" md={3}>
+              <div
+                className="auth-page__input-group auth-page__input-group--rules"
+              >
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  variant="success"
+                  className="auth-page__submit"
+                >
+                  Увійти
+                </Button>
+              </div>
+            </Col>
+          </Row>
 
-        <p className="auth-page__login">
-          Ще не зареєстровані? <Link to="/auth">Зареєструватися</Link>
-        </p>
-      </form>
+          <p className="auth-page__login">
+            Ще не зареєстровані? <Link to="/auth">Зареєструватися</Link>
+          </p>
+        </form>
+      </Container>
 
-      <Footer color="#fafafa"/>
+      <Footer />
     </>
   );
 };

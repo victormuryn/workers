@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 
 import './footer.scss';
 
+import {Container} from 'react-bootstrap';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+
 const Footer = ({color = `#fff`}) => {
   const background = `linear-gradient(
       179deg,
@@ -13,32 +17,36 @@ const Footer = ({color = `#fff`}) => {
     )`;
 
   return (
-    <footer className="footer" style={{background}}>
-      <div className="footer__wrapper">
-        <div className="footer__column">
+    <Container className="footer" fluid={true} style={{background}} as="footer">
+      <Row xs={1} md={3} className="footer__wrapper">
+        <Col md={{
+          span: 12,
+          order: `last`,
+        }} className="footer__column">
           <h2 className="footer__logo"><a href="/">Workers</a></h2>
-          <p className="footer__copy">© 2021 workers.com.ua — всі права
-            захищені</p>
-        </div>
+          <p className="footer__copy">
+            © 2021 workers.com.ua — всі права захищені
+          </p>
+        </Col>
 
-        <div className="footer__column">
+        <Col className="footer__column">
           <a href="#">Реклама на сайті</a>
           <a href="#">Зв&apos;язатися з адміністрацією</a>
-        </div>
+        </Col>
 
-        <div className="footer__column">
+        <Col className="footer__column">
           <a href="#">Угода користувача</a>
           <a href="#">Допомога</a>
-        </div>
+        </Col>
 
-        <div className="footer__column">
+        <Col className="footer__column">
           <a href="#">Замовники</a>
           <a href="#">Виконавці</a>
           <a href="#">Блог</a>
           <a href="#">Безпечна угода</a>
-        </div>
-      </div>
-    </footer>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

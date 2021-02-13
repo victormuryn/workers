@@ -3,6 +3,7 @@ import {BrowserRouter as Router} from 'react-router-dom';
 
 import {ScrollToTop} from '../scroll-to-top/scroll-to-top';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.scss';
 
 import {useAuth} from '../../../hooks/auth.hook';

@@ -13,15 +13,11 @@
 }
 
 .footer__wrapper {
-  display: flex;
   max-width: 1100px;
   margin: 0 auto;
-  flex-wrap: wrap;
-  justify-content: space-between
 }
 
 .footer__column {
-  width: 100%;
   margin-bottom: 2rem;
   text-align: center
 }
@@ -43,10 +39,5 @@
   .footer__copy {
     display: block;
     color: #4e5862
-  }
-
-  .footer__column {
-    width: auto;
-    text-align: left
   }
 }
