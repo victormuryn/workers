@@ -5,7 +5,7 @@ import {WOW} from 'wowjs';
 
 import './main-page.scss';
 
-import Footer from '../footer/footer';
+import Footer from '../../components/footer/footer';
 
 const DELETE_SPEED = 100; // ms
 const WRITE_SPEED = 130; // ms

@@ -7,8 +7,6 @@
   "proxy": "http://localhost:5000",
   "author": "Victor Muryn",
   "devDependencies": {
-    "@babel/preset-env": "7.12.13",
-    "@babel/preset-react": "7.12.13",
     "concurrently": "5.3.0",
     "eslint": "7.19.0",
     "eslint-config-google": "0.14.0",
@@ -18,16 +16,15 @@
   "dependencies": {
     "bcrypt": "5.0.0",
     "config": "3.3.3",
+    "draft-js": "0.11.7",
     "express": "4.17.1",
     "express-validator": "6.9.2",
     "jsonwebtoken": "8.5.1",
     "mongoose": "5.11.15"
   },
   "scripts": {
-    "testClient": "npm test --prefix client",
     "eslint": "eslint --ext .jsx --ext .js",
-    "testServer": "npm run eslint",
-    "test": "npm run testServer",
+    "test": "npm run eslint",
     "server": "nodemon app.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run client\" \"npm run server\"",

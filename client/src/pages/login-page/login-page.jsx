@@ -4,9 +4,9 @@ import {Link} from 'react-router-dom';
 import {useHttp} from '../../../hooks/http.hook';
 import AuthContext from '../../../context/Auth.context';
 
-import InputGroup from '../input-group/input-group';
-import Message from '../message/message';
-import Footer from '../footer/footer';
+import InputGroup from '../../components/input-group/input-group';
+import Message from '../../components/message/message';
+import Footer from '../../components/footer/footer';
 
 const LoginPage = () => {
   const {request, loading, error, clearError} = useHttp();

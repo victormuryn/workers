@@ -3,9 +3,9 @@ import {Link} from 'react-router-dom';
 
 import './auth-page.scss';
 
-import InputGroup from '../input-group/input-group';
-import Footer from '../footer/footer';
-import Message from '../message/message';
+import InputGroup from '../../components/input-group/input-group';
+import Footer from '../../components/footer/footer';
+import Message from '../../components/message/message';
 
 import {useHttp} from '../../../hooks/http.hook';
 import AuthContext from '../../../context/Auth.context';
