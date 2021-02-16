@@ -85,17 +85,24 @@ const MainPage = () => {
           <h2 className="header__logo"><a href="/">Workers</a></h2>
 
           <div className="header__btns-wrapper">
-            <Link to="/auth">
-              <Button variant="success" className="header__btn">
-                Реєстрація
-              </Button>
-            </Link>
+            <Button
+              as={Link}
+              to="/auth"
+              variant="success"
+              className="header__btn"
+            >
+              Реєстрація
+            </Button>
 
-            <Link to="/login">
-              <Button variant="primary" className="header__btn">
-                Увійти
-              </Button>
-            </Link>
+            <Button
+              as={Link}
+              to="/login"
+              // to="/project/add"
+              variant="primary"
+              className="header__btn"
+            >
+              Увійти
+            </Button>
           </div>
         </div>
 

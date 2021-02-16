@@ -2,15 +2,15 @@
 
 exports[`InputGroup tests Input Group renders corrects 1`] = `
 <label
-  className="auth-form__label"
+  className="auth-form__label row"
 >
   <span
-    className="auth-form__label-text"
+    className="auth-form__label-text mb-2 col-md-4 offset-md-2"
   >
     Test group
   </span>
   <div
-    className="auth-page__input-group"
+    className="position-relative mb-2 col-lg-3 col-md-6"
   >
     <div
       className="auth-page__input-underlined"

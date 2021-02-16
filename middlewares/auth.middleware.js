@@ -16,7 +16,7 @@ module.exports = (request, response, next) => {
         .json({message: `Ви не авторизовані`});
     }
 
-    request.user = jwt.decode(token, config.get(`jwtPhrase`));
+    request.user = jwt.decode(token, config.get(`jwtPhrase`)).userId;
     next();
   } catch (e) {
     response

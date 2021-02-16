@@ -1,11 +1,8 @@
 import React, {useContext, useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 
-import {useHttp} from '../../../hooks/http.hook';
-import AuthContext from '../../../context/Auth.context';
-
-import {useDispatch} from 'react-redux';
-import {ActionCreator} from '../../../redux/reducer';
+import {useHttp} from '../../hooks/http.hook';
+import AuthContext from '../../context/Auth.context';
 
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -19,10 +16,10 @@ import Footer from '../../components/footer/footer';
 const LoginPage = () => {
   const {request, loading, error, clearError} = useHttp();
   const {login} = useContext(AuthContext);
-  const dispatch = useDispatch();
+  const history = useHistory();
 
   const [data, setData] = useState({
-    email: ``,
+    login: ``,
     password: ``,
   });
 
@@ -39,10 +36,11 @@ const LoginPage = () => {
     event.preventDefault();
     clearError();
 
-    const email = data.email.toLowerCase();
-    const result = await request(`/api/auth/login`, `POST`, {...data, email});
+    const result = await request(`/api/auth/login`, `POST`, {...data});
+    const {token, userId, accountType, login: loginName} = result;
 
-    login(result.token, result.userId);
+    login(token, userId, accountType, loginName);
+    history.push(`/`);
   };
 
   const onErrorClose = (event) => {
@@ -67,12 +65,12 @@ const LoginPage = () => {
       <Container>
         <form className="auth-form mt-5" method="POST" onSubmit={onSubmit}>
           <InputGroup
-            name="email"
-            type="email"
-            value={data.email}
-            placeholder="Ваш email"
+            name="login"
+            value={data.login}
+            placeholder="Ваш логін"
             onChange={onInputChange}
-            label="Електронна пошта:"
+            label="Логін:"
+            pattern="^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$"
           />
 
           <InputGroup

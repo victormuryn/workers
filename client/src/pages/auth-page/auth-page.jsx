@@ -3,17 +3,17 @@ import {Link} from 'react-router-dom';
 
 import './auth-page.scss';
 
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+
 import InputGroup from '../../components/input-group/input-group';
 import Footer from '../../components/footer/footer';
 import Message from '../../components/message/message';
 
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-
-import {useHttp} from '../../../hooks/http.hook';
-import AuthContext from '../../../context/Auth.context';
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
+import {useHttp} from '../../hooks/http.hook';
+import AuthContext from '../../context/Auth.context';
 
 const AuthPage = () => {
   const {request, loading, error, clearError} = useHttp();
@@ -22,6 +22,8 @@ const AuthPage = () => {
   // Form data (default values)
   const [data, setData] = useState({
     name: ``,
+    surname: ``,
+    login: ``,
     email: ``,
     phone: ``,
     password: ``,
@@ -58,7 +60,7 @@ const AuthPage = () => {
     event.preventDefault();
     clearError();
 
-    const email = data.email.toLowerCase();
+    const email = data.login.toLowerCase();
     let {phone, password} = data;
 
     // +38-0**-**-**-***
@@ -77,10 +79,11 @@ const AuthPage = () => {
 
     // login after register
     const response = await request(`/api/auth/login`, `POST`, {
-      email, password,
+      login: data.login, password,
     });
 
-    login(response.token, response.userId);
+    const {token, userId, accountType, login: userLogin} = response;
+    login(token, userId, accountType, userLogin);
   };
 
   const onErrorClose = (event) => {
@@ -110,6 +113,27 @@ const AuthPage = () => {
             value={data.name}
             placeholder="Ваше ім'я"
             onChange={onInputChange}
+          />
+
+          <InputGroup
+            name="surname"
+            label="Прізвище:"
+            minLength={2}
+            maxLength={20}
+            value={data.surname}
+            placeholder="Ваше прізвище"
+            onChange={onInputChange}
+          />
+
+          <InputGroup
+            name="login"
+            label="Логін:"
+            minLength={2}
+            maxLength={20}
+            value={data.login}
+            placeholder="Ваш логін"
+            onChange={onInputChange}
+            pattern="^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$"
           />
 
           <InputGroup
@@ -166,7 +190,7 @@ const AuthPage = () => {
                 <input
                   required
                   type="radio"
-                  value="master"
+                  value="freelancer"
                   name="accountType"
                   onChange={onInputChange}
                 />

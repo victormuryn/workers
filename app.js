@@ -9,7 +9,8 @@ const app = express();
 app.use(express.json({extended: true}));
 
 app.use(`/api/auth`, require(`./routes/auth.route`));
-app.use(`/api/projects`, require(`./routes/projects.route`));
+app.use(`/api/user`, require(`./routes/user.route`));
+app.use(`/api/project`, require(`./routes/projects.route`));
 
 
 const start = async () => {

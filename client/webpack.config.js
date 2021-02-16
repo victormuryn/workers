@@ -1,16 +1,18 @@
 const path = require(`path`);
 const MiniCssExtractPlugin = require(`mini-css-extract-plugin`);
+const CopyWebpackPlugin = require(`copy-webpack-plugin`);
+const HtmlWebpackPlugin = require(`html-webpack-plugin`);
 
 module.exports = {
   entry: `./src/index.js`,
   output: {
-    path: path.join(__dirname, `public`),
+    path: path.join(__dirname, `dist`),
     filename: `bundle.js`,
     publicPath: '/',
   },
 
   devServer: {
-    contentBase: path.join(__dirname, `public`),
+    contentBase: path.join(__dirname, `dist`),
     historyApiFallback: true,
     compress: false,
     overlay: true,
@@ -73,7 +75,19 @@ module.exports = {
 
   plugins: [
     new MiniCssExtractPlugin({
-      filename: `./css/style.bundle.css`,
+      filename: `css/style.bundle.css`,
+    }),
+
+    new HtmlWebpackPlugin({
+      template: `./public/index.html`,
+    }),
+
+    new CopyWebpackPlugin({
+      patterns: [
+        {from: `./public/img/`, to: `./img/`},
+        {from: `./public/fonts/`, to: `./css/fonts/`},
+        {from: `./public/favicon.ico`, to: `./favicon.ico`},
+      ],
     }),
   ],
 };

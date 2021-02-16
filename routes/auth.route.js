@@ -17,6 +17,9 @@ router.post(
       .normalizeEmail()
       .isEmail(),
     check(`name`, `Некоректне ім'я`).exists(),
+    check(`surname`, `Некоректне прізвище`).exists(),
+    check(`login`, `Некоректний логін`)
+      .matches(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/, `i`),
     check(`phone`, `Некоректний номер телефону`).isMobilePhone(),
     check(`password`, `Введіть пароль`).exists(),
     check(`accountType`, `Виберіть тип аккаунту`).exists(),
@@ -29,22 +32,24 @@ router.post(
         return response
           .status(400)
           .json({
-            errors: errors.array(),
-            message: `Некоректні данні при реєстрації`,
+            message: `Некоректні данні при реєстрації: ${errors.array()[0]}`,
           });
       }
 
       const {
         email: requestEmail,
         name,
+        surname,
         phone,
         password,
         accountType,
+        login,
       } = request.body;
       const email = requestEmail.toLowerCase();
 
       const candidate = await User.findOne({email});
       const candidatePhone = await User.findOne({phone});
+      const candidateLogin = await User.findOne({login});
 
       if (candidate) {
         return response
@@ -54,11 +59,17 @@ router.post(
         return response
           .status(400)
           .json({message: `Користувач з таким телефоном уже існує.`});
+      } else if (candidateLogin) {
+        return response
+          .status(400)
+          .json({message: `Користувач з таким логіном уже існує.`});
       }
 
       const hashedPassword = await bcrypt.hash(password, 12);
       const user = new User({
         name,
+        surname,
+        login,
         email,
         phone,
         accountType,
@@ -82,7 +93,8 @@ router.post(
 router.post(
   `/login`,
   [
-    check(`email`, `Некоректний email`).isEmail(),
+    check(`login`, `Некоректний email`)
+      .matches(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/, `i`),
     check(`password`, `Введіть пароль`).exists(),
   ],
   async (request, response) => {
@@ -93,20 +105,18 @@ router.post(
         return response
           .status(400)
           .json({
-            errors: errors.array(),
-            message: `Некоректні данні при вході.`,
+            message: `Некоректні данні при вході: ${errors.array()[0]}`,
           });
       }
 
-      const {email: requestEmail, password} = request.body;
-      const email = requestEmail.toLowerCase();
+      const {login, password} = request.body;
 
-      const user = await User.findOne({email});
+      const user = await User.findOne({login});
 
       if (!user) {
         return response
           .status(400)
-          .json({message: `Користувач з таким email не знайдений.`});
+          .json({message: `Користувач з таким логіном не знайдений.`});
       }
 
       const match = await bcrypt.compare(password, user.password);
@@ -125,7 +135,7 @@ router.post(
 
       response.json({
         token,
-        name: user.name,
+        login: user.login,
         userId: user.id,
         accountType: user.accountType,
       });

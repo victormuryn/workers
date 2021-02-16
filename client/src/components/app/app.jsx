@@ -1,20 +1,23 @@
 import React from 'react';
 import {BrowserRouter as Router} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {ScrollToTop} from '../scroll-to-top/scroll-to-top';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.scss';
 
-import {useAuth} from '../../../hooks/auth.hook';
-import {useRoutes} from '../../../hooks/routes';
-import AuthContext from '../../../context/Auth.context';
+import {useAuth} from '../../hooks/auth.hook';
+import {useRoutes} from '../../hooks/routes';
+import AuthContext from '../../context/Auth.context';
 
 const App = () => {
-  const {login, logout, token, userId, ready} = useAuth();
-  const isAuthenticated = !!token;
+  const dispatch = useDispatch();
+  const {isAuthenticated, accountType} = useSelector((state) => state.user);
 
-  const router = useRoutes(isAuthenticated);
+  const {login, logout, ready} = useAuth(dispatch);
+
+  const router = useRoutes(isAuthenticated, accountType);
 
   if (!ready) {
     return (<div />);
@@ -24,8 +27,6 @@ const App = () => {
     <AuthContext.Provider value={{
       login,
       logout,
-      token,
-      userId,
       isAuthenticated,
     }}>
       <Router>
