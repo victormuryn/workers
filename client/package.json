@@ -14,9 +14,9 @@
     "test": "npm run eslint && npx jest"
   },
   "dependencies": {
-    "@tinymce/tinymce-react": "3.10.1",
+    "@ckeditor/ckeditor5-build-classic": "25.0.0",
+    "@ckeditor/ckeditor5-react": "3.0.1",
     "bootstrap": "5.0.0-beta2",
-    "draft-js": "0.11.7",
     "react": "17.0.1",
     "react-bootstrap": "1.4.3",
     "react-datepicker": "3.4.1",

@@ -13,8 +13,9 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 
-import {Editor} from '@tinymce/tinymce-react';
-import 'draft-js/dist/Draft.css';
+import {CKEditor} from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import '@ckeditor/ckeditor5-build-classic/build/translations/uk';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -47,16 +48,11 @@ const CreatePage = () => {
     }));
   };
 
-  const editorChangeHandler = (e) => setForm((prevState) => ({
-    ...prevState,
-    description: e.target.getContent(),
-  }));
-
   const formSubmitHandler = async (event) => {
     event.preventDefault();
     const date = new Date();
 
-    const response = await request(`/api/projects/create`, `POST`,
+    const response = await request(`/api/project/create`, `POST`,
       {...form, date}, {
         'Authorization': `Bearer ${user.token}`,
       });
@@ -74,13 +70,13 @@ const CreatePage = () => {
 
       <Form method="POST" onSubmit={formSubmitHandler}>
         <Form.Group as={Row} className="mb-3">
-          <Form.Label column md={{
+          <Form.Label column lg={{
             span: 2,
             offset: 2,
           }}>
-              Назва проєкту
+            Назва проєкту
           </Form.Label>
-          <Col md={6}>
+          <Col lg={6}>
             <Form.Control
               required
               type="text"
@@ -92,38 +88,44 @@ const CreatePage = () => {
         </Form.Group>
 
         <Form.Group as={Row} className="mb-3">
-          <Form.Label column md={{
+          <Form.Label column lg={{
             span: 2,
             offset: 2,
           }}>
             Опис
           </Form.Label>
-          <Col md={6}>
-            <Editor
-              apiKey="v0lbfhsjceqco2uno33wpn9tv3kxse1fxs7vot8peelq7ol3"
-              onChange={editorChangeHandler}
-              init={{
-                height: 300,
-                menubar: false,
-                plugins: [`lists link`],
-                language: 'uk',
-                toolbar:
-                  `undo redo | formatselect | bold italic link |
-                  alignleft aligncenter |
-                  bullist numlist outdent indent`,
+          <Col lg={6}>
+            <CKEditor
+              name="description"
+              editor={ClassicEditor}
+              config={{
+                toolbar: [`heading`, `|`,
+                  `bold`, `italic`, `link`, `blockQuote`, `|`,
+                  `bulletedList`, `numberedList`, `indent`, `outdent`, `|`,
+                  'undo', 'redo',
+                ],
+                placeholder: `Опишіть детально вашу проблему...`,
+                language: `uk`,
+              }}
+              onChange={(event, editor) => {
+                event.target = {
+                  name: `description`,
+                  value: editor.getData(),
+                };
+                inputChangeHandler(event);
               }}
             />
           </Col>
         </Form.Group>
 
         <Form.Group as={Row} className="mb-3">
-          <Form.Label column md={{
+          <Form.Label column lg={{
             span: 2,
             offset: 2,
           }}>
             Бюджет (у гривнях)
           </Form.Label>
-          <Col md={3}>
+          <Col lg={3}>
             <Form.Control
               min={200}
               name="price"
@@ -137,13 +139,13 @@ const CreatePage = () => {
         </Form.Group>
 
         <Form.Group as={Row} className="mb-3">
-          <Form.Label column md={{
+          <Form.Label column lg={{
             span: 2,
             offset: 2,
           }}>
             Активний до
           </Form.Label>
-          <Col md={3}>
+          <Col lg={3}>
             <DatePicker
               selected={form.expire}
               name="expire"

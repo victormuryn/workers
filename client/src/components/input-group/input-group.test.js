@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer';
 import InputGroup from './input-group';
 
 describe(`InputGroup tests`, () => {
-  it(`Input Group renders corrects`, () => {
+  it(`InputGroup renders corrects`, () => {
     const tree = renderer.create(<InputGroup
       placeholder="Placeholder text"
       onChange={() => {}}

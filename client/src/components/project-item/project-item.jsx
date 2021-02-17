@@ -9,9 +9,7 @@ import Col from 'react-bootstrap/Col';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
-const ProjectItem = ({project}) => {
-  const {_id, title, price, date} = project;
-
+const ProjectItem = ({_id, title, price, date}) => {
   const now = new Date();
   const months = [`січня`, `лютого`, `березня`, `квітня`, `травня`, `червня`,
     `липня`, `серпня`, `вересня`, `жовтня`, `листопада`, `грудня`];
@@ -58,11 +56,12 @@ const ProjectItem = ({project}) => {
             }
           >
             <p className="project__item-text text-success fw-bold m-md-0">
-              {project.price ?
+              {price ?
                 `${new Intl.NumberFormat(`uk`, {
                   style: 'currency',
                   currency: 'UAH',
                   maximumFractionDigits: 0,
+                  minimumFractionDigits: 0,
                 }).format(price)}` :
                 null}
             </p>
@@ -103,12 +102,10 @@ const ProjectItem = ({project}) => {
 };
 
 ProjectItem.propTypes = {
-  project: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
-    price: PropTypes.number,
-  }),
+  _id: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  price: PropTypes.number,
 };
 
 export default ProjectItem;

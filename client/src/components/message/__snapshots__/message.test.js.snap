@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Message tests Message danger renders corrects 1`] = `
+<div
+  className="msg-container"
+>
+  <div
+    className="xd-message msg-danger"
+  >
+    <div
+      className="xd-message-icon"
+    >
+      <svg
+        viewBox="0 0 30 10"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <use
+          className="ion-alert"
+          href="#icon-danger"
+        />
+      </svg>
+    </div>
+    <div
+      className="xd-message-content"
+    >
+      <p>
+        Test text for test
+      </p>
+    </div>
+    <a
+      className="xd-message-close"
+      href="#"
+      onClick={[Function]}
+    >
+      <svg
+        viewBox="0 0 30 10"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <use
+          className="close-icon"
+          href="#icon-danger"
+        />
+      </svg>
+    </a>
+  </div>
+</div>
+`;
+
+exports[`Message tests Message without type renders corrects 1`] = `
+<div
+  className="msg-container"
+>
+  <div
+    className="xd-message msg-info"
+  >
+    <div
+      className="xd-message-icon"
+    >
+      <svg
+        viewBox="0 0 30 10"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <use
+          className="ion-alert"
+          href="#icon-info"
+        />
+      </svg>
+    </div>
+    <div
+      className="xd-message-content"
+    >
+      <p>
+        Test text for test
+      </p>
+    </div>
+    <a
+      className="xd-message-close"
+      href="#"
+      onClick={[Function]}
+    >
+      <svg
+        viewBox="0 0 30 10"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <use
+          className="close-icon"
+          href="#icon-danger"
+        />
+      </svg>
+    </a>
+  </div>
+</div>
+`;

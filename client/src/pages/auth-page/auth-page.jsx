@@ -8,8 +8,8 @@ import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
-import InputGroup from '../../components/input-group/input-group';
-import Footer from '../../components/footer/footer';
+import InputGroup from '../../components/input-group';
+import Footer from '../../components/footer';
 import Message from '../../components/message/message';
 
 import {useHttp} from '../../hooks/http.hook';

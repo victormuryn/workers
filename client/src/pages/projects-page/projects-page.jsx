@@ -21,9 +21,12 @@ const ProjectsPage = () => {
       <h1 className="text-center mt-5 pt-3">Усі проєкти</h1>
 
       <Container as="ul" className="projects__list">
-        {projects.map((project) => (
-          <ProjectItem key={project._id} project={project} />
-        ))}
+        {projects.length ?
+          projects.map((project) => (
+            <ProjectItem key={project._id} {...project} />
+          )) :
+          <h2 className="text-center">Не вдалося знайти жодного проєкту</h2>
+        }
       </Container>
     </>
   );

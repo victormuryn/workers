@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`InputGroup tests Input Group renders corrects 1`] = `
+exports[`InputGroup tests InputGroup renders corrects 1`] = `
 <label
   className="auth-form__label row"
 >

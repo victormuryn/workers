@@ -9,9 +9,9 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import InputGroup from '../../components/input-group/input-group';
+import InputGroup from '../../components/input-group';
 import Message from '../../components/message/message';
-import Footer from '../../components/footer/footer';
+import Footer from '../../components/footer';
 
 const LoginPage = () => {
   const {request, loading, error, clearError} = useHttp();

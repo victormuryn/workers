@@ -8,8 +8,8 @@ import ProjectsPage from '../pages/projects-page/projects-page';
 import ProjectPage from '../pages/project-page/project-page';
 import CreatePage from '../pages/create-page/create-page';
 
-import Header from '../components/header/header';
-import Footer from '../components/footer/footer';
+import Header from '../components/header';
+import Footer from '../components/footer';
 
 export const useRoutes = (isAuthenticated, accountType) => {
   if (isAuthenticated) {
