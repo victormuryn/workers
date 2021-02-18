@@ -31,6 +31,7 @@ export const reducer = (state = initialState, action) => {
       ...state,
       user: {
         isAuthenticated: false,
+        login: null,
         token: null,
         userId: null,
         accountType: null,

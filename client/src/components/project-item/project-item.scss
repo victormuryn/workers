@@ -1,7 +1,10 @@
 .projects__item {
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--bs-gray);
+  padding: 2rem 0;
+  border-bottom: 2px solid var(--bs-gray);
+
+  &:first-of-type {
+    border-top: 2px solid var(--bs-gray);
+  }
 }
 
 .project__item-link {
