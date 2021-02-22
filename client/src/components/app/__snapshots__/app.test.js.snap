@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App tests App not authenticated renders corrects 1`] = `<div />`;
+
+exports[`App tests App renders corrects 1`] = `<div />`;

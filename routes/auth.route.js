@@ -18,7 +18,7 @@ router.post(
       .isEmail(),
     check(`name`, `Некоректне ім'я`).exists(),
     check(`surname`, `Некоректне прізвище`).exists(),
-    check(`login`, `Некоректний логін`)
+    check(`username`, `Некоректний логін`)
       .matches(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/, `i`),
     check(`phone`, `Некоректний номер телефону`).isMobilePhone(),
     check(`password`, `Введіть пароль`).exists(),
@@ -29,10 +29,12 @@ router.post(
       const errors = validationResult(request);
 
       if (!errors.isEmpty()) {
+        const error = errors.array()[0].msg;
+
         return response
           .status(400)
           .json({
-            message: `Некоректні данні при реєстрації: ${errors.array()[0]}`,
+            message: `Некоректні данні при реєстрації: ${error}`,
           });
       }
 
@@ -43,13 +45,13 @@ router.post(
         phone,
         password,
         accountType,
-        login,
+        username,
       } = request.body;
       const email = requestEmail.toLowerCase();
 
       const candidate = await User.findOne({email});
       const candidatePhone = await User.findOne({phone});
-      const candidateLogin = await User.findOne({login});
+      const candidateUsername = await User.findOne({username});
 
       if (candidate) {
         return response
@@ -59,7 +61,7 @@ router.post(
         return response
           .status(400)
           .json({message: `Користувач з таким телефоном уже існує.`});
-      } else if (candidateLogin) {
+      } else if (candidateUsername) {
         return response
           .status(400)
           .json({message: `Користувач з таким логіном уже існує.`});
@@ -69,7 +71,7 @@ router.post(
       const user = new User({
         name,
         surname,
-        login,
+        username,
         email,
         phone,
         accountType,
@@ -93,7 +95,7 @@ router.post(
 router.post(
   `/login`,
   [
-    check(`login`, `Некоректний email`)
+    check(`username`, `Некоректний логін`)
       .matches(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/, `i`),
     check(`password`, `Введіть пароль`).exists(),
   ],
@@ -102,16 +104,17 @@ router.post(
       const errors = validationResult(request);
 
       if (!errors.isEmpty()) {
+        const error = errors.array()[0].msg;
         return response
           .status(400)
           .json({
-            message: `Некоректні данні при вході: ${errors.array()[0]}`,
+            message: `Некоректні данні при вході: ${error}`,
           });
       }
 
-      const {login, password} = request.body;
+      const {username, password} = request.body;
 
-      const user = await User.findOne({login});
+      const user = await User.findOne({username});
 
       if (!user) {
         return response
@@ -135,7 +138,7 @@ router.post(
 
       response.json({
         token,
-        login: user.login,
+        username: user.username,
         userId: user.id,
         accountType: user.accountType,
       });

@@ -13,7 +13,9 @@ router.get(`/:id`, async (request, response) => {
         .json({message: `Користувач не знайдений`});
     }
 
-    response.json(user);
+    const {_id, name, surname, username} = user;
+
+    response.json({_id, name, surname, username});
   } catch (e) {
     response
       .status(500)

@@ -1,0 +1,185 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer tests Footer renders corrects 1`] = `
+<footer
+  className="footer container-fluid"
+  style={
+    Object {
+      "background": "linear-gradient(
+      179deg,
+      transparent 0,
+      transparent 45px,
+      #fff 45px,
+      #fff 100%
+    )",
+    }
+  }
+>
+  <div
+    className="footer__wrapper row row-cols-md-3 row-cols-1"
+  >
+    <div
+      className="footer__column col-md-12 order-md-last"
+    >
+      <h2
+        className="footer__logo"
+      >
+        <a
+          href="/"
+        >
+          Workers
+        </a>
+      </h2>
+      <p
+        className="footer__copy"
+      >
+        © 2021 workers.com.ua — всі права захищені
+      </p>
+    </div>
+    <div
+      className="footer__column col"
+    >
+      <a
+        href="#"
+      >
+        Реклама на сайті
+      </a>
+      <a
+        href="#"
+      >
+        Зв'язатися з адміністрацією
+      </a>
+    </div>
+    <div
+      className="footer__column col"
+    >
+      <a
+        href="#"
+      >
+        Угода користувача
+      </a>
+      <a
+        href="#"
+      >
+        Допомога
+      </a>
+    </div>
+    <div
+      className="footer__column col"
+    >
+      <a
+        href="#"
+      >
+        Замовники
+      </a>
+      <a
+        href="#"
+      >
+        Виконавці
+      </a>
+      <a
+        href="#"
+      >
+        Блог
+      </a>
+      <a
+        href="#"
+      >
+        Безпечна угода
+      </a>
+    </div>
+  </div>
+</footer>
+`;
+
+exports[`Footer tests Footer with color renders corrects 1`] = `
+<footer
+  className="footer container-fluid"
+  style={
+    Object {
+      "background": "linear-gradient(
+      179deg,
+      transparent 0,
+      transparent 45px,
+      #fafafa 45px,
+      #fafafa 100%
+    )",
+    }
+  }
+>
+  <div
+    className="footer__wrapper row row-cols-md-3 row-cols-1"
+  >
+    <div
+      className="footer__column col-md-12 order-md-last"
+    >
+      <h2
+        className="footer__logo"
+      >
+        <a
+          href="/"
+        >
+          Workers
+        </a>
+      </h2>
+      <p
+        className="footer__copy"
+      >
+        © 2021 workers.com.ua — всі права захищені
+      </p>
+    </div>
+    <div
+      className="footer__column col"
+    >
+      <a
+        href="#"
+      >
+        Реклама на сайті
+      </a>
+      <a
+        href="#"
+      >
+        Зв'язатися з адміністрацією
+      </a>
+    </div>
+    <div
+      className="footer__column col"
+    >
+      <a
+        href="#"
+      >
+        Угода користувача
+      </a>
+      <a
+        href="#"
+      >
+        Допомога
+      </a>
+    </div>
+    <div
+      className="footer__column col"
+    >
+      <a
+        href="#"
+      >
+        Замовники
+      </a>
+      <a
+        href="#"
+      >
+        Виконавці
+      </a>
+      <a
+        href="#"
+      >
+        Блог
+      </a>
+      <a
+        href="#"
+      >
+        Безпечна угода
+      </a>
+    </div>
+  </div>
+</footer>
+`;

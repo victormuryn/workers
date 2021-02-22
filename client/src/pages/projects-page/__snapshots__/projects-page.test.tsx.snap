@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjectsPage tests ProjectsPage renders corrects 1`] = `
+Array [
+  <h1
+    className="text-center mt-5 pt-3"
+  >
+    Усі проєкти
+  </h1>,
+  <ul
+    className="projects__list container"
+  >
+    <div
+      className="row"
+    >
+      <div
+        className="col-md-2"
+      >
+        Settings
+      </div>
+      <div
+        className="col-md-10"
+      >
+        <h2
+          className="text-center"
+        >
+          Не вдалося знайти жодного проєкту
+        </h2>
+      </div>
+    </div>
+  </ul>,
+]
+`;

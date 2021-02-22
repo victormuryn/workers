@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TypoAnimation tests TypoAnimation renders corrects 1`] = `
+<span>
+  test
+</span>
+`;
+
+exports[`TypoAnimation tests TypoAnimation with full data renders corrects 1`] = `
+<span
+  className="test-class"
+>
+  test
+</span>
+`;

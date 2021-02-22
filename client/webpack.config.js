@@ -2,9 +2,10 @@ const path = require(`path`);
 const MiniCssExtractPlugin = require(`mini-css-extract-plugin`);
 const CopyWebpackPlugin = require(`copy-webpack-plugin`);
 const HtmlWebpackPlugin = require(`html-webpack-plugin`);
+const WebpackBuildNotifierPlugin = require('webpack-build-notifier');
 
 module.exports = {
-  entry: `./src/index.js`,
+  entry: `./src/index.tsx`,
   output: {
     path: path.join(__dirname, `dist`),
     filename: `bundle.js`,
@@ -25,11 +26,15 @@ module.exports = {
 
   module: {
     rules: [{
-      test: /\.(js|jsx)$/,
+      test: /\.(jsx?)$/,
       exclude: /node_modules/,
       use: {
         loader: `babel-loader`,
       },
+    }, { // typescript
+      test: /\.tsx?$/,
+      use: 'ts-loader',
+      exclude: /node_modules/,
     }, { // sass|scss
       test: /\.(scss|sass)$/,
       use: [
@@ -70,7 +75,7 @@ module.exports = {
 
   devtool: `eval`,
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: [`.ts`, `.tsx`, `.js`, `.jsx`],
   },
 
   plugins: [
@@ -88,6 +93,15 @@ module.exports = {
         {from: `./public/fonts/`, to: `./css/fonts/`},
         {from: `./public/favicon.ico`, to: `./favicon.ico`},
       ],
+    }),
+
+    new WebpackBuildNotifierPlugin({
+      title: 'WORKERS ERROR!!',
+      suppressSuccess: true, // don't spam success notifications
+      suppressWarning: true,
+      suppressCompileStart: true,
+      warningSound: false,
+      successSound: false,
     }),
   ],
 };
