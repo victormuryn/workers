@@ -14,14 +14,13 @@ import AuthContext from '../../context/Auth.context';
 import {State} from '../../redux/reducer';
 
 const App: React.FC = () => {
+  const dispatch = useDispatch();
+  const {login, logout, ready} = useAuth(dispatch);
+
   const user = useSelector((state: State) => state.user);
   const {isAuthenticated, accountType} = user;
 
   const router = useRoutes(isAuthenticated, accountType);
-
-  const dispatch = useDispatch();
-  const {login, logout, ready} = useAuth(dispatch);
-
   if (!ready) {
     return (<div />);
   }

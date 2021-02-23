@@ -3,73 +3,73 @@ import {USER_LOGIN, USER_LOGOUT} from './types';
 import {ActionCreator} from './action-creator';
 
 describe(`ActionCreator tests`, () => {
-  it(`ActionCreator.login works good`, () => {
-    const login = ActionCreator.login(
-      `test-token`,
-      `test-user-id`,
-      `test-account-type`,
-      `test-login`,
-    );
+  it(`ActionCreator.username works good`, () => {
+    const login = ActionCreator.login({
+      token: `test-token`,
+      userId: `test-user-id`,
+      accountType: `freelancer`,
+      username: `test-username`,
+    });
 
     expect(login).toEqual({
       type: USER_LOGIN,
       payload: {
         token: `test-token`,
         userId: `test-user-id`,
-        accountType: `test-account-type`,
-        login: `test-login`,
+        accountType: `freelancer`,
+        username: `test-username`,
       },
     });
   });
 
   it(`ActionCreator.logout works good`, () => {
-    const login = ActionCreator.logout();
+    const logout = ActionCreator.logout();
 
-    expect(login).toEqual({
+    expect(logout).toEqual({
       type: USER_LOGOUT,
-      payload: {},
     });
   });
 });
 
 describe(`Reducer tests`, () => {
-  it(`USER_LOGIN test`, () => {
+  it(`USER_username test`, () => {
     const action = {
       type: USER_LOGIN,
       payload: {
         token: `test-token`,
-        login: `test-login`,
+        username: `test-username`,
         userId: `test-user-id`,
-        accountType: `test-account-type`,
+        accountType: `freelancer`,
       },
     };
 
+    // @ts-ignore
     const data = reducer(undefined, action);
 
     expect(data).toEqual({
       user: {
         isAuthenticated: true,
         token: `test-token`,
-        login: `test-login`,
+        username: `test-username`,
         userId: `test-user-id`,
-        accountType: `test-account-type`,
+        accountType: `freelancer`,
       },
     });
   });
 
-  it(`USER_LOGIN test`, () => {
+  it(`USER_LOGOUT test`, () => {
     const action = {
       type: USER_LOGOUT,
-      payload: {},
     };
 
+    // @ts-ignore
     const data = reducer(undefined, action);
 
     expect(data).toEqual({
       user: {
         isAuthenticated: false,
         token: null,
-        login: null,
+        username: null,
         userId: null,
         accountType: null,
       },

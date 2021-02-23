@@ -3,7 +3,6 @@ import {useSelector} from 'react-redux';
 import {Link, NavLink, useHistory} from 'react-router-dom';
 
 import {State} from '../../redux/reducer';
-// @ts-ignore
 import AuthContext from '../../context/Auth.context';
 
 import './header.scss';

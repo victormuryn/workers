@@ -1,0 +1,163 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header tests Header client renders corrects 1`] = `
+<nav
+  className="navbar navbar-expand-md navbar-dark bg-dark"
+>
+  <div
+    className="container"
+  >
+    <a
+      className="inner-header__logo navbar-brand"
+      href="/"
+      onClick={[Function]}
+    >
+      Workers
+    </a>
+    <button
+      aria-controls="responsive-navbar-nav"
+      aria-label="Toggle navigation"
+      className="navbar-toggler collapsed"
+      onClick={[Function]}
+      type="button"
+    >
+      <span
+        className="navbar-toggler-icon"
+      />
+    </button>
+    <div
+      aria-expanded={null}
+      className="navbar-collapse collapse"
+      id="responsive-navbar-nav"
+    >
+      <div
+        className="ms-auto me-0 navbar-nav"
+        onKeyDown={[Function]}
+      >
+        <a
+          aria-current={null}
+          className="ms-2 nav-link"
+          data-rb-event-key={null}
+          disabled={false}
+          href="/projects"
+          onClick={[Function]}
+        >
+          Проєкти
+        </a>
+        <a
+          className="ms-2 nav-link"
+          data-rb-event-key="#features"
+          href="#features"
+          onClick={[Function]}
+          onKeyDown={[Function]}
+        >
+          Features
+        </a>
+        <div
+          className="ms-2 dropdown nav-item"
+          onKeyDown={[Function]}
+        >
+          <a
+            aria-expanded={false}
+            aria-haspopup={true}
+            className="dropdown-toggle nav-link"
+            data-rb-event-key={null}
+            href="#"
+            id="header-profile"
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+          >
+            yellowkiiid
+          </a>
+        </div>
+        <a
+          className="ms-md-5 btn btn-success"
+          disabled={false}
+          href="/create"
+          onClick={[Function]}
+        >
+          Створити проєкт
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+`;
+
+exports[`Header tests Header freelancer renders corrects 1`] = `
+<nav
+  className="navbar navbar-expand-md navbar-dark bg-dark"
+>
+  <div
+    className="container"
+  >
+    <a
+      className="inner-header__logo navbar-brand"
+      href="/"
+      onClick={[Function]}
+    >
+      Workers
+    </a>
+    <button
+      aria-controls="responsive-navbar-nav"
+      aria-label="Toggle navigation"
+      className="navbar-toggler collapsed"
+      onClick={[Function]}
+      type="button"
+    >
+      <span
+        className="navbar-toggler-icon"
+      />
+    </button>
+    <div
+      aria-expanded={null}
+      className="navbar-collapse collapse"
+      id="responsive-navbar-nav"
+    >
+      <div
+        className="ms-auto me-0 navbar-nav"
+        onKeyDown={[Function]}
+      >
+        <a
+          aria-current={null}
+          className="ms-2 nav-link"
+          data-rb-event-key={null}
+          disabled={false}
+          href="/projects"
+          onClick={[Function]}
+        >
+          Проєкти
+        </a>
+        <a
+          className="ms-2 nav-link"
+          data-rb-event-key="#features"
+          href="#features"
+          onClick={[Function]}
+          onKeyDown={[Function]}
+        >
+          Features
+        </a>
+        <div
+          className="ms-2 dropdown nav-item"
+          onKeyDown={[Function]}
+        >
+          <a
+            aria-expanded={false}
+            aria-haspopup={true}
+            className="dropdown-toggle nav-link"
+            data-rb-event-key={null}
+            href="#"
+            id="header-profile"
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+          >
+            hellcaster
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+`;

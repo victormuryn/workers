@@ -1,0 +1,130 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreatePage tests CreatePage with client renders corrects 1`] = `
+<div
+  className="mt-5 pt-5 container"
+>
+  <h1
+    className="text-center mt-5 mb-5 pb-5"
+  >
+    Створити проєкт
+  </h1>
+  <form
+    className=""
+    method="POST"
+    onSubmit={[Function]}
+  >
+    <div
+      className="mb-3 form-group row"
+    >
+      <label
+        className="form-label col-form-label col-lg-2 offset-lg-2"
+      >
+        Назва проєкту
+      </label>
+      <div
+        className="col-lg-6"
+      >
+        <input
+          className="form-control"
+          name="title"
+          onChange={[Function]}
+          required={true}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+    <div
+      className="mb-3 form-group row"
+    >
+      <label
+        className="form-label col-form-label col-lg-2 offset-lg-2"
+      >
+        Опис
+      </label>
+      <div
+        className="col-lg-6"
+      >
+        <div />
+      </div>
+    </div>
+    <div
+      className="mb-3 form-group row"
+    >
+      <label
+        className="form-label col-form-label col-lg-2 offset-lg-2"
+      >
+        Бюджет (у гривнях)
+      </label>
+      <div
+        className="col-lg-3"
+      >
+        <input
+          className="form-control"
+          min={200}
+          name="price"
+          onChange={[Function]}
+          type="number"
+        />
+        <small
+          className="text-muted"
+        >
+          Якщо не впевнені у вартості - залиште поле пустим
+        </small>
+      </div>
+    </div>
+    <div
+      className="mb-3 form-group row"
+    >
+      <label
+        className="form-label col-form-label col-lg-2 offset-lg-2"
+      >
+        Активний до
+      </label>
+      <div
+        className="col-lg-3"
+      >
+        <div
+          className="react-datepicker-wrapper"
+        >
+          <div
+            className="react-datepicker__input-container"
+          >
+            <input
+              className=""
+              disabled={false}
+              name="expire"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              readOnly={false}
+              type="text"
+              value="03/02/2021"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="mt-5 form-group row"
+    >
+      <div
+        className="col-sm-10 offset-sm-2"
+      >
+        <button
+          className="btn btn-primary btn-lg"
+          disabled={false}
+          type="submit"
+        >
+          Опублікувати проєкт
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`CreatePage tests CreatePage with freelancer renders corrects 1`] = `<div />`;

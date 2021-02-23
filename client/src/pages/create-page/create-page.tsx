@@ -38,6 +38,7 @@ const CreatePage: React.FC = () => {
   const history = useHistory();
   if (user.accountType !== `client`) {
     history.goBack();
+    return <div />;
   }
 
   const {request, loading, error, clearError} = useHttp<{ id: string }>();
