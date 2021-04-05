@@ -23,17 +23,15 @@ const TypoAnimation: React.FC<TypoAnimationProps> = ({
 
   const changePhrase = (element: HTMLSpanElement, phrases: string[]) => {
     const changeActivePhrase = (current: string | null) => {
-      if (!current) {
-        return phrases[0];
-      }
+      if (!current) return phrases[0];
 
       return phrases[phrases.indexOf(current) + 1] || phrases[0];
     };
 
-    let activePhrase:string = changeActivePhrase(element.textContent);
+    let activePhrase: string = changeActivePhrase(element.textContent);
 
-    const deleteLetters = (afterEnd: () => void): void => {
-      const deleteInterval: NodeJS.Timeout = setInterval(() => {
+    const deleteLetters = (afterEnd: () => void) => {
+      const deleteInterval = setInterval(() => {
         // new text content = last text content without last character
         element.textContent = element.textContent!.slice(0, -1);
 
@@ -45,7 +43,7 @@ const TypoAnimation: React.FC<TypoAnimationProps> = ({
       }, deleteSpeed);
     };
 
-    const writeLetters = (phrase: string): void => {
+    const writeLetters = (phrase: string) => {
       let lettersPrinted: number = 0;
 
       const writeInterval: NodeJS.Timeout = setInterval(() => {

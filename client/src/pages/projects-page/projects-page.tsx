@@ -1,36 +1,73 @@
 import React, {useEffect, useState} from 'react';
-
-import {useHttp} from '../../hooks/http.hook';
+import api from '../../utils/api';
 
 import './projects-page.scss';
 
+import Loader from '../../components/loader';
 import ProjectItem from '../../components/project-item';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import {useSelector} from 'react-redux';
+import {State} from '../../redux/reducer';
+import {setPageMeta} from '../../utils/utils';
 
 type Project = {
   _id: string,
-  author: string,
+  hot: boolean,
   date: string,
-  description: string,
-  expire: string,
+  bets: number,
   price: number,
   title: string,
-  views: string,
+  remote: boolean,
+  location: {
+    city: string,
+    region: string,
+    latitude: number,
+    longitude: number,
+  },
+  category: {
+    title: string,
+    url: string,
+  }
 }
 
 const ProjectsPage: React.FC = () => {
+  setPageMeta(`Усі проєкти`);
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>(``);
   const [projects, setProjects] = useState<Project[]>([]);
-  const {request} = useHttp<Project[]>();
+
+  const token = useSelector((state: State) => state.user.token);
 
   useEffect(() => {
     (async () => {
-      const response = await request(`/api/project/`);
-      setProjects(response);
+      setLoading(true);
+
+      api
+        .get<Project[]>(`/project/`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        })
+        .then((response) => setProjects(response.data))
+        .catch((error) => {
+          setError(error.response.data.message ||
+            `Щось пішло не так, спробуйте знову.`);
+        })
+        .then(() => setLoading(false));
     })();
   }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (error) {
+    alert(error);
+  }
 
   return (
     <>

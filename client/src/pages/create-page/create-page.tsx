@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import {useSelector} from 'react-redux';
-import {useHttp} from '../../hooks/http.hook';
+import {useForm} from '../../hooks/form.hook';
+import api from '../../utils/api';
 
 import './create-page.scss';
 
 import Message from '../../components/message';
+import CreateFormGroup from '../../components/create-form-group';
+import InputAutocomplete from '../../components/input-autocomplete';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -16,7 +19,7 @@ import Container from 'react-bootstrap/Container';
 // @ts-ignore
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 // @ts-ignore
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import ClassicEditor from '../../libs/ckeditor/ckeditor.js';
 import '@ckeditor/ckeditor5-build-classic/build/translations/uk';
 
 import DatePicker from 'react-datepicker';
@@ -24,64 +27,200 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 // Types
 import {State} from '../../redux/reducer';
+import {setPageMeta} from '../../utils/utils';
+
+type Location = {
+  city: string,
+  district: string,
+  region: string,
+  latitude: number,
+  longitude: number,
+}
 
 type FormState = {
-  title: string,
-  description: string,
-  price: number,
+  hot: boolean,
   expire: Date,
+  title: string,
+  price: number,
+  remote: boolean,
+  category: string,
+  inputCity: string,
+  location: Location,
+  description: string,
+  categoryText: string,
 };
 
+type Categories = {
+  _id: string,
+  title: string,
+  url: string,
+};
+
+type Autofill = {
+  text: string,
+  value: string | number,
+};
+
+type AutofillChangeType<T> = [
+  e: React.ChangeEvent<HTMLInputElement>,
+  setter: (value: []) => void,
+  url: string,
+  onSuccess: (data: T[]) => void,
+];
+
 const CreatePage: React.FC = () => {
+  setPageMeta(`Створити проєкт`);
   const user = useSelector((state: State) => state.user);
 
   const history = useHistory();
   if (user.accountType !== `client`) {
     history.goBack();
-    return <div />;
+    return <div/>;
   }
 
-  const {request, loading, error, clearError} = useHttp<{ id: string }>();
+  const [error, setError] = useState<string>(``);
+  const [loading, setLoading] = useState<boolean>(false);
+  const clearError = () => setError(``);
+
+  const [catSuggestions, setCatSuggestions] = useState<Autofill[]>([]);
+  const [suggestions, setSuggestions] = useState<Autofill[]>([]);
 
   const initialExpire = new Date();
   const expire = new Date((initialExpire).setDate(initialExpire.getDate() + 7));
 
   const now = new Date();
-  const [form, setForm] = useState<FormState>({
-    title: ``,
-    description: ``,
-    price: 0,
+  const {form, inputChangeHandler} = useForm<FormState>({
     expire,
+    price: 0,
+    title: ``,
+    hot: false,
+    category: ``,
+    remote: false,
+    inputCity: ``,
+    description: ``,
+    categoryText: ``,
+    location: {city: ``, district: ``, region: ``, latitude: 0, longitude: 0},
   });
 
-  const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = event.target;
+  const inputChangeHandlerByValue = (value: any, name: string) => {
+    inputChangeHandler({
+      target: {
+        name, value,
+      },
+    });
+  };
 
-    setForm((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const selectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const {name} = e.target;
+    const inputName = e.target.dataset.inputName || `none`;
+
+    const nativeTarget = e.nativeEvent.target as HTMLSelectElement;
+
+    const index = nativeTarget.selectedIndex || -1;
+    const text = nativeTarget[index].textContent || `Пусто`;
+
+    let value: any;
+    try {
+      value = JSON.parse(e.target.value);
+    } catch (error) {
+      value = e.target.value;
+    }
+
+    setSuggestions([]);
+    setCatSuggestions([]);
+
+    inputChangeHandler([{
+      target: {
+        name: inputName,
+        value: text,
+      },
+    }, {
+      target: {name, value},
+    }]);
+  };
+
+  const onAutofillChange = async <T, >(...args: AutofillChangeType<T>) => {
+    const [e, setter, url, onSuccess] = args;
+    inputChangeHandler(e);
+
+    if (e.target.value === ``) {
+      setter([]);
+      return;
+    }
+
+    api
+      .get<T[]>(`${url}${e.target.value}`)
+      .then(({data}) => {
+        onSuccess(data);
+      })
+      .catch((error) => {
+        setError(error);
+      });
+  };
+
+  const categoryInputChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    onAutofillChange<Categories>(
+      event,
+      setCatSuggestions,
+      `/categories/autofill/`,
+      (result) => {
+        const response = result.map((element) => ({
+          text: element.title,
+          value: element._id,
+        }));
+
+        setCatSuggestions(response);
+      });
+  };
+
+  const cityInputChangeEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onAutofillChange<Location>(
+      event,
+      setSuggestions,
+      `/project/city/`,
+      (result) => {
+        const suggestionsList = result.map((element) => {
+          const {
+            city, district, region,
+            latitude, longitude,
+          } = element;
+          const value = JSON.stringify({
+            city, district, region, latitude, longitude,
+          });
+
+          return {
+            text: `${city}, ${district}, ${region}`,
+            value,
+          };
+        });
+
+        setSuggestions(suggestionsList);
+      });
   };
 
   const formSubmitHandler = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     const date = new Date();
 
-    const response = await request(`/api/project/create`, `POST`,
-      {...form, date}, {
-        'Authorization': `Bearer ${user.token}`,
+    setLoading(true);
+    api
+      .post<{ id: string }>(`/project/create`, {...form, date}, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+        },
+      })
+      .then(({data}) => {
+        history.push(`/project/${data.id}`);
+      })
+      .catch((error) => {
+        setError(error.response.data.message ||
+        `Щось пішло не так, спробуйте знову.`);
+      })
+      .then(() => {
+        setLoading(false);
       });
-
-    if (response) {
-      history.push(`/project/${response.id}`);
-    }
-  };
-
-  const dateChangeHandler = (date: Date) => {
-    setForm((prevState) => ({
-      ...prevState,
-      expire: date,
-    }));
   };
 
   return (
@@ -91,101 +230,143 @@ const CreatePage: React.FC = () => {
       {error && <Message text={error} onClose={clearError} type="danger"/>}
 
       <Form method="POST" onSubmit={formSubmitHandler}>
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column lg={{
-            span: 2,
-            offset: 2,
-          }}>
-            Назва проєкту
-          </Form.Label>
-          <Col lg={6}>
-            <Form.Control
-              required
-              type="text"
-              name="title"
-              value={form.title}
-              onChange={inputChangeHandler}
-            />
-          </Col>
-        </Form.Group>
+        {/* title */}
+        <CreateFormGroup title="Назва проєкту">
+          <Form.Control
+            required
+            type="text"
+            name="title"
+            value={form.title}
+            onChange={inputChangeHandler}
+          />
+        </CreateFormGroup>
 
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column lg={{
-            span: 2,
-            offset: 2,
-          }}>
-            Опис
-          </Form.Label>
-          <Col lg={6}>
-            <CKEditor
-              name="description"
-              editor={ClassicEditor}
-              config={{
-                toolbar: [`heading`, `|`,
-                  `bold`, `italic`, `link`, `blockQuote`, `|`,
-                  `bulletedList`, `numberedList`, `indent`, `outdent`, `|`,
-                  'undo', 'redo',
-                ],
-                placeholder: `Опишіть детально вашу проблему...`,
-                language: `uk`,
-              }}
-              onChange={
-                (event: any, editor: any) => {
-                  event.target = {
-                    name: `description`,
-                    value: editor.getData(),
-                  };
-
-                  inputChangeHandler(event);
-                }
+        {/* description */}
+        <CreateFormGroup title="Опис">
+          <CKEditor
+            name="description"
+            editor={ClassicEditor}
+            config={{
+              toolbar: [`heading`, `|`,
+                `bold`, `italic`, `link`, `blockQuote`, `|`,
+                `bulletedList`, `numberedList`, `indent`, `outdent`, `|`,
+                'undo', 'redo',
+              ],
+              placeholder: `Опишіть детально вашу проблему...`,
+              language: `uk`,
+            }}
+            onChange={
+              (event: any, editor: any) => {
+                inputChangeHandlerByValue(editor.getData(), `description`);
               }
-            />
-          </Col>
-        </Form.Group>
+            }
+          />
+        </CreateFormGroup>
 
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column lg={{
-            span: 2,
-            offset: 2,
-          }}>
-            Бюджет (у гривнях)
-          </Form.Label>
-          <Col lg={3}>
-            <Form.Control
-              min={200}
-              name="price"
-              type="number"
-              onChange={inputChangeHandler}
-            />
-            <small className="text-muted">
-              Якщо не впевнені у вартості - залиште поле пустим
-            </small>
-          </Col>
-        </Form.Group>
+        {/* price */}
+        <CreateFormGroup title="Бюджет (у гривнях)" lg={3}>
+          <Form.Control
+            min={200}
+            name="price"
+            type="number"
+            onChange={inputChangeHandler}
+          />
+          <small className="text-muted">
+            Якщо не впевнені у вартості - залиште поле пустим
+          </small>
+        </CreateFormGroup>
 
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column lg={{
-            span: 2,
-            offset: 2,
-          }}>
-            Активний до
-          </Form.Label>
-          <Col lg={3}>
-            <DatePicker
-              selected={form.expire}
-              name="expire"
-              minDate={new Date()}
-              maxDate={new Date(now.setMonth(now.getMonth() + 1))}
-              onChange={dateChangeHandler}
-            />
-          </Col>
-        </Form.Group>
+        {/* category */}
+        <CreateFormGroup title="Вкажіть категорію" lg={3}>
+          <InputAutocomplete
+            selectName="category"
+            placeholder="Категорія"
+            inputName="categoryText"
+            value={form.categoryText}
+            suggestions={catSuggestions}
+            onSelectChange={selectChangeHandler}
+            onInputChange={categoryInputChangeHandler}
+          />
+        </CreateFormGroup>
 
+        {/* expire */}
+        <CreateFormGroup title="Активний до">
+          <DatePicker
+            name="expire"
+            minDate={new Date()}
+            selected={form.expire}
+            className="form-control"
+            onChange={(date) => {
+              inputChangeHandlerByValue(date, `expire`);
+            }}
+            maxDate={new Date(now.setMonth(now.getMonth() + 1))}
+          />
+        </CreateFormGroup>
+
+        {/* city */}
+        <CreateFormGroup title="Вкажіть місто" lg={3}>
+          <InputAutocomplete
+            selectName="location"
+            inputName="inputCity"
+            value={form.inputCity}
+            disabled={form.remote}
+            suggestions={suggestions}
+            placeholder="Населений пункт"
+            onInputChange={cityInputChangeEvent}
+            onSelectChange={selectChangeHandler}
+          />
+          <Form.Label>або</Form.Label>
+          <Form.Check
+            custom
+            id="remote"
+            name="remote"
+            type="checkbox"
+            checked={form.remote}
+            label="Віддалена робота"
+            onChange={(event) => {
+              setSuggestions([]);
+              inputChangeHandler([
+                event,
+                {
+                  target: {
+                    name: `inputCity`,
+                    value: ``,
+                  },
+                }, {
+                  target: {
+                    name: `location`,
+                    value: {
+                      city: ``, district: ``, region: ``,
+                      latitude: 0, longitude: 0,
+                    },
+                  },
+                },
+              ]);
+            }}
+          />
+        </CreateFormGroup>
+
+        {/* hot */}
+        <CreateFormGroup title="Потрібно терміново?" lg={3}>
+          <Form.Check
+            custom
+            id="hot"
+            name="hot"
+            type="checkbox"
+            checked={form.hot}
+            className="text-muted small"
+            onChange={inputChangeHandler}
+            label="ми знайдемо виконавців для вашого проєкту якнайшвидше"
+          />
+        </CreateFormGroup>
+
+        {/* submit */}
         <Form.Group as={Row} className="mt-5">
           <Col sm={{span: 10, offset: 2}}>
             <Button
-              type="submit"
               size="lg"
+              type="submit"
+              variant="success"
               disabled={loading}
             >
               Опублікувати проєкт
@@ -193,7 +374,6 @@ const CreatePage: React.FC = () => {
           </Col>
         </Form.Group>
       </Form>
-
     </Container>
   );
 };

@@ -5,6 +5,23 @@
   &:first-of-type {
     border-top: 2px solid var(--bs-gray);
   }
+
+  &--hot {
+    position: relative;
+
+    &::before {
+      content: "";
+      display: block;
+      background: url("../img/fire.svg") no-repeat center center;
+      background-size: cover;
+      width: 2.5rem;
+      height: 2.5rem;
+      position: absolute;
+      left: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
 }
 
 .project__item-link {

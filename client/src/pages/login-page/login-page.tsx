@@ -1,61 +1,72 @@
 import React, {useContext, useState} from 'react';
 import {Link, useHistory} from 'react-router-dom';
-
-import {useHttp} from '../../hooks/http.hook';
 import AuthContext from '../../context/Auth.context';
+import {useForm} from '../../hooks/form.hook';
+import api from '../../utils/api';
 
-import InputGroup from '../../components/input-group';
-import Message from '../../components/message';
 import Footer from '../../components/footer';
+import Message from '../../components/message';
+import InputGroup from '../../components/input-group';
 
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
 
 import {AccountTypes} from '../../types/types';
+import {setPageMeta} from '../../utils/utils';
+
+type Response = {
+  token: string,
+  userId: string,
+  accountType: AccountTypes,
+  username: string,
+};
+
+type FormData = {
+  username: string,
+  password: string,
+};
 
 const LoginPage: React.FC = () => {
-  type Response = {
-    token: string,
-    userId: string,
-    accountType: AccountTypes,
-    username: string,
-  };
-  const {request, loading, error, clearError} = useHttp<Response>();
+  setPageMeta(`Увійти`);
+
   const {login} = useContext(AuthContext);
   const history = useHistory();
 
-  const [data, setData] = useState({
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>(``);
+
+  const {form: data, inputChangeHandler} = useForm<FormData>({
     username: ``,
     password: ``,
   });
 
-  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = event.target;
-
-    setData({
-      ...data,
-      [name]: value,
-    });
-  };
-
   const onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
-    clearError();
+    setLoading(true);
 
-    const result = await request(`/api/auth/login`, `POST`, {...data});
-    const {token, userId, accountType, username} = result;
-
-    login(token, userId, accountType, username);
-    history.push(`/`);
+    api
+      .post<Response>(`/auth/login`, {...data})
+      .then((response) => {
+        const {token, userId, accountType, username} = response.data;
+        login(token, userId, accountType, username);
+        history.push(`/`);
+      })
+      .catch((error) => {
+        setError(error.response.data.message ||
+          `Щось пішло не так, спробуйте знову.`);
+      })
+      .then(() => {
+        setLoading(false);
+      });
   };
 
   const onErrorClose = (
     e: React.MouseEvent<HTMLAnchorElement | MouseEvent>,
   ) => {
     e.preventDefault();
-    clearError();
+    setError(``);
   };
 
   return (
@@ -75,11 +86,11 @@ const LoginPage: React.FC = () => {
       <Container>
         <form className="auth-form mt-5" method="POST" onSubmit={onSubmit}>
           <InputGroup
+            label="Логін:"
             name="username"
             value={data.username}
             placeholder="Ваш логін"
-            onChange={onInputChange}
-            label="Логін:"
+            onChange={inputChangeHandler}
             pattern="^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$"
           />
 
@@ -90,7 +101,7 @@ const LoginPage: React.FC = () => {
             label="Пароль:"
             value={data.password}
             placeholder="Ваш пароль"
-            onChange={onInputChange}
+            onChange={inputChangeHandler}
           />
 
           <Row as="label" className="auth-form__label">

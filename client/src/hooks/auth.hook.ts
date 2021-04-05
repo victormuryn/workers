@@ -1,6 +1,7 @@
-import {useState, useCallback, useEffect, Dispatch} from 'react';
+import {useState, useCallback, useEffect} from 'react';
+import {Action, Dispatch} from 'redux';
 import {ActionCreator} from '../redux/action-creator';
-import {User, UserActionTypes} from '../redux/types';
+import {User} from '../redux/types';
 import {AccountTypes} from '../types/types';
 
 // logged user data keeps in localstorage
@@ -13,12 +14,7 @@ type Login = (
   username: string
 ) => void;
 
-type UseAuthReturn = {
-  login: Login,
-  logout: () => void,
-  ready: boolean
-}
-export const useAuth = (dispatch: Dispatch<UserActionTypes>): UseAuthReturn => {
+export const useAuth = (dispatch: Dispatch<Action>) => {
   // have we checked is user logged
   const [ready, setReady] = useState(false);
 
@@ -27,6 +23,7 @@ export const useAuth = (dispatch: Dispatch<UserActionTypes>): UseAuthReturn => {
   ) => {
     // set logged user data to redux state
     dispatch(ActionCreator.login({token, userId, accountType, username}));
+    dispatch(ActionCreator.initMessages(username, token)(dispatch));
 
     // set data to localstorage
     localStorage.setItem(storageName, JSON.stringify({
@@ -34,9 +31,11 @@ export const useAuth = (dispatch: Dispatch<UserActionTypes>): UseAuthReturn => {
     }));
   }, []);
 
+  // const logout = useCallback((id: string | null, token: string | null) => {
   const logout = useCallback(() => {
     // remove data from state
     dispatch(ActionCreator.logout());
+    dispatch(ActionCreator.offSocket());
 
     // remove data from localstorage
     localStorage.removeItem(storageName);

@@ -11,7 +11,7 @@
     "strict": true,
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node",
+    "moduleResolution": "node"
   },
   "include": [
     "src"

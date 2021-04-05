@@ -1,34 +1,40 @@
 import React, {useState, useRef, useEffect, useContext} from 'react';
-import {Link} from 'react-router-dom';
-
-import {useHttp} from '../../hooks/http.hook';
 import AuthContext from '../../context/Auth.context';
+import {useForm} from '../../hooks/form.hook';
+import {Link} from 'react-router-dom';
+import api from '../../utils/api';
 
 import './auth-page.scss';
 
-import InputGroup from '../../components/input-group';
 import Footer from '../../components/footer';
 import Message from '../../components/message';
+import InputGroup from '../../components/input-group';
 
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
 
 import {AccountTypes} from '../../types/types';
+import {setPageMeta} from '../../utils/utils';
+
+type Response = {
+  token: string,
+  userId: string,
+  username: string,
+  accountType: AccountTypes,
+};
 
 const AuthPage: React.FC = () => {
-  type Response = {
-    token: string,
-    userId: string,
-    accountType: AccountTypes,
-    username: string,
-  };
-  const {request, loading, error, clearError} = useHttp<Response>();
+  setPageMeta(`Зареєструватися`);
+
   const {login} = useContext(AuthContext);
 
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>(``);
+
   // Form data (default values)
-  const [data, setData] = useState({
+  const {form: data, inputChangeHandler} = useForm({
     name: ``,
     surname: ``,
     username: ``,
@@ -41,16 +47,6 @@ const AuthPage: React.FC = () => {
 
   // Confirm password element (to check is it equals to first one)
   const confirmPasswordElement = useRef<HTMLInputElement>(null);
-
-  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {value, name} = event.target;
-
-    // set new data (prevState + new value)
-    setData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
 
   // on confirmPassword change
   useEffect(() => {
@@ -70,7 +66,7 @@ const AuthPage: React.FC = () => {
 
   const onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
-    clearError();
+    setError(``);
 
     const email = data.email.toLowerCase();
     let {phone, password} = data;
@@ -87,24 +83,36 @@ const AuthPage: React.FC = () => {
     }
 
     // register
-    await request(`/api/auth/register`, `POST`, {...data, phone, email});
-
-    // login after register
-    const response = await request(
-      `/api/auth/login`,
-      `POST`,
-      {
-        username: data.username, password,
-      },
-    );
-
-    const {token, userId, accountType, username} = response;
-    login(token, userId, accountType, username);
+    setLoading(true);
+    api
+      .post(`/auth/register`, {...data, phone, email})
+      .then(() => {
+        // login
+        api
+          .post<Response>(`/auth/login`, {
+            username: data.username, password,
+          })
+          .then((response) => {
+            const {token, userId, accountType, username} = response.data;
+            login(token, userId, accountType, username);
+          })
+          .catch((error) => {
+            setError(error.response.data.message ||
+              `Щось пішло не так, спробуйте знову`);
+          });
+      })
+      .catch((error) => {
+        setError(error.response.data.message ||
+          `Щось пішло не так, спробуйте знову`);
+      })
+      .then(() => {
+        setLoading(false);
+      });
   };
 
   const onErrorClose = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
-    clearError();
+    setError(``);
   };
 
   return (
@@ -128,37 +136,37 @@ const AuthPage: React.FC = () => {
             maxLength={20}
             value={data.name}
             placeholder="Ваше ім'я"
-            onChange={onInputChange}
+            onChange={inputChangeHandler}
           />
 
           <InputGroup
+            minLength={2}
+            maxLength={20}
             name="surname"
             label="Прізвище:"
-            minLength={2}
-            maxLength={20}
             value={data.surname}
             placeholder="Ваше прізвище"
-            onChange={onInputChange}
+            onChange={inputChangeHandler}
           />
 
           <InputGroup
-            name="username"
-            label="Логін:"
             minLength={2}
             maxLength={20}
+            label="Логін:"
+            name="username"
             value={data.username}
             placeholder="Ваш логін"
-            onChange={onInputChange}
+            onChange={inputChangeHandler}
             pattern="^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$"
           />
 
           <InputGroup
             name="email"
             type="email"
-            label="Електронна пошта:"
             value={data.email}
             placeholder="Ваш email"
-            onChange={onInputChange}
+            label="Електронна пошта:"
+            onChange={inputChangeHandler}
           />
 
           <InputGroup
@@ -168,26 +176,26 @@ const AuthPage: React.FC = () => {
             value={data.phone}
             placeholder="Ваш телефон"
             pattern="^(\+?38)?(0\d{9})$"
-            onChange={onInputChange}
+            onChange={inputChangeHandler}
           />
 
           <InputGroup
+            minLength={6}
             name="password"
             type="password"
             label="Пароль:"
             value={data.password}
-            minLength={6}
             placeholder="Ваш пароль"
-            onChange={onInputChange}
+            onChange={inputChangeHandler}
           />
 
           <InputGroup
             minLength={6}
             type="password"
             name="confirmPassword"
-            onChange={onInputChange}
             label="Повторіть пароль:"
             value={data.confirmPassword}
+            onChange={inputChangeHandler}
             refProp={confirmPasswordElement}
             placeholder="Повторіть ваш пароль"
           />
@@ -208,7 +216,7 @@ const AuthPage: React.FC = () => {
                   type="radio"
                   value="freelancer"
                   name="accountType"
-                  onChange={onInputChange}
+                  onChange={inputChangeHandler}
                 />
                 <span>Виконавець</span>
               </label>
@@ -219,7 +227,7 @@ const AuthPage: React.FC = () => {
                   type="radio"
                   value="client"
                   name="accountType"
-                  onChange={onInputChange}
+                  onChange={inputChangeHandler}
                 />
                 <span>Замовник</span>
               </label>

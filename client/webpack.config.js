@@ -21,6 +21,18 @@ module.exports = {
       '/api': {
         target: `http://localhost:5000`,
       },
+
+      '/socket.io': {
+        target: `http://localhost:5000`,
+        ws: true,
+      },
+    },
+    watchOptions: {
+      ignored: [
+        path.resolve(__dirname, `public/img/users`),
+        path.resolve(__dirname, `dist/img/users`),
+        path.resolve(__dirname, `img/users`),
+      ],
     },
   },
 
@@ -73,7 +85,7 @@ module.exports = {
     }],
   },
 
-  devtool: `eval`,
+  devtool: `eval-source-map`,
   resolve: {
     extensions: [`.ts`, `.tsx`, `.js`, `.jsx`],
   },
@@ -96,7 +108,7 @@ module.exports = {
     }),
 
     new WebpackBuildNotifierPlugin({
-      title: 'WORKERS ERROR!!',
+      title: 'WORKERS!!!',
       suppressSuccess: true, // don't spam success notifications
       suppressWarning: true,
       suppressCompileStart: true,

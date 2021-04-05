@@ -5,17 +5,35 @@ import './project-item.scss';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
 type ProjectItemProps = {
   _id: string,
-  title: string,
-  price: number,
+  hot: boolean,
+  bets: number,
   date: string,
+  price: number,
+  title: string,
+  remote: boolean,
+  location: {
+    city: string,
+    region: string,
+    latitude: number,
+    longitude: number,
+  },
+  category: {
+    title: string,
+    url: string,
+  }
 };
 
-const ProjectItem: React.FC<ProjectItemProps> = ({_id, title, price, date}) => {
+const ProjectItem: React.FC<ProjectItemProps> = (props) => {
+  const {
+    _id, title, price, date, bets, hot,
+    remote, location, category,
+  } = props;
+
   const now = new Date();
   const months = [`січня`, `лютого`, `березня`, `квітня`, `травня`, `червня`,
     `липня`, `серпня`, `вересня`, `жовтня`, `листопада`, `грудня`];
@@ -24,7 +42,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({_id, title, price, date}) => {
     const date = new Date(projectDate);
 
     const setZero = (number: number): string => {
-      return number < 9 ? `0${number}` : number.toString();
+      return number < 10 ? `0${number}` : number.toString();
     };
 
     const day: string = setZero(date.getDate());
@@ -38,7 +56,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({_id, title, price, date}) => {
 
   return (
     <li className="projects__item">
-      <Row className="align-items-center">
+      <Row className={`align-items-center ${hot && `projects__item--hot`}`}>
         <Col md={{
           offset: 1,
           span: 7,
@@ -47,8 +65,15 @@ const ProjectItem: React.FC<ProjectItemProps> = ({_id, title, price, date}) => {
             to={`/project/${_id}`}
             className="project__item-link"
           >
-            <span className="h4">{title}</span>
-            <p className="small text-muted mt-2 mb-md-0">Програмування</p>
+            <span className={`h4 ${hot && `text-danger`}`}>{title}</span>
+            <p className="small text-muted mt-2 mb-md-0">
+              {category.title},{` `}
+              {
+                remote ?
+                  <>віддалено</> :
+                  <>{location.city}, {location.region}</>
+              }
+            </p>
           </Link>
         </Col>
 
@@ -83,7 +108,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({_id, title, price, date}) => {
               </Tooltip>
             }
           >
-            <p className="project__item-text text-danger m-md-0">15</p>
+            <p className="project__item-text text-danger m-md-0">{bets}</p>
           </OverlayTrigger>
         </Col>
 

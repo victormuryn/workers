@@ -23,6 +23,7 @@ describe(`ActionCreator tests`, () => {
   });
 
   it(`ActionCreator.logout works good`, () => {
+    // const logout = ActionCreator.logout(`123`, `123`);
     const logout = ActionCreator.logout();
 
     expect(logout).toEqual({

@@ -1,0 +1,17 @@
+.autocomplete__wrapper {
+  position: relative;
+  display: block;
+}
+
+.autocomplete__input {
+  position: relative;
+  z-index: 2;
+}
+
+.autocomplete__select {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}

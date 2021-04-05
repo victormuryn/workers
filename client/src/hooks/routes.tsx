@@ -3,59 +3,50 @@ import {Redirect, Route, Switch} from 'react-router-dom';
 
 import MainPage from '../pages/main-page';
 import AuthPage from '../pages/auth-page';
+import UserPage from '../pages/user-page';
 import LoginPage from '../pages/login-page';
-import ProjectsPage from '../pages/projects-page';
-import ProjectPage from '../pages/project-page';
 import CreatePage from '../pages/create-page';
+import ProjectPage from '../pages/project-page';
+import ProjectsPage from '../pages/projects-page';
+import CategoryPage from '../pages/category-page';
 
 import Header from '../components/header';
 import Footer from '../components/footer';
 
 import {AccountTypes} from '../types/types';
+import ChatPage from '../pages/chat-page';
 
 export const useRoutes = (
   isAuthenticated: boolean,
   accountType: AccountTypes | null,
-): JSX.Element => {
+) => {
   if (isAuthenticated) {
-    if (accountType === `client`) {
-      return (
-        <>
-          <Header/>
-          <Switch>
-            {/* <Route path="/" exact component={ProjectsPage} />*/}
-            <Route path="/create" exact component={CreatePage} />
+    return (
+      <>
+        <Header/>
+        <Switch>
+          <Route path="/projects" exact component={ProjectsPage} />
+          <Route path="/project/:id" component={ProjectPage} />
 
-            <Route path="/projects" exact component={ProjectsPage} />
-            <Route path="/project/:id" component={ProjectPage} />
+          <Route path="/category/:name" component={CategoryPage} />
 
-            <Route>
-              <Redirect to="/"/>
-            </Route>
-          </Switch>
-          <Footer/>
-        </>
-      );
-    }
+          <Route path="/user/:username" component={UserPage} />
 
-    if (accountType === `freelancer`) {
-      return (
-        <>
-          <Header/>
-          <Switch>
-            {/* <Route path="/" exact component={ProjectsPage} />*/}
+          <Route path="/messages/" component={ChatPage} />
 
-            <Route path="/projects" exact component={ProjectsPage} />
-            <Route path="/project/:id" component={ProjectPage} />
+          {
+            accountType === `client` && (
+              <Route path="/create" exact component={CreatePage} />
+            )
+          }
 
-            <Route>
-              <Redirect to="/" />
-            </Route>
-          </Switch>
-          <Footer/>
-        </>
-      );
-    }
+          <Route>
+            <Redirect to="/projects" />
+          </Route>
+        </Switch>
+        <Footer/>
+      </>
+    );
   }
 
   return (
@@ -65,11 +56,19 @@ export const useRoutes = (
       <Route path="/auth" exact component={AuthPage} />
       <Route path="/login" exact component={LoginPage} />
 
-      <Route path="/projects" exact component={ProjectsPage} />
-      <Route path="/project/:id" component={ProjectPage} />
+      <Route>
+        <Header />
+        <Route path="/projects" exact component={ProjectsPage} />
+        <Route path="/project/:id" component={ProjectPage} />
+
+        <Route path="/category/:name" component={CategoryPage} />
+
+        <Route path="/user/:username" component={UserPage} />
+        <Footer />
+      </Route>
 
       <Route>
-        <Redirect to="/"/>
+        <Redirect to="/" />
       </Route>
     </Switch>
   );

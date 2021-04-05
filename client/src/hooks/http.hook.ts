@@ -2,8 +2,8 @@ import {useCallback, useState} from 'react';
 
 type RequestType<T> = (
   url: RequestInfo,
-  method?: `GET` | `POST` | `DELETE` | `OPTIONS`,
-  reqBody?: object,
+  method?: `GET` | `POST` | `DELETE` | `OPTIONS` | `PATCH` | `PUT`,
+  reqBody?: object | FormData,
   headers?: {
     [key: string]: string
   }
@@ -25,11 +25,15 @@ export const useHttp = <T>(): UseHttpReturn<T> => {
       setLoading(true);
 
       try {
-        let body: string | null = null;
+        let body: string | FormData | null = null;
 
         if (reqBody) {
-          body = JSON.stringify(reqBody);
-          headers[`Content-Type`] = `application/json`;
+          if (!(reqBody instanceof FormData)) {
+            body = JSON.stringify(reqBody);
+            headers[`Content-Type`] = `application/json`;
+          } else {
+            body = reqBody;
+          }
         }
 
         const response = await fetch(url, {method, body, headers});
@@ -51,5 +55,4 @@ export const useHttp = <T>(): UseHttpReturn<T> => {
   const clearError = () => setError(null);
 
   return {loading, request, error, clearError};
-}
-;
+};

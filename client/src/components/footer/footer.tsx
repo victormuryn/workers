@@ -1,10 +1,11 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 import './footer.scss';
 
-import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container';
 
 type FooterProps = {
   color?: string;
@@ -26,7 +27,7 @@ const Footer: React.FC<FooterProps> = ({color = `#fff`}) => {
           span: 12,
           order: `last`,
         }} className="footer__column">
-          <h2 className="footer__logo"><a href="/">Workers</a></h2>
+          <h2 className="footer__logo"><Link to="/">Workers</Link></h2>
           <p className="footer__copy">
             © 2021 workers.com.ua — всі права захищені
           </p>
@@ -45,7 +46,7 @@ const Footer: React.FC<FooterProps> = ({color = `#fff`}) => {
         <Col className="footer__column">
           <a href="#">Замовники</a>
           <a href="#">Виконавці</a>
-          <a href="#">Блог</a>
+          {/* <a href="#">Блог</a>*/}
           <a href="#">Безпечна угода</a>
         </Col>
       </Row>

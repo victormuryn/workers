@@ -1,140 +1,119 @@
-const path = require(`path`);
-const fs = require(`fs`);
-
+var path = require("path");
+var fs = require("fs");
+var generateJSX = function (props) {
+  var css = props.css, scss = props.scss, componentName = props.componentName,
+    fileName = props.fileName;
+  return "import React from 'react';\n" + (css ? "import './" + fileName + ".css';" : "") + "\n" + (scss ? "import './" + fileName + ".scss';" : "") + "\n\nconst " + componentName + " = () => {\n  return (\n    <p>" + componentName + "</p>\n  );\n};\n\nexport default " + componentName + ";\n";
+};
+var generateTS = function (props) {
+  var css = props.css, scss = props.scss, componentName = props.componentName,
+    fileName = props.fileName;
+  return "import React from 'react';\n" + (css ? "import './" + fileName + ".css';" : "") + "\n" + (scss ? "import './" + fileName + ".scss';" : "") + "\n  \nconst " + componentName + ": React.FC = () => {\n  return (\n    <p>" + componentName + "</p>\n  );\n};\n\nexport default " + componentName + ";\n";
+};
+var generateIndex = function (props) {
+  var componentName = props.componentName, fileName = props.fileName;
+  return "import " + componentName + " from './" + fileName + "';\n\nexport default " + componentName + ";\n";
+};
+var generateTest = function (props) {
+  var componentName = props.componentName, fileName = props.fileName;
+  return "import React from 'react';\nimport renderer from 'react-test-renderer';\nimport " + componentName + " from './" + fileName + "';\n\ndescribe(`" + componentName + " tests`, () => {\n  it(`" + componentName + " renders corrects`, () => {\n    const tree = renderer.create(<" + componentName + " />).toJSON();\n\n    expect(tree).toMatchSnapshot();\n  });\n});\n";
+};
+var generateE2ETest = function (props) {
+  var componentName = props.componentName, fileName = props.fileName;
+  return "import React from 'react';\nimport Enzyme, {shallow} from 'enzyme';\nimport Adapter from 'enzyme-adapter-react-16';\nimport " + componentName + " from './" + fileName + "';\n\nEnzyme.configure({adapter: new Adapter()});\n\nit(`On " + componentName + " ...`, () => {\n  // test data\n  const app = shallow(<" + componentName + " />);\n\n  // test manipulation\n\n  // check test\n});\n";
+};
 // test-component => TestComponent
-const camelize = (str) => {
-  const arr = str.split(`-`);
-  const capital = arr
-    .map((item) => item.charAt(0).toUpperCase() + item.slice(1).toLowerCase());
-  return capital.join(``);
+var camelize = function (str) {
+  var arr = str.split("-");
+  var capital = arr
+    .map(function (item) {
+      return item.charAt(0).toUpperCase() + item.slice(1).toLowerCase();
+    });
+  return capital.join("");
 };
-
 // on file creation/modification callback
-const fileCallback = (error, filename) => {
-  if (error) console.log(error);
-  console.log(`${filename} created`);
+var fileCallback = function (error, filename) {
+  if (error)
+    console.log(error);
+  console.log(filename + " created");
 };
-
 // delete first 2 arguments
-const args = process.argv.slice(2);
-
-const fileName = args[0];
-
-// if second argument and second argument starts with "-" (--scss or -T) => skip
+var args = process.argv.slice(2);
+var fileName = args[0];
+// if second argument starts with "-" (--scss or -T) => skip
 // on the other case => return this element
-const argPath = (args[1] && args[1][0]) === `-` ? undefined : args[1];
-
+var argPath = args[1][0] === "-" ? undefined : args[1];
 // create path to component. Default: src\component\(fileName)
-const pathToComponent = path.join(`src`, (argPath || `components`), fileName);
-
+var pathToComponent = path.join("src", (argPath || "components"), fileName);
 // componentName witch camelize
-const componentName = camelize(fileName);
-
+var componentName = camelize(fileName);
 // do we need a test
-const matchTest = args.includes(`--test`) || args.includes(`-T`);
+var matchTest = args.includes("--test") || args.includes("-T");
 // do we need a e2e-test
-const matchE2ETest = args.includes(`--e2e-test`) || args.includes(`-ET`);
+var matchE2ETest = args.includes("--e2e-test") || args.includes("-ET");
 // do we need css
-const mathCSS = args.includes(`--css`) || args.includes(`-C`);
+var matchCSS = args.includes("--css") || args.includes("-C");
 // do we need scss
-const mathSCSS = args.includes(`--scss`) || args.includes(`-S`);
-
+var matchSCSS = args.includes("--scss") || args.includes("-S");
+// do we need typescript
+var matchTS = args.includes("--typescript") || args.includes("-TS");
 // if there isn't folder
 if (!fs.existsSync(pathToComponent)) {
   fs.mkdirSync(pathToComponent);
 }
-
-// jsx markup. We import css/scss files if we use them
-const jsxContent = `import React from 'react';
-${mathCSS ? `import './${fileName}.css';` : ``}
-${mathSCSS ? `import './${fileName}.scss';` : ``}
-
-const ${componentName} = () => {
-  return (
-    <p>${componentName}</p>
-  );
-};
-
-export default ${componentName};
-`;
-
-fs.writeFile(
-  `${path.join(pathToComponent, fileName)}.jsx`,
-  jsxContent,
-  (e) => fileCallback(e, `JSX`),
-);
-
-// index file. We export component from folder by default
-const indexContent = `import ${componentName} from './${fileName}';
-
-export default ${componentName};
-`;
-
-fs.writeFile(
-  `${path.join(pathToComponent, `index.js`)}`,
-  indexContent,
-  (e) => fileCallback(e, `INDEX`),
-);
-
-
-if (matchTest) {
-  const testContent = `import React from 'react';
-import renderer from 'react-test-renderer';
-import ${componentName} from './${fileName}';
-
-describe(\`${componentName} tests\`, () => {
-  it(\`${componentName} renders corrects\`, () => {
-    const tree = renderer.create(<${componentName} />).toJSON();
-
-    expect(tree).toMatchSnapshot();
+if (matchTS) {
+  var mainContent = generateTS({
+    css: matchCSS,
+    scss: matchSCSS,
+    fileName: fileName, componentName: componentName
   });
-});
-`;
-
-  fs.writeFile(
-    `${path.join(pathToComponent, fileName)}.test.js`,
-    testContent,
-    (e) => fileCallback(e, `Test`),
-  );
+  fs.writeFile(path.join(pathToComponent, fileName) + ".tsx", mainContent, function (e) {
+    return fileCallback(e, "TSX");
+  });
+} else {
+  // jsx markup. We import css/scss files if we use them
+  var jsxContent = generateJSX({
+    css: matchCSS,
+    scss: matchSCSS,
+    fileName: fileName, componentName: componentName
+  });
+  fs.writeFile(path.join(pathToComponent, fileName) + ".jsx", jsxContent, function (e) {
+    return fileCallback(e, "JSX");
+  });
 }
-
+// index file. We export component from folder by default
+var indexContent = generateIndex({
+  componentName: componentName,
+  fileName: fileName
+});
+fs.writeFile("" + path.join(pathToComponent, "index." + (matchTS ? 't' : 'j') + "s"), indexContent, function (e) {
+  return fileCallback(e, "index." + (matchTS ? 't' : 'j') + "s");
+});
+if (matchTest) {
+  var testContent = generateTest({
+    componentName: componentName,
+    fileName: fileName
+  });
+  fs.writeFile(path.join(pathToComponent, fileName) + ".test." + (matchTS ? "tsx" : "js"), testContent, function (e) {
+    return fileCallback(e, "Test");
+  });
+}
 if (matchE2ETest) {
-  const testContent = `import React from 'react';
-import Enzyme, {shallow} from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import ${componentName} from './${fileName}';
-
-Enzyme.configure({adapter: new Adapter()});
-
-it(\`On ${componentName} ...\`, () => {
-  // test data
-  const app = shallow(<${componentName} />);
-
-  // test manipulation
-
-  // check test
-});
-`;
-
-  fs.writeFile(
-    `${path.join(pathToComponent, fileName)}.e2e.test.js`,
-    testContent,
-    (e) => fileCallback(e, `E2E Test`),
-  );
+  var testContent = generateE2ETest({
+    componentName: componentName,
+    fileName: fileName
+  });
+  fs.writeFile(path.join(pathToComponent, fileName) + ".e2e.test." + (matchTS ? "tsx" : "js"), testContent, function (e) {
+    return fileCallback(e, "E2E Test");
+  });
 }
-
-if (mathSCSS) {
-  fs.appendFile(
-    `${path.join(pathToComponent, fileName)}.scss`,
-    ``,
-    (e) => fileCallback(e, `SCSS`),
-  );
+if (matchSCSS) {
+  fs.appendFile(path.join(pathToComponent, fileName) + ".scss", "", function (e) {
+    return fileCallback(e, "SCSS");
+  });
 }
-
-if (mathCSS) {
-  fs.appendFile(
-    `${path.join(pathToComponent, fileName)}.css`,
-    ``,
-    (e) => fileCallback(e, `CSS`),
-  );
+if (matchCSS) {
+  fs.appendFile(path.join(pathToComponent, fileName) + ".css", "", function (e) {
+    return fileCallback(e, "CSS");
+  });
 }

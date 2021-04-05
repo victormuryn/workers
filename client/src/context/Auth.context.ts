@@ -8,6 +8,8 @@ type Login = (
   username: string
 ) => void;
 
+// type Logout = (id: string | null, token: string | null) => void;
+
 type ContextType = {
   isAuthenticated: boolean,
   login: Login,

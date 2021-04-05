@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Loader tests Loader renders corrects 1`] = `
+<div
+  className="spinner__wrapper"
+>
+  <div
+    className="spinner"
+  >
+    <div
+      className="visually-hidden"
+    >
+      Триває загрузка...
+    </div>
+    <div
+      className="inner one"
+    />
+    <div
+      className="inner two"
+    />
+    <div
+      className="inner three"
+    />
+  </div>
+</div>
+`;

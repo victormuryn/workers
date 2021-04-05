@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react';
 import {Link} from 'react-router-dom';
 
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
 
 import TypoAnimation from '../../components/typo-animation';
 import Footer from '../../components/footer';
@@ -13,8 +13,11 @@ import './main-page.scss';
 
 // @ts-ignore
 import {WOW} from 'wowjs';
+import {setPageMeta} from '../../utils/utils';
 
 const MainPage: React.FC = () => {
+  setPageMeta(`Головна`);
+
   const phrases = [
     `спеціаліста`,
     `роботу`,
@@ -86,7 +89,7 @@ const MainPage: React.FC = () => {
         <Row>
           <Col xs={12} md={4}>
             <div className="why__item-img-wrapper">
-              <img src="./img/one.svg" alt="№1 у світі"
+              <img src="/img/one.svg" alt="№1 у світі"
                 className="why__item-img"/>
             </div>
 
@@ -97,7 +100,7 @@ const MainPage: React.FC = () => {
           </Col>
           <Col xs={12} md={4}>
             <div className="why__item-img-wrapper">
-              <img src="./img/worker.svg" alt="Перевірений професіонал"
+              <img src="/img/worker.svg" alt="Перевірений професіонал"
                 className="why__item-img"/>
             </div>
 
@@ -110,7 +113,7 @@ const MainPage: React.FC = () => {
           </Col>
           <Col xs={12} md={4}>
             <div className="why__item-img-wrapper">
-              <img src="./img/plane.svg" alt="Захист"
+              <img src="/img/plane.svg" alt="Захист"
                 className="why__item-img"/>
             </div>
 
@@ -127,11 +130,11 @@ const MainPage: React.FC = () => {
         <h2 className="custom__title">Працюємо так, як зручно тобі</h2>
 
         <picture>
-          <source srcSet="./img/work.webp, ./img/work@2x.webp 2x"
+          <source srcSet="/img/work.webp, /img/work@2x.webp 2x"
             type="image/webp"/>
-          <source srcSet="./img/work.jpg, ./img/work@2x.jpg 2x"
+          <source srcSet="/img/work.jpg, /img/work@2x.jpg 2x"
             type="image/jpeg"/>
-          <img src="./img/work.jpg" alt="Стараємося для Вас"
+          <img src="/img/work.jpg" alt="Стараємося для Вас"
             className="custom__img"/>
         </picture>
 
@@ -202,83 +205,83 @@ const MainPage: React.FC = () => {
 
         <Row lg={5}>
           <Col xs={12} sm={6} lg={false} className="categories__item">
-            <a href="#">
-              <img src="./img/pipeline.svg" alt="Сантехніка"
+            <Link to="/category/plumbing">
+              <img src="/img/pipeline.svg" alt="Сантехніка"
                 className="categories__item-img"/>
               <h5 className="categories__item-title"> Сантехніка</h5>
-            </a>
+            </Link>
           </Col>
 
           <Col xs={12} sm={6} lg={false} className="categories__item">
-            <a href="#">
-              <img src="./img/plug.svg" alt="Електрика"
+            <Link to="/category/electricity">
+              <img src="/img/plug.svg" alt="Електрика"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Електрика</h5>
-            </a>
+            </Link>
           </Col>
 
           <Col xs={12} sm={6} lg={false} className="categories__item">
-            <a href="#">
-              <img src="./img/delivery.svg" alt="Доставка"
+            <Link to="/category/delivery">
+              <img src="/img/delivery.svg" alt="Доставка"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Доставка</h5>
-            </a>
+            </Link>
           </Col>
 
           <Col xs={12} sm={6} lg={false} className="categories__item">
-            <a href="#">
-              <img src="./img/service.svg" alt="Автосервіс"
+            <Link to="/category/car-service">
+              <img src="/img/service.svg" alt="Автосервіс"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Автосервіс</h5>
-            </a>
+            </Link>
           </Col>
 
           <Col xs={12} sm={6} lg={false} className="categories__item">
-            <a href="#">
-              <img src="./img/paint-bucket.svg" alt="Ремонт"
+            <Link to="/category/repair">
+              <img src="/img/paint-bucket.svg" alt="Ремонт"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Ремонт</h5>
-            </a>
+            </Link>
           </Col>
 
           <Col xs={12} sm={6} lg={false} className="categories__item">
-            <a href="#">
-              <img src="./img/book.svg" alt="Навчання"
+            <Link to="/category/learning">
+              <img src="/img/book.svg" alt="Навчання"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Навчання</h5>
-            </a>
+            </Link>
           </Col>
 
           <Col xs={12} sm={6} lg={false} className="categories__item">
-            <a href="#">
-              <img src="./img/it.svg" alt="IT-послуги"
+            <Link to="/category/it">
+              <img src="/img/it.svg" alt="IT-послуги"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">IT-послуги</h5>
-            </a>
+            </Link>
           </Col>
 
           <Col xs={12} sm={6} lg={false} className="categories__item">
-            <a href="#">
-              <img src="./img/camera.svg" alt="Фотосесії"
+            <Link to="/category/photosession">
+              <img src="/img/camera.svg" alt="Фотосесії"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Фотосесії</h5>
-            </a>
+            </Link>
           </Col>
 
           <Col xs={12} sm={6} lg={false} className="categories__item">
-            <a href="#">
-              <img src="./img/cleaning.svg" alt="Прибирання"
+            <Link to="/category/cleaning">
+              <img src="/img/cleaning.svg" alt="Прибирання"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Прибирання</h5>
-            </a>
+            </Link>
           </Col>
 
           <Col xs={12} sm={6} lg={false} className="categories__item">
-            <a href="#">
-              <img src="./img/other.svg" alt="Інше"
+            <Link to="/category/others">
+              <img src="/img/other.svg" alt="Інше"
                 className="categories__item-img"/>
               <h5 className="categories__item-title">Інше</h5>
-            </a>
+            </Link>
           </Col>
         </Row>
 
