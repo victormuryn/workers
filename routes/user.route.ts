@@ -11,6 +11,7 @@ import * as sharp from 'sharp';
 import * as multer from 'multer';
 
 import auth from '../middlewares/auth.middleware';
+import {LeanDocument} from 'mongoose';
 
 const upload = multer({
   limits: {
@@ -24,11 +25,23 @@ const upload = multer({
 // eslint-disable-next-line new-cap
 const router = Router();
 
+const getPlace = <T extends {_id?: string}>(list: T[], id: string ) => {
+  return list.findIndex(({_id}) => _id && _id.toString() === id);
+};
+
 router.get(`/:username`, async (request: Request, response: Response) => {
   try {
     // get "username" from url and get user by "username"
     const {username} = request.params;
-    const user = await User.getAllData(username);
+    const user = await User
+      .findOne({username})
+      .populate(`categories`)
+      .select(`_id quote cv
+        name surname username online
+        social image rating accountType
+        finished location categories
+      `)
+      .lean();
 
     // if there isn't user
     if (!user) {
@@ -47,17 +60,20 @@ router.get(`/:username`, async (request: Request, response: Response) => {
           categories: category._id,
         })
         .sort({rating: -1})
-        .select(`_id`);
+        .select(`_id`)
+        .lean();
 
-      const place = usersRating.findIndex((element: UserType) => {
-        return element._id.toString() === user._id.toString();
-      });
+      const place = getPlace<LeanDocument<UserType>>(
+        usersRating,
+        user._id.toString(),
+      );
 
       categories.push({
         place: place + 1,
         id: category._id,
         url: category.url,
         title: category.title,
+        group: category.group,
         all: usersRating.length,
       });
     }
@@ -65,24 +81,20 @@ router.get(`/:username`, async (request: Request, response: Response) => {
     const usersRating = await User
       .find({accountType: user.accountType})
       .sort({'rating': -1})
-      .select(`_id`);
+      .select(`_id`)
+      .lean();
 
-    const place = usersRating.findIndex((element: UserType) => {
-      return element._id.toString() === user._id.toString();
-    });
-
-    const all = usersRating.length;
+    const place = getPlace<LeanDocument<UserType>>(
+      usersRating,
+      user._id.toString(),
+    );
 
     const rating = {
-      all,
       place: place + 1,
+      all: usersRating.length,
     };
 
-    response.json({
-      user,
-      rating,
-      categories,
-    });
+    response.json({user, rating, categories});
   } catch (e) {
     response
       .status(500)
@@ -289,8 +301,6 @@ router.patch(
       response
         .status(500)
         .json({message: `Щось пішло не так, спробуйте знову.`});
-
-      console.log(e);
     }
   });
 

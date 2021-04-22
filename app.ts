@@ -29,7 +29,12 @@ const start = async () => {
       useCreateIndex: true,
     });
 
-    server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    server.listen(PORT, () => {
+      console.log(`\x1b[32m%s\x1b[0m`, `=====================================`);
+      console.log(`\x1b[32m%s\x1b[0m`, `=====================================`);
+      console.log(`\x1b[32m%s\x1b[0m`, `Server running on port ${PORT}`);
+      console.log(`\x1b[32m%s\x1b[0m`, `=====================================`);
+    });
   } catch (e) {
     console.log(`Server Error: ${e.message}`);
     process.exit(1);

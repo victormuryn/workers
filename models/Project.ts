@@ -25,36 +25,7 @@ export interface ProjectType extends Document {
   }
 }
 
-export interface ProjectFull extends ProjectType {
-  author: UserType,
-  betsCount: number,
-  bets: Array<BetType>,
-  category: CategoryType,
-}
-
-export interface ProjectPreview {
-  date: Date,
-  hot: boolean,
-  title: string,
-  price: number,
-  remote: boolean,
-  betsCount: number,
-  category: CategoryType,
-  location: {
-    city: string,
-    region: string,
-    district: string,
-    latitude: number,
-    longitude: number,
-  }
-}
-
-export interface ProjectModel extends Model<ProjectType> {
-  getFullProject(id: string): Promise<ProjectFull>,
-  getPreviews(start: number, count: number): Promise<Array<ProjectPreview>>,
-}
-
-const schema = new Schema<ProjectType, ProjectModel>({
+const schema = new Schema<ProjectType>({
   price: {type: Number, default: 0},
   views: {type: Number, default: 0},
   date: {type: Date, required: true},
@@ -89,44 +60,6 @@ const schema = new Schema<ProjectType, ProjectModel>({
     },
   },
   // tags: {type: Types.ObjectId}
-}, {
-  toObject: {virtuals: true},
-  toJSON: {virtuals: true},
 });
 
-schema
-  .virtual(`betsCount`)
-  .get(function(this: ProjectType) {
-    return this.bets.length;
-  });
-
-// Static methods
-schema.statics.getFullProject = function(
-  this: Model<ProjectType>,
-  id: string,
-) {
-  return this
-    .findById(id)
-    .populate(`bets`)
-    .populate(
-      `author`,
-      `_id name surname username image location.city location.country`,
-    )
-    .populate(`category`)
-    .exec();
-};
-
-schema.statics.getPreviews = function(
-  this: Model<ProjectType>,
-  start: number,
-  count: number,
-) {
-  return this
-    .find({})
-    .populate(`category`)
-    .select(`title price date hot location remote category betsCount`)
-    .sort({date: -1})
-    .exec();
-};
-
-export default model<ProjectType, ProjectModel>(`Project`, schema);
+export default model<ProjectType>(`Project`, schema);

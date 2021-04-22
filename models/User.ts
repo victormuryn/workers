@@ -1,4 +1,4 @@
-import {Document, Schema, model, Types, Model} from 'mongoose';
+import {Document, Schema, model, Types} from 'mongoose';
 
 import {CategoryType} from './Category';
 import bcrypt from 'bcrypt';
@@ -34,15 +34,7 @@ export interface UserType extends Document{
   }
 }
 
-export interface UserFull extends UserType {
-  categories: Array<CategoryType>,
-}
-
-export interface UserModel extends Model<UserType> {
-  getAllData(id: string): Promise<UserFull>
-}
-
-const schema = new Schema<UserType, UserModel>({
+const schema = new Schema<UserType>({
   cv: {type: String, default: ``},
   quote: {type: String, default: ``},
   rating: {type: Number, default: 0},
@@ -109,20 +101,4 @@ schema.pre<UserType>(`save`, async function() {
   }
 });
 
-// Static methods
-schema.statics.getAllData = async function(
-  this: Model<UserType>,
-  username: string,
-): Promise<UserType | null> {
-  return await this
-    .findOne({username})
-    .populate(`categories`)
-    .select(`_id quote cv
-      name surname username online
-      social image rating accountType
-      finished location categories
-    `)
-    .exec();
-};
-
-export default model<UserType, UserModel>(`User`, schema);
+export default model<UserType>(`User`, schema);

@@ -1,17 +1,15 @@
-import fs from 'fs';
+import * as fs from 'fs';
 
 import {Request, Response, Router} from 'express';
 import {Types} from 'mongoose';
 import {check} from 'express-validator';
-import csv from 'csv-parse';
+import * as csv from 'csv-parse';
 
-import Bet from '../models/Bet';
-import User from '../models/User';
 import Project from '../models/Project';
-import Category from '../models/Category';
 
 import auth from '../middlewares/auth.middleware';
 import {client} from '../middlewares/users.middleware';
+
 import {handleErrors} from '../utils';
 
 // eslint-disable-next-line new-cap
@@ -114,10 +112,12 @@ router.post(
 router.get(`/`, async (request: Request, response: Response) => {
   try {
     // get first 20 projects sorted by date
-    const projects = await Project.getPreviews(0, 20);
-    // const projects = await Project.find({});
-
-    console.log(projects);
+    const projects = await Project
+      .find({})
+      .populate(`category`)
+      .select(`title price date hot location remote category bets`)
+      .sort({date: -1})
+      .lean();
 
     response.json(projects);
   } catch (e) {
@@ -139,7 +139,20 @@ router.get(`/:id`, async (request, response) => {
         });
     }
 
-    const project = await Project.getFullProject(id);
+    const project = await Project
+      .findById(id)
+      .populate(`category`)
+      .populate({
+        path: `bets`,
+        populate: {
+          path: `author`,
+          select: `_id name surname username image`,
+        },
+      })
+      .populate(
+        `author`,
+        `_id name surname username image location.city location.country`,
+      );
 
     if (!project) {
       return response

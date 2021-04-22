@@ -20,11 +20,11 @@ import {
   MESSAGES_DISCONNECT,
   MESSAGES_SUBMIT,
   MESSAGES_OFF,
-  MESSAGES_SELECT_USER,
+  MESSAGES_SELECT_USER, MESSAGES_DELETE_USER, MESSAGES_SELECT_USER_BY_NAME,
 } from './types';
 import api from '../utils/api';
 import {Project, UserBet} from '../types/types';
-import {io, Socket} from 'socket.io-client';
+import {io} from 'socket.io-client';
 
 type Message = {
   content: string,
@@ -129,19 +129,16 @@ export const ActionCreator = {
       console.log(event, args);
     });
 
-    socket.on('connect_error', (err: {message: string}) => {
-      if (err.message === 'invalid username') new Error(err.message);
+    socket.on(`connect_error`, (err: {message: string}) => {
+      if (err.message === `invalid username`) new Error(err.message);
     });
 
-    socket.on('users', (users: MessageUser[]) => {
-      console.log(users)
-      dispatch({
-        type: MESSAGES_SET_USERS,
-        payload: users,
-      });
-    });
+    socket.on(`users`, (users: MessageUser[]) => dispatch({
+      type: MESSAGES_SET_USERS,
+      payload: users,
+    }));
 
-    socket.on('user connected', (userResponse: MessageUser) => {
+    socket.on(`user connected`, (userResponse: MessageUser) => {
       const user = {
         ...userResponse,
         self: false,
@@ -156,24 +153,26 @@ export const ActionCreator = {
       });
     });
 
-    socket.on('private message', (message: Message) => dispatch({
+    socket.on(`user disconnected`, (userID: string) => dispatch({
+      type: MESSAGES_DELETE_USER,
+      payload: userID,
+    }));
+
+    socket.on(`private message`, (message: Message) => dispatch({
       type: MESSAGES_SET_MESSAGE,
       payload: message,
     }));
 
-    socket.on('connect', () => dispatch({
+    socket.on(`connect`, () => dispatch({
       type: MESSAGES_CONNECT,
     }));
 
-    socket.on('disconnect', () => dispatch({
+    socket.on(`disconnect`, () => dispatch({
       type: MESSAGES_DISCONNECT,
     }));
 
-    socket.on('session', (
-      {userID}: {userID: string},
-    ) => {
+    socket.on(`session`, ({userID}: {userID: string}) => {
       // save the ID of the user
-      // @ts-ignore
       socket.userID = userID;
     });
 
@@ -196,6 +195,13 @@ export const ActionCreator = {
     return {
       type: MESSAGES_SELECT_USER,
       payload: user,
+    };
+  },
+
+  selectUserByName: (username: string) => {
+    return {
+      type: MESSAGES_SELECT_USER_BY_NAME,
+      payload: username,
     };
   },
 

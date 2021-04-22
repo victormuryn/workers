@@ -13,12 +13,14 @@ import InputAutocomplete from '../input-autocomplete';
 type Suggestions = Array<{
   value: string,
   text: string,
+  group?: string,
 }>;
 
 type Response = Array<{
   _id: string,
   title: string,
   url: string,
+  group?: string,
 }>;
 
 type Props = {
@@ -48,16 +50,11 @@ const UserRatingItem: React.FC<Props> = ({
     const {value} = e.target;
     setValue(value);
 
-    if (value === ``) {
-      onCategoryChange();
-      setSuggestions([]);
-      return;
-    }
-
     const data = await request(`/api/categories/autofill/${value}`, `GET`);
-    const result = data.map((element) => ({
-      value: `${element._id}|${element.title}`,
-      text: element.title,
+    const result = data.map(({_id, title: text, group}) => ({
+      text,
+      group,
+      value: `${_id}|${title}`,
     }));
 
     setSuggestions(result);

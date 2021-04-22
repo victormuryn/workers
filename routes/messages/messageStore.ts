@@ -1,8 +1,5 @@
-export interface Message {
-  to: string,
-  from: string,
-  content: string,
-}
+import Chat, {ChatType} from '../../models/Chat';
+import {LeanDocument} from 'mongoose';
 
 /**
  * Message Store abstract class
@@ -12,43 +9,61 @@ class MessageStore {
    * save message in store
    * @param {Message} message - Message
    */
-  saveMessage(message: Message) {}
+  saveMessage(message: ChatType) {}
 
   /**
    * find messages
    * @param {string} userID - User ID
+   * @param {function} cb - callback
    */
-  findMessagesForUser(userID: string) {}
+  findMessagesForUser(
+    userID: string,
+    cb: (error: undefined | Error, messages: LeanDocument<ChatType>[]) => any,
+  ) {}
 }
 
 /**
  * Message store. Here will be saved all messages
  */
-export default class InMemoryMessageStore extends MessageStore {
-  private messages: Message[];
-
+export default class DBMessageStore extends MessageStore {
   /**
    * @constructor
    */
   constructor() {
     super();
-    this.messages = [];
   }
 
   /**
    * Save message in store
-   * @param {Message} message - Message
+   * @param {ChatType} message - Message
    */
-  saveMessage(message: Message) {
-    this.messages.push(message);
+  async saveMessage(message: ChatType) {
+    await new Chat(message).save();
   }
 
   /**
    * Find all messages from user or sent by user
    * @param {string} userID - User ID
+   * @param {function} cb - callback
    * @return {Message[]}
    */
-  findMessagesForUser(userID: string) {
-    return this.messages.filter(({from, to}) => [from, to].includes(userID));
+  async findMessagesForUser(
+    userID: string,
+    cb: (error: undefined | Error, messages: LeanDocument<ChatType>[]) => any,
+  ) {
+    try {
+      const to = await Chat.find({to: userID}).lean();
+      const from = await Chat.find({from: userID}).lean();
+
+      const result = [...to, ...from].sort((a, b) => {
+        return +(new Date(a.date)) - +(new Date(b.date));
+      });
+
+      if (cb) cb(undefined, result);
+      return result;
+    } catch (error) {
+      if (cb) cb(error, []);
+      throw new Error(error);
+    }
   }
 }

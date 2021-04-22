@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 import api from '../../utils/api';
 
 import './projects-page.scss';
@@ -6,32 +7,13 @@ import './projects-page.scss';
 import Loader from '../../components/loader';
 import ProjectItem from '../../components/project-item';
 
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import {useSelector} from 'react-redux';
+import Container from 'react-bootstrap/Container';
+
 import {State} from '../../redux/reducer';
 import {setPageMeta} from '../../utils/utils';
-
-type Project = {
-  _id: string,
-  hot: boolean,
-  date: string,
-  bets: number,
-  price: number,
-  title: string,
-  remote: boolean,
-  location: {
-    city: string,
-    region: string,
-    latitude: number,
-    longitude: number,
-  },
-  category: {
-    title: string,
-    url: string,
-  }
-}
+import {Project} from "../../types/types";
 
 const ProjectsPage: React.FC = () => {
   setPageMeta(`Усі проєкти`);
@@ -78,11 +60,14 @@ const ProjectsPage: React.FC = () => {
           <Col md={2}>Settings</Col>
 
           <Col md={10}>
-            {projects.length ?
-              projects.map((project) => (
-                <ProjectItem key={project._id} {...project} />
-              )) :
-              <h2 className="text-center">Не вдалося знайти жодного проєкту</h2>
+            {
+              projects.length ?
+                projects.map((project) => (
+                  <ProjectItem key={project._id} {...project} />
+                )) :
+                <h2 className="text-center">
+                  Не вдалося знайти жодного проєкту
+                </h2>
             }
           </Col>
         </Row>

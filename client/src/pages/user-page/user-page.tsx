@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {useParams} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import {useForm} from '../../hooks/form.hook';
 import api from '../../utils/api';
 
@@ -9,6 +9,7 @@ import './user-page.scss';
 import Loader from '../../components/loader';
 import Message from '../../components/message';
 import UserRating from '../../components/user-rating';
+import UserAvatar from '../../components/user-avatar';
 import UserSocialList from '../../components/user-social-list';
 
 import Row from 'react-bootstrap/Row';
@@ -36,8 +37,8 @@ type Author = {
   cv: string,
   _id: string,
   name: string,
-  image: string,
   quote: string,
+  image: boolean,
   rating: number,
   online: string,
   surname: string,
@@ -67,6 +68,7 @@ type Response = {
     all: number,
     place: number,
     title: string,
+    group?: string,
     url: string,
     id: string,
   }>,
@@ -91,12 +93,12 @@ const UserPage: React.FC = () => {
       cv: ``,
       _id: ``,
       name: ``,
-      image: ``,
       quote: ``,
       rating: 0,
       surname: ``,
       finished: 0,
       username: ``,
+      image: false,
       categories: [],
       accountType: `client`,
       online: `1970-01-01T00:00:00.000+00:00`,
@@ -191,10 +193,8 @@ const UserPage: React.FC = () => {
     }
 
     inputChangeHandler({
-      target: {
-        name: `user.categories`,
-        value: newCategories,
-      },
+      name: `user.categories`,
+      value: newCategories,
     });
   };
 
@@ -293,10 +293,8 @@ const UserPage: React.FC = () => {
           })
         .then((response) => {
           inputChangeHandler({
-            target: {
-              name: `user.location`,
-              value: response.data.location,
-            },
+            name: `user.location`,
+            value: response.data.location,
           });
 
           setSuccess(`Місцезнаходження оновлено!`);
@@ -346,34 +344,12 @@ const UserPage: React.FC = () => {
               className="d-flex flex-column align-items-center text-center">
 
               <div className="user__avatar">
-                {
-                  user.image ?
-                    <picture>
-                      {/* set get parameter to update image on change */}
-                      <source
-                        srcSet={`/img/users/${username}.webp?${avatarName}`}
-                        type="image/webp"
-                      />
-
-                      <source
-                        srcSet={`/img/users/${username}.jpg?${avatarName}`}
-                        type="image/jpeg"
-                      />
-
-                      <img
-                        width={150}
-                        alt={username}
-                        src={`/img/users/${username}.jpg?${avatarName}`}
-                        className="rounded-circle"
-                      />
-                    </picture> :
-                    <img
-                      width={150}
-                      alt={username}
-                      src="/img/default.svg"
-                      className="rounded-circle"
-                    />
-                }
+                <UserAvatar
+                  width={150}
+                  get={avatarName}
+                  image={user.image}
+                  username={username}
+                />
 
                 {isUsersPage &&
                   <Button
@@ -443,7 +419,13 @@ const UserPage: React.FC = () => {
                   </div>
                 </OverlayTrigger>
 
-                <Button variant="outline-primary">Написати</Button>
+                <Button
+                  as={Link}
+                  variant="outline-primary"
+                  to={`/messages?user=${user.username}`}
+                >
+                  Написати
+                </Button>
               </div>
             </div>
           </Card.Body>
@@ -478,9 +460,9 @@ const UserPage: React.FC = () => {
                 {
                   isUsersPage ?
                     <Form.Control
+                      required
                       minLength={2}
                       maxLength={20}
-                      required
                       type="text"
                       name="user.name"
                       value={user.name}
@@ -615,10 +597,8 @@ const UserPage: React.FC = () => {
                         onChange={
                           (event: any, editor: any) => {
                             inputChangeHandler({
-                              target: {
-                                name: `user.cv`,
-                                value: editor.getData(),
-                              },
+                              name: `user.cv`,
+                              value: editor.getData(),
                             });
                           }
                         }

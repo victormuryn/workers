@@ -3,31 +3,10 @@ import React from 'react';
 import './project-bets-list.scss';
 
 import BetItem from '../bet-item';
-
-type User = {
-  _id: string,
-  name: string,
-  image: boolean,
-  surname: string,
-  username: string,
-}
-
-type Bets = Array<{
-  _id: string,
-  text: string,
-  price: number,
-  term: number,
-  date: string,
-  author: string,
-  betAuthor: User,
-  updated: {
-    count: number,
-    lastDate?: string,
-  }
-}>;
+import {Bet} from '../../types/types';
 
 type Props = {
-  bets: Bets,
+  bets: Array<Bet>,
   deleteClickHandler: (e: React.MouseEvent, id: string) => void,
 }
 

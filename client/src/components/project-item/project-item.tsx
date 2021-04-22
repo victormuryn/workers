@@ -7,11 +7,12 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import {Bet} from "../../types/types";
 
 type ProjectItemProps = {
+  bets: Bet[],
   _id: string,
   hot: boolean,
-  bets: number,
   date: string,
   price: number,
   title: string,
@@ -108,7 +109,9 @@ const ProjectItem: React.FC<ProjectItemProps> = (props) => {
               </Tooltip>
             }
           >
-            <p className="project__item-text text-danger m-md-0">{bets}</p>
+            <p className="project__item-text text-danger m-md-0">
+              {bets.length}
+            </p>
           </OverlayTrigger>
         </Col>
 

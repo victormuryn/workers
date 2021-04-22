@@ -4,6 +4,7 @@
     "noImplicitAny": true,
     "module": "esnext",
     "target": "es5",
+    "lib": ["ESNext", "dom"],
     "jsx": "react",
 //    "allowJs": true,
 //    "noEmit": true,
@@ -11,9 +12,11 @@
     "strict": true,
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "typeRoots": ["./types"]
   },
   "include": [
-    "src"
+    "src",
+    "node_modules/@types/jest/index.d.ts"
   ]
 }

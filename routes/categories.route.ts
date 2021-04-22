@@ -5,6 +5,24 @@ import Category from '../models/Category';
 const router = Router();
 
 router.get(
+  `/autofill/`,
+  async (request: Request, response: Response,
+  ) => {
+    try {
+      const data = await Category
+        .find({})
+        .sort({'group': 1})
+        .lean();
+      
+      return response.json(data);
+    } catch (e) {
+      response
+        .status(500)
+        .json({message: `Щось пішло не так, спробуйте знову.`});
+    }
+  });
+
+router.get(
   `/autofill/:category`,
   async (request: Request, response: Response,
   ) => {
@@ -14,7 +32,8 @@ router.get(
       const regex = new RegExp(`.*${category}.*`, `i`);
       const data = await Category
         .find({'title': regex})
-        .limit(20);
+        .sort({'group': 1, 'title': 1})
+        .lean();
 
       return response.json(data);
     } catch (e) {
@@ -28,7 +47,9 @@ router.get(`/:url`, async (request: Request, response: Response) => {
   try {
     const {url} = request.params;
 
-    const data = await Category.findOne({'url': url});
+    const data = await Category
+      .findOne({'url': url})
+      .lean();
 
     if (!data) {
       return response

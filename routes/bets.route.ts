@@ -1,12 +1,14 @@
 import {Request, Response, Router} from 'express';
 
-import {check, validationResult} from 'express-validator';
+import {check} from 'express-validator';
 
 import Bet from '../models/Bet';
 import Project from '../models/Project';
 
 import auth from '../middlewares/auth.middleware';
 import {freelancer} from '../middlewares/users.middleware';
+
+import {handleErrors} from '../utils';
 
 // eslint-disable-next-line new-cap
 const router = Router();
@@ -57,16 +59,13 @@ router.patch(
   ],
   async (request: Request, response: Response) => {
     try {
-      const errors = validationResult(request);
-      if (!errors.isEmpty()) {
-        const error = errors.array()[0].msg;
-
-        return response
-          .status(400)
-          .json({
-            message: `Некоректні данні при заповненні форми. ${error}.`,
-          });
+      if (handleErrors(
+        request, response,
+        `Некоректні данні при заповненні форми:`,
+      )) {
+        return;
       }
+
       const author = request.user;
       const {id} = request.params;
 

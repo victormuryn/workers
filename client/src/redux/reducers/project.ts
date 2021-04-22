@@ -1,22 +1,16 @@
-import {Bet, MinUser, Project} from '../../types/types';
+import {Project} from '../../types/types';
 import {
+  PROJECT_SET,
   PROJECT_ERROR,
   PROJECT_LOADING,
   PROJECT_REMOVE_BET,
-  PROJECT_SET,
   ProjectActionTypes,
 } from '../types';
 
 export type State = {
   project: Project,
-  author: MinUser,
-  bets: Array<Bet>,
-  error: string | null,
   loading: boolean,
-  category: {
-    title: string,
-    url: string,
-  }
+  error: string | null,
 };
 
 const time = new Date().toLocaleString();
@@ -24,39 +18,39 @@ const time = new Date().toLocaleString();
 const initialState: State = {
   project: {
     _id: ``,
-    hot: false,
-    date: time,
-    title: ``,
+    bets: [],
     price: 0,
     views: 0,
+    title: ``,
+    date: time,
+    hot: false,
     expire: time,
     remote: true,
     description: ``,
+    category: {
+      title: ``,
+      url: ``,
+    },
     location: {
       city: ``,
       region: ``,
       latitude: 0,
       longitude: 0,
     },
-  },
-  author: {
-    _id: ``,
-    name: ``,
-    image: false,
-    surname: ``,
-    username: ``,
-    location: {
-      city: ``,
-      country: ``,
+    author: {
+      _id: ``,
+      name: ``,
+      image: false,
+      surname: ``,
+      username: ``,
+      location: {
+        city: ``,
+        country: ``,
+      },
     },
   },
-  bets: [],
   error: null,
   loading: false,
-  category: {
-    title: ``,
-    url: ``,
-  }
 };
 
 export default (
@@ -67,7 +61,7 @@ export default (
   case PROJECT_SET:
     return {
       ...state,
-      ...action.payload,
+      project: {...action.payload},
     };
 
   case PROJECT_ERROR:
@@ -83,13 +77,16 @@ export default (
     };
 
   case PROJECT_REMOVE_BET:
-    const bets = [...state.bets];
+    const bets = [...state.project.bets];
     const deleteIndex = bets.findIndex(({_id}) => action.payload === _id);
     bets.splice(deleteIndex, 1);
 
     return {
       ...state,
-      bets,
+      project: {
+        ...state.project,
+        bets,
+      }
     };
   }
 

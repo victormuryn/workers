@@ -1,75 +1,95 @@
 import * as http from 'http';
-import {Server, Socket} from 'socket.io';
 
-// we use "crypto" to generate random userID
-import * as crypto from 'crypto';
-const randomId = () => crypto.randomBytes(8).toString(`hex`);
+import * as jwt from 'jsonwebtoken';
+import * as config from 'config';
+
+import {Server, Socket} from 'socket.io';
 
 // import stores
 import InMemorySessionStore, {Session} from './sessionStore';
-import InMemoryMessageStore, {Message} from './messageStore';
+import DBMessageStore from './messageStore';
+
+import User from '../../models/User';
+import {ChatType} from '../../models/Chat';
+import {LeanDocument} from 'mongoose';
 
 // init all stores
 const sessionStore = new InMemorySessionStore();
-const messageStore = new InMemoryMessageStore();
+const messageStore = new DBMessageStore();
 
 export interface MessageUser {
   userID: string,
   username: string,
   connected: boolean,
-  messages: Array<Message>,
+  messages: Array<ChatType>,
 }
 
-const messages = (server: http.Server) => {
+type Message = {
+  from: string,
+  to: string,
+  content: string,
+}
+
+module.exports = (server: http.Server) => {
   // main websocket server
   const io = new Server(server);
 
   io.use((socket: Socket, next) => {
     const token = socket.handshake.auth.token;
+
     if (!token) {
-      return next(new Error(`Wrong token`));
+      return next(new Error(`There is no token`));
     }
 
     // find existing session
-    const session = sessionStore.findSession(token);
+    const userId = jwt.decode(token, config.get(`jwtPhrase`))?.userId;
+    if (!userId) return next(new Error(`Wrong token`));
+
+    socket.userID = userId;
+
+    const session = sessionStore.findSession(userId);
     if (session) {
-      socket.token = token;
-      socket.userID = session.userID;
+      socket.name = session.name;
+      socket.image = session.image;
+      socket.surname = session.surname;
       socket.username = session.username;
-
-      return next();
+      socket.fullName = session.fullName;
     }
 
-    const username = socket.handshake.auth.username;
-    if (!username) {
-      return next(new Error(`invalid username`));
-    }
-
-    socket.token = token;
-    socket.userID = randomId();
-    socket.username = username;
-
-    next();
+    return next();
   });
 
-  io.on(`connection`, (socket: Socket, next) => {
-    const {userID, username, token, connected} = socket;
+  io.on(`connection`, async (socket: Socket) => {
+    const {userID} = socket;
 
-    if (!userID || !username || !token) {
-      return next(new Error(`You are not auth`));
+    if (!userID) {
+      return console.error(new Error(`You are not auth. Use token`));
     }
 
-    // persist session
-    sessionStore.saveSession(token, {
+    const userModel = await User
+      .findById(userID)
+      .select(`image username name surname`)
+      .lean();
+
+    if (!userModel) {
+      return console.error(new Error(`User with this id isn't found`));
+    }
+
+    const user = {
       userID,
-      username,
       connected: true,
-    });
+      name: userModel.name,
+      image: userModel.image,
+      surname: userModel.surname,
+      username: userModel.username,
+      fullName: `${userModel.name} ${userModel.surname}`,
+    };
+
+    // persist session
+    sessionStore.saveSession(userID, user);
 
     // emit session details
-    socket.emit(`session`, {
-      userID,
-    });
+    socket.emit(`session`, {userID});
 
     // join the "userID" room
     socket.join(userID);
@@ -78,44 +98,49 @@ const messages = (server: http.Server) => {
     const users: Array<MessageUser> = [];
     const messagesPerUser = new Map();
 
-    messageStore
-      .findMessagesForUser(userID)
-      .forEach((message: Message) => {
-        const {from, to} = message;
+    await messageStore.findMessagesForUser(userID, (error, messages) => {
+      if (error) return console.log(error);
+
+      messages.forEach((message: LeanDocument<ChatType>) => {
+        const from = message.from.toString();
+        const to = message.to.toString();
+
         const otherUser = userID === from ? to : from;
 
-        if (messagesPerUser.has(otherUser)) {
-          messagesPerUser.get(otherUser).push(message);
-        } else {
-          messagesPerUser.set(otherUser, [messages]);
-        }
-      });
+        const msg = {
+          ...message,
+          to, from,
+          fromSelf: userID === from,
+        };
 
-    sessionStore.findAllSessions().forEach((session: Session) => {
-      users.push({
-        userID,
-        username,
-        connected,
-        messages: messagesPerUser.get(session.userID) || [],
+        if (messagesPerUser.has(otherUser)) {
+          return messagesPerUser.get(otherUser).push(msg);
+        }
+
+        messagesPerUser.set(otherUser, [msg]);
       });
     });
+
+    sessionStore
+      .findAllSessions()
+      .forEach((session: Session) => {
+        const messages = messagesPerUser.get(session.userID) || [];
+
+        users.push({...session, messages});
+      });
 
     socket.emit(`users`, users);
 
     // notify existing users
-    socket.broadcast.emit(`user connected`, {
-      userID,
-      username,
-      connected: true,
-    });
+    socket.broadcast.emit(`user connected`, user);
 
     // forward the private message to the right recipient
     // (and to other tabs of the sender)
     socket.on(`private message`, ({content, to}: Message) => {
       const message = {
-        to,
-        content,
+        to, content,
         from: userID,
+        date: new Date(),
       };
 
       socket.to(to).to(userID).emit('private message', message);
@@ -129,17 +154,14 @@ const messages = (server: http.Server) => {
 
       if (isDisconnected) {
         // notify other users
-        socket.broadcast.emit(`user disconnected`, userID);
+        // socket.broadcast.emit(`user disconnected`, userID);
 
         // update the connection status of the session
-        sessionStore.saveSession(token, {
-          userID,
-          username,
+        sessionStore.saveSession(userID, {
+          ...user,
           connected: false,
         });
       }
     });
   });
 };
-
-module.exports = messages;

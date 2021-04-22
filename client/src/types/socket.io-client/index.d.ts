@@ -1,8 +1,8 @@
-import {Socket as OriginalSocket} from 'socket.io';
+import {Socket as OriginalSocket} from 'socket.io-client';
 
-declare module 'socket.io' {
+declare module 'socket.io-client' {
   /**
-   * This is original socket, but with token, userID and username
+   * This is original socket, but with extra properties
    */
   export declare class Socket extends OriginalSocket {
     token?: string;

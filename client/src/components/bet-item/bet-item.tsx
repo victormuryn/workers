@@ -14,6 +14,7 @@ import {State} from '../../redux/reducer';
 import {formatPrice, getPluralNoun} from '../../utils/utils';
 import {useHttp} from '../../hooks/http.hook';
 import Message from '../message';
+import {MinUser} from "../../types/types";
 
 type User = {
   _id: string,
@@ -29,8 +30,7 @@ type Props = {
   term: number,
   date: string,
   price: number,
-  author: string,
-  betAuthor: User,
+  author: MinUser,
   onDeleteClick: (e: React.MouseEvent) => void,
   updated: {
     count: number,
@@ -39,10 +39,7 @@ type Props = {
 };
 
 const BetItem: React.FC<Props> = (props) => {
-  const {_id, text, price, term, date, onDeleteClick, updated,
-    betAuthor: author,
-    author: authorID,
-  } = props;
+  const {_id, text, price, term, date, onDeleteClick, updated, author} = props;
   const user = useSelector((state: State) => state.user);
 
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -180,7 +177,7 @@ const BetItem: React.FC<Props> = (props) => {
         </small>
 
         {
-          authorID === user.userId ?
+          author._id === user.userId ?
             <div className="bet__author-line mt-3
          d-flex align-content-center justify-content-end">
               {
@@ -215,7 +212,7 @@ const BetItem: React.FC<Props> = (props) => {
       </article>
 
       {
-        authorID === user.userId &&
+        author._id === user.userId &&
           <Modal show={showModal} onHide={closeModal}>
             <Modal.Header closeButton>
               <Modal.Title>Ви дійсно хочете видалити ставку?</Modal.Title>

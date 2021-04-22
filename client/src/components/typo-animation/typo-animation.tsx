@@ -46,7 +46,7 @@ const TypoAnimation: React.FC<TypoAnimationProps> = ({
     const writeLetters = (phrase: string) => {
       let lettersPrinted: number = 0;
 
-      const writeInterval: NodeJS.Timeout = setInterval(() => {
+      const writeInterval = setInterval(() => {
         // text content = current phrase + one letter
         element.textContent = phrase.slice(0, lettersPrinted);
 

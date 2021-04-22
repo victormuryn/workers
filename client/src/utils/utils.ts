@@ -1,4 +1,4 @@
-export const getPluralNoun = (num:number, ...forms: string[]): string => {
+export const getPluralNoun = (num: number, ...forms: string[]): string => {
   switch (forms.length) {
   case 1:
     throw new Error(`Not enough forms`);
@@ -45,7 +45,7 @@ const getNounPluralForm = (a: number): 0 | 1 | 2 => {
   }
 };
 
-export const formatDate = (strDate: string, now: Date | string): string => {
+export const formatDate = (strDate: string, now: Date | string) => {
   if (typeof now === `string`) {
     now = new Date(now);
   }
@@ -121,6 +121,11 @@ export const formatDate = (strDate: string, now: Date | string): string => {
   return prettifyDate(monthDiff, [`місяць`, `місяці`, `місяців`]);
 };
 
+/**
+ * Format phone number
+ * @param {string} number - phone number to format
+ * @return {string} - formatted phone number
+ */
 export const formatPhoneNumber = (number: string) => {
   // from +380xxxxxxxxx to +380 xx xxx-xx-xx
   const regex = /(\+380)(\d{2})(\d{3})(\d{2})(\d{2})/g;
@@ -133,6 +138,11 @@ export const formatPhoneNumber = (number: string) => {
   return ``;
 };
 
+/**
+ * Format price in locale string
+ * @param {number} price - price to format
+ * @return {string} - formatted price
+ */
 export const formatPrice = (price: number) => {
   return new Intl.NumberFormat(`uk`, {
     style: 'currency',
@@ -142,18 +152,10 @@ export const formatPrice = (price: number) => {
   }).format(price);
 };
 
-// export const isNumeric = (value: any) => {
-//   if (typeof value === `number`) {
-//     return true;
-//   }
-//
-//   if (typeof value !== `string`) {
-//     return false;
-//   }
-//
-//   return !isNaN(value) && !isNaN(parseFloat(value));
-// };
-
+/**
+ * Set all pages meta data
+ * @param {string} title - Title of the page
+ */
 export const setPageMeta = (title: string) => {
   document.title = `${title} — Workers`;
 };

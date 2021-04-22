@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 
 import './chat-page.scss';
@@ -7,18 +8,23 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Media from 'react-bootstrap/Media';
+import Badge from 'react-bootstrap/Badge';
 import Container from 'react-bootstrap/Container';
 import ListGroup from 'react-bootstrap/ListGroup';
 
+import UserAvatar from '../../components/user-avatar';
+
 import {State} from '../../redux/reducer';
+import {MessageUser} from '../../redux/types';
 
 import {ActionCreator} from '../../redux/action-creator';
-import {MessageUser} from '../../redux/types';
-import Badge from 'react-bootstrap/Badge';
 import {getPluralNoun, setPageMeta} from '../../utils/utils';
 
 
 const ChatPage: React.FC = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
   const {
     users,
     unread,
@@ -34,11 +40,16 @@ const ChatPage: React.FC = () => {
 
   setPageMeta(title);
 
-  const dispatch = useDispatch();
 
   const [text, setText] = useState<string>(``);
-
   useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const name = query.get(`user`);
+
+    if (name) {
+      dispatch(ActionCreator.selectUserByName(name));
+    }
+
     return () => {
       dispatch(ActionCreator.selectUser());
     };
@@ -53,7 +64,8 @@ const ChatPage: React.FC = () => {
   const setSelectedUser = (user: MessageUser) => {
     if (selectedUser?.userID !== user.userID) {
       setText(``);
-      dispatch(ActionCreator.selectUser(user));
+      history.push({search: `?user=${user.username}`});
+      dispatch(ActionCreator.selectUserByName(user.username));
     }
   };
 
@@ -72,7 +84,13 @@ const ChatPage: React.FC = () => {
               <ListGroup className="rounded-0">
                 {
                   users.map((user) => {
-                    const {username, userID, hasNewMessages} = user;
+                    const {
+                      image,
+                      userID,
+                      fullName,
+                      username,
+                      hasNewMessages,
+                    } = user;
                     const isSelected = selectedUser?.userID === userID;
 
                     return (
@@ -85,16 +103,19 @@ const ChatPage: React.FC = () => {
                         variant={!isSelected ? `light` : undefined}
                       >
                         <Media>
-                          <img
-                            src={`http://localhost:8080/img/users/${username}.webp`}
-                            alt={username} className="rounded-circle" width={50}
+                          <UserAvatar
+                            width={50}
+                            image={image}
+                            alt={fullName}
+                            username={username}
                           />
+
                           <Media.Body className="media-body ms-4">
                             <div
                               className="d-flex align-items-center
                          justify-content-between mb-1">
                               <h6 className="mb-0">
-                                {username}{` `}
+                                {fullName}{` `}
                                 {hasNewMessages && (
                                   <Badge
                                     variant="danger"
@@ -128,7 +149,8 @@ const ChatPage: React.FC = () => {
             {
               selectedUser ?
                 selectedUser.messages.map((message, i) => {
-                  const {content, fromSelf} = message;
+                  const {content, fromSelf, date} = message;
+                  const msgDate = new Date(date);
 
                   return (
                     <Media
@@ -144,7 +166,11 @@ const ChatPage: React.FC = () => {
                             {content}
                           </p>
                         </div>
-                        <p className="small text-muted">12:00 PM | Aug 13</p>
+                        <p className="small text-muted">
+                          {msgDate.toLocaleTimeString()}
+                          {` `}|{` `}
+                          {msgDate.toLocaleDateString()}
+                        </p>
                       </Media.Body>
                     </Media>
                   );

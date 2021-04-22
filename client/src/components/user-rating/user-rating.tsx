@@ -15,6 +15,7 @@ type Props = {
     title: string,
     url: string,
     id: string,
+    group?: string,
   }>,
   rating: {
     all: number,

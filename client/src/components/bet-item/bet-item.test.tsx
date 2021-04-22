@@ -7,18 +7,21 @@ describe(`BetItem tests`, () => {
     const tree = renderer.create(<BetItem
       term={2}
       price={200}
-      author="id"
+      author={{
+        _id: `string`,
+        image: true,
+        name: `string`,
+        surname: `string`,
+        username: `string`,
+        location: {
+          city: ``,
+          country: ``,
+        }
+      }}
       _id="string"
       text="string"
       date="string"
       onDeleteClick={() => {}}
-      betAuthor={{
-        image: true,
-        _id: `string`,
-        name: `string`,
-        surname: `string`,
-        username: `string`,
-      }}
       updated={{
         count: 2,
         lastDate: `string`,

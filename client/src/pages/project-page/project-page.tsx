@@ -21,8 +21,8 @@ import {setPageMeta} from '../../utils/utils';
 
 type FormState = {
   text: string,
-  price: number,
   term: number,
+  price: number,
 }
 
 const ProjectPage: React.FC = () => {
@@ -30,7 +30,7 @@ const ProjectPage: React.FC = () => {
 
   const dispatch = useDispatch();
   const {user, project: projectData} = useSelector((state: State) => state);
-  const {project, author, bets, error, loading, category} = projectData;
+  const {project, error, loading} = projectData;
 
   setPageMeta(project.title);
 
@@ -47,8 +47,8 @@ const ProjectPage: React.FC = () => {
 
   let possibleToBet = user.accountType === `freelancer`;
   if (possibleToBet) {
-    for (let i = 0; i < bets.length; i++) {
-      if (bets[i].author === user.userId) {
+    for (let i = 0; i < project.bets.length; i++) {
+      if (project.bets[i].author._id === user.userId) {
         possibleToBet = false;
         break;
       }
@@ -62,7 +62,7 @@ const ProjectPage: React.FC = () => {
   // get project data on component mount
   useEffect(() => {
     (async () => {
-      getProjectData();
+      await getProjectData();
     })();
   }, [id]);
 
@@ -82,7 +82,7 @@ const ProjectPage: React.FC = () => {
     await dispatch(ActionCreator.postBet(betData));
 
     // get updated data when bet was sent
-    getProjectData();
+    await getProjectData();
   };
 
   const deleteClickHandler = async (e: React.MouseEvent, id: string) => {
@@ -106,42 +106,42 @@ const ProjectPage: React.FC = () => {
         <Col lg={8}>
           <ProjectContent
             hot={project.hot}
-            category={category}
             title={project.title}
             price={project.price}
             isExpired={isExpired}
             remote={project.remote}
             location={project.location}
+            category={project.category}
             description={project.description}
           />
 
           {
             possibleToBet && !isExpired ?
               <ProjectAddBet
+                price={project.price}
                 onFormSubmit={formSubmitHandler}
                 inputChangeHandler={inputChangeHandler}
-                price={project.price}
               /> :
               null
           }
 
           <ProjectBetsList
-            bets={bets}
+            bets={project.bets}
             deleteClickHandler={deleteClickHandler}
           />
         </Col>
 
         <ProjectSidebar
           // category={category}
-          name={author.name}
           date={project.date}
-          image={author.image}
-          isExpired={isExpired}
           views={project.views}
+          isExpired={isExpired}
           expire={project.expire}
-          surname={author.surname}
-          username={author.username}
-          location={author.location}
+          name={project.author.name}
+          image={project.author.image}
+          surname={project.author.surname}
+          username={project.author.username}
+          location={project.author.location}
         />
       </Row>
     </Container>

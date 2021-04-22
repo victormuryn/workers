@@ -54,6 +54,7 @@ type Categories = {
   _id: string,
   title: string,
   url: string,
+  group?: string,
 };
 
 type Autofill = {
@@ -62,11 +63,10 @@ type Autofill = {
 };
 
 type AutofillChangeType<T> = [
-  e: React.ChangeEvent<HTMLInputElement>,
-  setter: (value: []) => void,
-  url: string,
-  onSuccess: (data: T[]) => void,
-];
+  React.ChangeEvent<HTMLInputElement>,
+  string,
+  (data: T[]) => void,
+]
 
 const CreatePage: React.FC = () => {
   setPageMeta(`Створити проєкт`);
@@ -103,11 +103,7 @@ const CreatePage: React.FC = () => {
   });
 
   const inputChangeHandlerByValue = (value: any, name: string) => {
-    inputChangeHandler({
-      target: {
-        name, value,
-      },
-    });
+    inputChangeHandler({name, value});
   };
 
   const selectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -130,23 +126,17 @@ const CreatePage: React.FC = () => {
     setCatSuggestions([]);
 
     inputChangeHandler([{
-      target: {
-        name: inputName,
-        value: text,
-      },
+      name: inputName,
+      value: text,
     }, {
-      target: {name, value},
+      name,
+      value,
     }]);
   };
 
   const onAutofillChange = async <T, >(...args: AutofillChangeType<T>) => {
-    const [e, setter, url, onSuccess] = args;
+    const [e, url, onSuccess] = args;
     inputChangeHandler(e);
-
-    if (e.target.value === ``) {
-      setter([]);
-      return;
-    }
 
     api
       .get<T[]>(`${url}${e.target.value}`)
@@ -158,27 +148,34 @@ const CreatePage: React.FC = () => {
       });
   };
 
-  const categoryInputChangeHandler = (
+  const categoryInputChangeHandler = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    onAutofillChange<Categories>(
+    await onAutofillChange<Categories>(
       event,
-      setCatSuggestions,
       `/categories/autofill/`,
       (result) => {
-        const response = result.map((element) => ({
-          text: element.title,
-          value: element._id,
+        const response = result.map(({group, _id, title: text}) => ({
+          text,
+          group,
+          value: _id,
         }));
 
         setCatSuggestions(response);
       });
   };
 
-  const cityInputChangeEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onAutofillChange<Location>(
+  const cityInputChangeEvent = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (!event.target.value) {
+      inputChangeHandler(event);
+      setSuggestions([]);
+      return;
+    }
+
+    await onAutofillChange<Location>(
       event,
-      setSuggestions,
       `/project/city/`,
       (result) => {
         const suggestionsList = result.map((element) => {
@@ -216,7 +213,7 @@ const CreatePage: React.FC = () => {
       })
       .catch((error) => {
         setError(error.response.data.message ||
-        `Щось пішло не так, спробуйте знову.`);
+          `Щось пішло не так, спробуйте знову.`);
       })
       .then(() => {
         setLoading(false);
@@ -328,17 +325,13 @@ const CreatePage: React.FC = () => {
               inputChangeHandler([
                 event,
                 {
-                  target: {
-                    name: `inputCity`,
-                    value: ``,
-                  },
+                  name: `inputCity`,
+                  value: ``,
                 }, {
-                  target: {
-                    name: `location`,
-                    value: {
-                      city: ``, district: ``, region: ``,
-                      latitude: 0, longitude: 0,
-                    },
+                  name: `location`,
+                  value: {
+                    city: ``, district: ``, region: ``,
+                    latitude: 0, longitude: 0,
                   },
                 },
               ]);

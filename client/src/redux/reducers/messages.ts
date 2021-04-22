@@ -1,9 +1,15 @@
 import {
-  MESSAGES_CONNECT, MESSAGES_DISCONNECT,
-  MESSAGES_INIT, MESSAGES_OFF, MESSAGES_SELECT_USER,
+  MESSAGES_CONNECT,
+  MESSAGES_DELETE_USER,
+  MESSAGES_DISCONNECT,
+  MESSAGES_INIT,
+  MESSAGES_OFF,
+  MESSAGES_SELECT_USER,
+  MESSAGES_SELECT_USER_BY_NAME,
   MESSAGES_SET_MESSAGE,
   MESSAGES_SET_NEW_USER,
-  MESSAGES_SET_USERS, MESSAGES_SUBMIT,
+  MESSAGES_SET_USERS,
+  MESSAGES_SUBMIT,
   MessagesTypes,
   MessageUser,
 } from '../types';
@@ -40,8 +46,9 @@ export default (
 
     actionUsers.forEach((user) => {
       user.messages.forEach((message) => {
-        // @ts-ignore
-        message.fromSelf = message.from = state.socket.userID;
+        if (message) {
+          message.fromSelf = message.from === state.socket?.userID;
+        }
       });
 
       for (let i = 0; i < users.length; i++) {
@@ -54,8 +61,7 @@ export default (
         }
       }
 
-      // @ts-ignore
-      user.self = user.userID === state.socket.userID;
+      user.self = user.userID === state.socket?.userID;
       user.messages = user.messages || [];
       user.hasNewMessages = user.hasNewMessages || false;
       user.connected = user.connected || true;
@@ -84,7 +90,9 @@ export default (
 
       if (user.userID === from) {
         user.messages.push({
+          from,
           content,
+          date: new Date(),
           fromSelf: false,
         });
 
@@ -98,7 +106,7 @@ export default (
           });
 
           const audio = new Audio(`/message.mp3`);
-          audio.volume = .4;
+          audio.volume = 0.4;
           audio.addEventListener(`canplaythrough`, () => audio.play());
         }
 
@@ -123,19 +131,30 @@ export default (
     return {...state, users: [...state.users, action.payload]};
   }
 
+  // case MESSAGES_DELETE_USER: {
+  //   // const users = state.users
+  //   //   .filter((user) => user.userID !== action.payload);
+  //   //
+  //   // return {...state, users};
+  // }
+
   case MESSAGES_CONNECT: {
     const users = [...state.users];
+
     users.forEach((user) => {
       if (user.self) user.connected = true;
     });
+
     return {...state, users};
   }
 
   case MESSAGES_DISCONNECT: {
     const users = [...state.users];
+
     users.forEach((user) => {
       if (user.self) user.connected = false;
     });
+
     return {...state, users};
   }
 
@@ -149,15 +168,18 @@ export default (
       state.selectedUser.messages.push({
         content: action.payload,
         fromSelf: true,
+        date: new Date(),
+        from: state.socket.userID || ``,
       });
     }
+
     break;
 
   case MESSAGES_OFF:
     state.socket?.off(`connect_error`);
     break;
 
-  case MESSAGES_SELECT_USER:
+  case MESSAGES_SELECT_USER: {
     const selectedUser = action.payload;
 
     if (selectedUser === null || !selectedUser.hasNewMessages) {
@@ -181,6 +203,35 @@ export default (
       selectedUser,
     };
   }
+
+  case MESSAGES_SELECT_USER_BY_NAME: {
+    const selectedUser = action.payload;
+    const user = state.users
+      .find((element) => element.username === selectedUser);
+
+    if (!selectedUser || !user) {
+      return {
+        ...state,
+        selectedUser: null,
+      };
+    }
+
+    const unread = [...state.unread]
+      .filter((e) => e.from !== selectedUser);
+
+    const users = [...state.users];
+    const usersIndex = users.findIndex((e) => e.username === selectedUser);
+    users[usersIndex].hasNewMessages = false;
+
+    return {
+      ...state,
+      users,
+      unread,
+      selectedUser: user,
+    };
+  }
+  }
+
 
   return state;
 };

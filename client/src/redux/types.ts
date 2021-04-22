@@ -18,6 +18,8 @@ export const MESSAGES_DISCONNECT = `MESSAGES/DISCONNECT`;
 export const MESSAGES_SUBMIT = `MESSAGES/SUBMIT`;
 export const MESSAGES_OFF = `MESSAGES/OFF`;
 export const MESSAGES_SELECT_USER = `MESSAGES/SELECT_USER`;
+export const MESSAGES_DELETE_USER = `MESSAGES/DELETE_USER`;
+export const MESSAGES_SELECT_USER_BY_NAME = `MESSAGES/SELECT_USER_BY_NAME`;
 
 export interface User {
   token: string,
@@ -27,11 +29,17 @@ export interface User {
 }
 
 type Message = {
+  from: string,
   content: string,
   fromSelf: boolean,
+  date: string | Date,
 };
 
 export type MessageUser = {
+  image: boolean,
+  name: string,
+  surname: string,
+  fullName: string,
   username: string,
   userID: string,
   self: boolean,
@@ -114,6 +122,16 @@ interface MessagesSelectUser {
   payload: MessageUser | null,
 }
 
+interface MessagesDeleteUser {
+  type: typeof MESSAGES_DELETE_USER,
+  payload: string,
+}
+
+interface MessagesSelectUserByName {
+  type: typeof MESSAGES_SELECT_USER_BY_NAME,
+  payload: string,
+}
+
 export type UserActionTypes = UserLoginAction | UserLogoutAction;
 export type ProjectActionTypes =
   ProjectSetDataAction |
@@ -128,5 +146,5 @@ export type MessagesTypes =
   MessagesSetNewUser |
   MessagesConnect | MessagesDisconnect |
   MessagesSubmit | MessagesOff |
-  MessagesSelectUser;
+  MessagesSelectUser | MessagesDeleteUser | MessagesSelectUserByName;
 

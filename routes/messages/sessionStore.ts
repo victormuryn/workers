@@ -1,5 +1,9 @@
 export interface Session {
+  name: string,
+  image: boolean,
   userID: string,
+  surname: string,
+  fullName: string,
   username: string,
   connected: boolean,
 }

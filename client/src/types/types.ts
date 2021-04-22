@@ -20,6 +20,8 @@ export type Project = {
   views: number,
   expire: string,
   remote: boolean,
+  author: MinUser,
+  bets: Array<Bet>,
   description: string,
   location: {
     city: string,
@@ -27,6 +29,10 @@ export type Project = {
     latitude: number,
     longitude: number,
   },
+  category: {
+    title: string,
+    url: string,
+  }
 };
 
 export type Bet = {
@@ -35,8 +41,7 @@ export type Bet = {
   price: number,
   term: number,
   date: string,
-  author: string,
-  betAuthor: MinUser,
+  author: MinUser,
   updated: {
     count: number,
     lastDate: string,

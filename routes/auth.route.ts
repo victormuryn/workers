@@ -64,7 +64,6 @@ router.post(
           .json({message: `Користувач з таким логіном уже існує.`});
       }
 
-
       // create and save user
       // password will be hashed in db middleware
       const user = new User({
