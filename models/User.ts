@@ -1,7 +1,8 @@
 import {Document, Schema, model, Types} from 'mongoose';
 
 import {CategoryType} from './Category';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
+import {CityDocument} from "./City";
 
 export interface UserType extends Document{
   cv: string,
@@ -18,13 +19,7 @@ export interface UserType extends Document{
   username: string,
   categories: Array<CategoryType['_id']>,
   accountType: `freelancer` | `client`,
-  location: {
-    city: string,
-    region: string,
-    country: string,
-    latitude: number,
-    longitude: number,
-  },
+  location: CityDocument['_id'],
   social: {
     twitter: string,
     github: string,
@@ -44,33 +39,12 @@ const schema = new Schema<UserType>({
   surname: {type: String, required: true},
   password: {type: String, required: true},
   accountType: {type: String, required: true},
+  location: {type: Types.ObjectId, ref: `City`},
   online: {type: Date, default: new Date(0)},
   phone: {type: String, required: true, unique: true},
   email: {type: String, required: true, unique: true, lowercase: true},
   categories: [{type: Types.ObjectId, ref: `Category`, required: true}],
   username: {type: String, required: true, unique: true, lowercase: true},
-  location: {
-    city: {
-      type: String,
-      default: ``,
-    },
-    region: {
-      type: String,
-      default: ``,
-    },
-    country: {
-      type: String,
-      default: ``,
-    },
-    latitude: {
-      type: Number,
-      default: 0,
-    },
-    longitude: {
-      type: Number,
-      default: 0,
-    },
-  },
   social: {
     twitter: {
       type: String,

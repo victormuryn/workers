@@ -13,7 +13,7 @@ router.get(
         .find({})
         .sort({'group': 1})
         .lean();
-      
+
       return response.json(data);
     } catch (e) {
       response

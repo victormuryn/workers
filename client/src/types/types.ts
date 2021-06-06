@@ -1,17 +1,17 @@
 export type AccountTypes = `freelancer` | `client`;
-export type MinUser = {
+export interface MinUser {
   _id: string,
   name: string,
   image: boolean,
   surname: string,
   username: string,
-  location:{
+  location?: {
     city: string,
     country: string,
   },
-};
+}
 
-export type Project = {
+export interface Project {
   _id: string,
   hot: boolean,
   date: string,
@@ -24,16 +24,19 @@ export type Project = {
   bets: Array<Bet>,
   description: string,
   location: {
+    _id: string,
     city: string,
     region: string,
+    country: string,
     latitude: number,
     longitude: number,
   },
   category: {
+    _id: string,
     title: string,
     url: string,
-  }
-};
+  }[],
+}
 
 export type Bet = {
   _id: string,

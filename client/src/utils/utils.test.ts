@@ -4,23 +4,27 @@ describe(`Utils tests`, () => {
   it(`getPluralNoun test`, () => {
     const forms = [`телефон`, `телефони`, `телефонів`];
 
-    expect(getPluralNoun(1, ...forms)).toBe(`телефон`);
-    expect(getPluralNoun(2, ...forms)).toBe(`телефони`);
-    expect(getPluralNoun(5, ...forms)).toBe(`телефонів`);
-    expect(getPluralNoun(10, ...forms)).toBe(`телефонів`);
-    expect(getPluralNoun(11, ...forms)).toBe(`телефонів`);
-    expect(getPluralNoun(15, ...forms)).toBe(`телефонів`);
-    expect(getPluralNoun(21, ...forms)).toBe(`телефон`);
-    expect(getPluralNoun(50, ...forms)).toBe(`телефонів`);
-    expect(getPluralNoun(74, ...forms)).toBe(`телефони`);
-    expect(getPluralNoun(100, ...forms)).toBe(`телефонів`);
-    expect(getPluralNoun(501, ...forms)).toBe(`телефон`);
-    expect(getPluralNoun(1003, ...forms)).toBe(`телефони`);
+    expect(getPluralNoun(1, forms)).toBe(`телефон`);
+    expect(getPluralNoun(2, forms)).toBe(`телефони`);
+    expect(getPluralNoun(5, forms)).toBe(`телефонів`);
+    expect(getPluralNoun(10, forms)).toBe(`телефонів`);
+    expect(getPluralNoun(11, forms)).toBe(`телефонів`);
+    expect(getPluralNoun(15, forms)).toBe(`телефонів`);
+    expect(getPluralNoun(21, forms)).toBe(`телефон`);
+    expect(getPluralNoun(50, forms)).toBe(`телефонів`);
+    expect(getPluralNoun(74, forms)).toBe(`телефони`);
+    expect(getPluralNoun(100, forms)).toBe(`телефонів`);
+    expect(getPluralNoun(501, forms)).toBe(`телефон`);
+    expect(getPluralNoun(1003, forms)).toBe(`телефони`);
 
-    expect(getPluralNoun(0, ...forms)).toBe(`телефонів`);
-    expect(getPluralNoun(-1, ...forms)).toBe(`телефон`);
-    expect(getPluralNoun(-2, ...forms)).toBe(`телефони`);
-    expect(getPluralNoun(-5, ...forms)).toBe(`телефонів`);
+    expect(getPluralNoun(1, forms, true)).toBe(`1 телефон`);
+    expect(getPluralNoun(2, forms, true)).toBe(`2 телефони`);
+    expect(getPluralNoun(5, forms, true)).toBe(`5 телефонів`);
+
+    expect(getPluralNoun(0, forms)).toBe(`телефонів`);
+    expect(getPluralNoun(-1, forms)).toBe(`телефон`);
+    expect(getPluralNoun(-2, forms)).toBe(`телефони`);
+    expect(getPluralNoun(-5, forms)).toBe(`телефонів`);
   });
 
   it(`formatPhoneNumber test`, () => {

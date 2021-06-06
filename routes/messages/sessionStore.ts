@@ -3,7 +3,6 @@ export interface Session {
   image: boolean,
   userID: string,
   surname: string,
-  fullName: string,
   username: string,
   connected: boolean,
 }

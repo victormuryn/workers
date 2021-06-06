@@ -10,6 +10,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
 import {formatDate, getPluralNoun} from '../../utils/utils';
+import UserAvatar from '../user-avatar';
 
 type Props = {
   name: string,
@@ -20,14 +21,10 @@ type Props = {
   surname: string,
   username: string,
   isExpired: boolean,
-  location: {
+  location?: {
     city: string,
     country: string,
   },
-  // category: {
-  //   title: string,
-  //   url: string,
-  // }
 }
 
 const ProjectSidebar: React.FC<Props> = (props) => {
@@ -48,35 +45,14 @@ const ProjectSidebar: React.FC<Props> = (props) => {
           >
             <Row className="align-items-center">
               <Col sm={3}>
-                {
-                  image ?
-                    <picture>
-                      <source
-                        srcSet={`/img/users/${username}.webp`}
-                        type="image/webp"
-                      />
-
-                      <source
-                        srcSet={`/img/users/${username}.jpg`}
-                        type="image/jpeg"
-                      />
-
-                      <img
-                        alt={username}
-                        src={`/img/users/${username}.jpg`}
-                        className="rounded-circle"
-                      />
-                    </picture> :
-                    <img
-                      alt={username}
-                      src="/img/default.svg"
-                      className="rounded-circle"
-                    />
-                }
+                <UserAvatar
+                  username={username}
+                  image={image}
+                />
               </Col>
               <Col>
                 <span>
-                  {name} {surname} { location.city &&
+                  {name} {surname} { location &&
                     <>
                       <br/>
                       {location.city}, {location.country}</>
@@ -102,11 +78,9 @@ const ProjectSidebar: React.FC<Props> = (props) => {
           >
             <p>{formatDate(date, now)} тому</p>
           </OverlayTrigger>
-          <p>{views} {getPluralNoun(
+          <p>{getPluralNoun(
             views,
-            `перегляд`,
-            `перегляди`,
-            `переглядів`,
+            [`перегляд`, `перегляди`, `переглядів`],
           )}</p>
         </Card.Body>
       </Card>

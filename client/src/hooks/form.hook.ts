@@ -27,11 +27,19 @@ type EventType = EventTypes | Array<EventTypes>;
 /**
  * Hook to use in cases when you have to work with forms and control states of
  * inputs
- * @param {Object} argsForm - Object with default value
+ * @param {Object} initialForm - Object with default value
  * @return {UseFormReturn} - Hook utils
  */
-export const useForm = <FormType>(argsForm: FormType) => {
-  const [form, setForm] = useState<FormType>(argsForm);
+export const useForm = <FormType>(initialForm: FormType) => {
+  const [form, setForm] = useState<FormType>({...initialForm});
+
+  /**
+   * Reset all data to initial state
+   * @return {void}
+   */
+  const resetForm = () => {
+    setForm({...initialForm});
+  };
 
   /**
    * Set data to form
@@ -81,6 +89,11 @@ export const useForm = <FormType>(argsForm: FormType) => {
    * @return {FormState} - New State
    */
   const _setValueToObject = <T>(state: T, value: any, path: string) => {
+    if (path === ``) {
+      console.error(`You should add name to input`);
+      return state;
+    }
+
     const pathParts = path.split(`.`);
     const objectCopy = {...state};
     let editableObject = objectCopy;
@@ -106,5 +119,5 @@ export const useForm = <FormType>(argsForm: FormType) => {
     return objectCopy;
   };
 
-  return {form, inputChangeHandler, setForm};
+  return {form, inputChangeHandler, setForm, resetForm};
 };

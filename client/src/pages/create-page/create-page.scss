@@ -224,3 +224,7 @@ select.form-control[size] {
 //  transform: translateX(-50%);
 //  width: calc(100% - var(--bs-gutter-x));
 //}
+
+.custom-control {
+  z-index: 0;
+}

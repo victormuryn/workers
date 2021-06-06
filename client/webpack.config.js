@@ -14,7 +14,9 @@ module.exports = {
 
   devServer: {
     contentBase: path.join(__dirname, `dist`),
-    historyApiFallback: true,
+    historyApiFallback: {
+      disableDotRule: true,
+    },
     compress: false,
     overlay: true,
     proxy: {

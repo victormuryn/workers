@@ -19,8 +19,11 @@ import {AccountTypes} from '../../types/types';
 import {setPageMeta} from '../../utils/utils';
 
 type Response = {
+  name: string,
   token: string,
+  image: boolean,
   userId: string,
+  surname: string,
   username: string,
   accountType: AccountTypes,
 };
@@ -92,10 +95,7 @@ const AuthPage: React.FC = () => {
           .post<Response>(`/auth/login`, {
             username: data.username, password,
           })
-          .then((response) => {
-            const {token, userId, accountType, username} = response.data;
-            login(token, userId, accountType, username);
-          })
+          .then((response) => login(response.data))
           .catch((error) => {
             setError(error.response.data.message ||
               `Щось пішло не так, спробуйте знову`);

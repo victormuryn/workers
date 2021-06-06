@@ -40,9 +40,7 @@ export const useRoutes = (
             )
           }
 
-          <Route>
-            <Redirect to="/projects" />
-          </Route>
+          <Redirect to="/projects" />
         </Switch>
         <Footer/>
       </>
@@ -51,24 +49,26 @@ export const useRoutes = (
 
   return (
     <Switch>
-      <Route path="/" exact component={MainPage} />
+      <Route path="/" component={MainPage} exact />
 
-      <Route path="/auth" exact component={AuthPage} />
-      <Route path="/login" exact component={LoginPage} />
+      <Route path="/auth" component={AuthPage} exact />
+      <Route path="/login" component={LoginPage} exact />
 
       <Route>
         <Header />
-        <Route path="/projects" exact component={ProjectsPage} />
-        <Route path="/project/:id" component={ProjectPage} />
 
-        <Route path="/category/:name" component={CategoryPage} />
+        <Switch>
+          <Route path="/projects" component={ProjectsPage} exact />
+          <Route path="/project/:id" component={ProjectPage} />
 
-        <Route path="/user/:username" component={UserPage} />
+          <Route path="/category/:name" component={CategoryPage} />
+
+          <Route path="/user/:username" component={UserPage} />
+
+          <Redirect to="/" />
+        </Switch>
+
         <Footer />
-      </Route>
-
-      <Route>
-        <Redirect to="/" />
       </Route>
     </Switch>
   );

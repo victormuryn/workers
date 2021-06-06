@@ -1,11 +1,10 @@
-import * as fs from 'fs';
-
 import {Request, Response, Router} from 'express';
 import {Types} from 'mongoose';
 import {check} from 'express-validator';
-import * as csv from 'csv-parse';
+import * as config from 'config';
 
 import Project from '../models/Project';
+import City from '../models/City';
 
 import auth from '../middlewares/auth.middleware';
 import {client} from '../middlewares/users.middleware';
@@ -29,8 +28,7 @@ router.post(
     check(`date`, `Виникла помилка`)
       .custom((value) => !isNaN(Date.parse(value))),
     check(`price`, `Введіть ціну`)
-      .isNumeric()
-      .custom((value) => value >= 200),
+      .custom((value) => +value >= 200 || !value),
     check(`expire`, `Виберіть дату завершення проєкту`)
       .custom((value) => !isNaN(Date.parse(value)))
       .custom((value, {req}) => {
@@ -39,19 +37,12 @@ router.post(
     check(`hot`, `Виберіть тип проєкту`)
       .isBoolean(),
     check(`category`, `Виберіть категорію`)
-      .custom((value) => Types.ObjectId.isValid(value)),
+      .isArray()
+      .custom((value) => value.every((e: string) => Types.ObjectId.isValid(e))),
     check(`remote`, `Виберіть місто`)
       .isBoolean(),
-    check(`location.city`, `Виберіть місто`)
-      .isString(),
-    check(`location.region`, `Виберіть місто`)
-      .isString(),
-    check(`location.district`, `Виберіть місто`)
-      .isString(),
-    check(`location.longitude`, `Виберіть місто`)
-      .isNumeric(),
-    check(`location.latitude`, `Виберіть місто`)
-      .isNumeric(),
+    check(`location`, `Виберіть місто`)
+      .custom((value) => Types.ObjectId.isValid(value) || !value),
   ],
   async (request: Request, response: Response) => {
     try {
@@ -69,32 +60,27 @@ router.post(
       } = request.body; // all data from request
 
       // if project is not remote and there're no location
-      if (!remote) {
-        if (
-          !location.city ||
-          !location.district ||
-          !location.region ||
-          !location.latitude ||
-          !location.longitude
-        ) {
-          return response
-            .status(400)
-            .json({
-              message: `Некоректні данні при заповненні форми. Виберіть місто.`,
-            });
-        }
+      if (!remote && !location) {
+        return response
+          .status(400)
+          .json({
+            message: `Некоректні данні при заповненні форми. Виберіть місто.`,
+          });
       }
 
       // everything is ok (with data)
       // get user after middleware
       const author = request.user;
 
+      const numberPrice = (price && !isNaN(+price)) ? +price : 0;
+
       // create project and save it
       const project = new Project({
-        hot, date, price, author,
+        hot, date, author,
         expire, remote, location,
         category, description,
         title: title.trim(),
+        price: numberPrice,
       });
       await project.save();
 
@@ -102,6 +88,7 @@ router.post(
         .status(201)
         .json({id: project._id});
     } catch (e) {
+      console.log(e);
       response
         .status(500)
         .json({message: `Щось пішло не так, спробуйте знову.`});
@@ -111,15 +98,56 @@ router.post(
 
 router.get(`/`, async (request: Request, response: Response) => {
   try {
-    // get first 20 projects sorted by date
+    const page = (request.query.page && !isNaN(+request.query.page)) ?
+      +request.query.page - 1 :
+      0;
+
+    const {remote, hot, location, categories} = request.query;
+    const query: {
+      hot?: true,
+      remote?: true,
+      location?: {$in: string[]},
+      category?: {$in: string[]},
+      expire: { $gt: Date },
+    } = {
+      expire: {$gt: new Date()},
+    };
+
+
+    if (remote === `true`) query.remote = true;
+    if (hot === `true`) query.hot = true;
+    if (location && typeof location === `string`) {
+      try {
+        query.location = {$in: <string[]>JSON.parse(location)};
+      } catch (e) {}
+    }
+
+    if (categories && typeof categories === `string`) {
+      try {
+        query.category = {
+          $in: <string[]>JSON.parse(categories),
+        };
+      } catch (e) {}
+    }
+
+    const projectsPerPage = <number>config.get(`projectsPerPage`);
+
+    // get 20 projects sorted by date
     const projects = await Project
-      .find({})
-      .populate(`category`)
+      .find(query)
+      .sort({hot: -1, date: -1})
+      .skip(page * projectsPerPage)
+      .limit(projectsPerPage)
+      .populate(`category location`)
       .select(`title price date hot location remote category bets`)
-      .sort({date: -1})
       .lean();
 
-    response.json(projects);
+    const projectsCount = await Project.countDocuments(query);
+
+    response.json({
+      projects,
+      pages: Math.ceil(projectsCount / projectsPerPage),
+    });
   } catch (e) {
     response
       .status(500)
@@ -141,18 +169,21 @@ router.get(`/:id`, async (request, response) => {
 
     const project = await Project
       .findById(id)
-      .populate(`category`)
+      .populate(`category location`)
       .populate({
         path: `bets`,
         populate: {
           path: `author`,
-          select: `_id name surname username image`,
+          select: `name surname username image`,
         },
       })
-      .populate(
-        `author`,
-        `_id name surname username image location.city location.country`,
-      );
+      .populate({
+        path: `author`,
+        populate: {
+          path: `location`,
+        },
+        select: `name surname username image location`,
+      });
 
     if (!project) {
       return response
@@ -171,43 +202,54 @@ router.get(`/:id`, async (request, response) => {
   }
 });
 
-router.get(`/city/:cityName`, async (request: Request, response: Response) => {
+router.delete(`/:id`, auth, async (request, response) => {
   try {
-    const {cityName} = request.params;
+    const author = request.user;
+    const {id} = request.params;
 
-    const data: string[][] = [];
-    const readStream = fs
-      .createReadStream(`./data/cities_uk.csv`)
-      .pipe(csv( {delimiter: `,`} ));
+    if (!Types.ObjectId.isValid(id)) {
+      return response
+        .status(404)
+        .json({
+          message: `Неправильний ідентифікатор проєкту, спробуйте знову.`,
+        });
+    }
 
-    return readStream
-      .on('data', (row: string[]) => {
-        if (row[0].toLowerCase().includes(cityName.toLowerCase())) {
-          data.push(row);
-        }
+    const project = await Project.findById(id);
 
-        if (data.length > 20) {
-          readStream.destroy();
-        }
-      })
-      .on('close', (err: Error) => {
-        if (err) throw err;
+    if (!project) {
+      return response
+        .status(404)
+        .json({message: `Проєкт не знайдений, спробуйте знову.`});
+    }
 
-        const result = data
-          .map((cityData) => {
-            const [city,,, longitude, latitude] = cityData;
-            const district = cityData[1][0] === 'м' ?
-              cityData[1] :
-              `${cityData[1]} район`;
+    if (project.author.toString() === author) {
+      project.expire = new Date();
+      await project.save();
+      return response.json(project);
+    }
 
-            const region = cityData[2][0] === 'м' ?
-              cityData[2] :
-              `${cityData[2]} область`;
-            return {city, district, region, longitude, latitude};
-          });
+    return response
+      .status(403)
+      .json({message: `Ви не авторизовані.`});
+  } catch (e) {
+    response
+      .status(500)
+      .json({message: `Щось пішло не так, спробуйте знову.`});
+  }
+});
 
-        return response.json(result);
-      });
+router.get(`/city/:city`, async (request: Request, response: Response) => {
+  try {
+    const {city} = request.params;
+
+    const regex = new RegExp(`.*${city}.*`, `i`);
+    const result = await City
+      .find({'city': regex})
+      .limit(20)
+      .lean();
+
+    return response.json(result);
   } catch (e) {
     response
       .status(500)

@@ -2,10 +2,15 @@ import {createContext} from 'react';
 import {AccountTypes} from '../types/types';
 
 type Login = (
-  token: string,
-  userId: string,
-  accountType: AccountTypes,
-  username: string
+  data: {
+    name: string,
+    surname: string,
+    image: boolean,
+    token: string,
+    userId: string,
+    accountType: AccountTypes,
+    username: string,
+  }
 ) => void;
 
 // type Logout = (id: string | null, token: string | null) => void;

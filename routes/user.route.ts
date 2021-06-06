@@ -12,6 +12,8 @@ import * as multer from 'multer';
 
 import auth from '../middlewares/auth.middleware';
 import {LeanDocument} from 'mongoose';
+import Category from '../models/Category';
+import City, {CityDocument} from '../models/City';
 
 const upload = multer({
   limits: {
@@ -35,12 +37,11 @@ router.get(`/:username`, async (request: Request, response: Response) => {
     const {username} = request.params;
     const user = await User
       .findOne({username})
-      .populate(`categories`)
+      .populate(`location`)
       .select(`_id quote cv
         name surname username online
         social image rating accountType
-        finished location categories
-      `)
+        finished location categories`)
       .lean();
 
     // if there isn't user
@@ -52,7 +53,9 @@ router.get(`/:username`, async (request: Request, response: Response) => {
 
     const categories = [];
     for (let i = 0; i < user.categories.length; i++) {
-      const category = user.categories[i];
+      const category = await Category.findById(user.categories[i]).lean();
+
+      if (!category) continue;
 
       const usersRating = await User
         .find({
@@ -265,29 +268,44 @@ router.patch(
           (res: NodeJS.ReadableStream) => {
             let result = ``;
 
-            console.log(`res user Route`, typeof res);
             res.on(`data`, (d: Buffer) => {
               result += d.toString();
             });
 
             res.on(`end`, async () => {
-              const {
-                city,
-                countryName,
-                principalSubdivision: region,
-              } = JSON.parse(result);
+              const {city} = JSON.parse(result);
 
-              const location = {
-                city,
-                region,
-                latitude,
-                longitude,
-                country: countryName,
-              };
-              user.location = location;
+              const location = await City.find({city}).lean();
+
+              if (!location) {
+                return new Error(`Не вдалося знайти населений пункт`);
+              }
+
+              let min: number = Infinity;
+              let userCity: LeanDocument<CityDocument>;
+
+              for (let i = 0; i < location.length; i++) {
+                const currentCity = location[i];
+
+                const distance = Math.hypot(
+                  Math.abs(latitude - currentCity.latitude),
+                  Math.abs(longitude - currentCity.longitude),
+                );
+
+                if (distance < min) {
+                  min = distance;
+                  userCity = currentCity;
+                }
+
+                if (distance < 0.05) break;
+              }
+
+              // @ts-ignore
+              user.location = userCity._id;
               await user.save();
 
-              return response.json({location});
+              // @ts-ignore
+              return response.json(userCity);
             });
           }).on(`error`, (e: NodeJS.ErrnoException) => {
           throw e;

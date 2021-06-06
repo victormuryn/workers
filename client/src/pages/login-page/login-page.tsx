@@ -19,6 +19,9 @@ import {setPageMeta} from '../../utils/utils';
 type Response = {
   token: string,
   userId: string,
+  surname: string,
+  name: string,
+  image: boolean,
   accountType: AccountTypes,
   username: string,
 };
@@ -49,8 +52,7 @@ const LoginPage: React.FC = () => {
     api
       .post<Response>(`/auth/login`, {...data})
       .then((response) => {
-        const {token, userId, accountType, username} = response.data;
-        login(token, userId, accountType, username);
+        login(response.data);
         history.push(`/`);
       })
       .catch((error) => {
@@ -63,9 +65,9 @@ const LoginPage: React.FC = () => {
   };
 
   const onErrorClose = (
-    e: React.MouseEvent<HTMLAnchorElement | MouseEvent>,
+    event: React.MouseEvent<HTMLAnchorElement | MouseEvent>,
   ) => {
-    e.preventDefault();
+    event.preventDefault();
     setError(``);
   };
 

@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {useSelector} from 'react-redux';
+import {useSelector, shallowEqual} from 'react-redux';
 import {Link, NavLink, useHistory} from 'react-router-dom';
 
 import {State} from '../../redux/reducer';
@@ -15,19 +15,20 @@ import Container from 'react-bootstrap/Container';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
 const Header: React.FC = () => {
-  const {logout} = useContext(AuthContext);
-  const {user, unread} = useSelector((state: State) => (
-    {
-      user: state.user,
-      unread: state.messages.unread,
-    }
-  ));
   const history = useHistory();
+  const {logout} = useContext(AuthContext);
+
+  const {user, users} = useSelector((state: State) => ({
+    user: state.user,
+    users: state.messages.users,
+  }), shallowEqual);
 
   const isLogged = user.isAuthenticated;
+  const unread = users.filter((user) => user.hasNewMessages).length;
 
   const onLogoutClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+
     logout();
     history.push(`/`);
   };
@@ -43,9 +44,10 @@ const Header: React.FC = () => {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ms-auto me-0">
             <Nav.Link
-              as={NavLink} activeClassName="active"
+              as={NavLink}
               to="/projects"
               className="ms-2"
+              activeClassName="active"
             >
               Проєкти
             </Nav.Link>
@@ -54,15 +56,16 @@ const Header: React.FC = () => {
               isLogged ?
                 <>
                   <Nav.Link
-                    as={NavLink} activeClassName="active"
+                    as={NavLink}
                     to="/messages"
                     className="ms-2"
+                    activeClassName="active"
                   >
                     Повідомлення
                     {
-                      unread.length !== 0 ?
+                      unread !== 0 ?
                         <Badge variant="light" className="align-middle">
-                          {unread.length}
+                          {unread}
                         </Badge> : undefined
                     }
                   </Nav.Link>

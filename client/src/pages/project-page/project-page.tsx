@@ -32,6 +32,8 @@ const ProjectPage: React.FC = () => {
   const {user, project: projectData} = useSelector((state: State) => state);
   const {project, error, loading} = projectData;
 
+  const isOwner = user.userId === project.author._id;
+
   setPageMeta(project.title);
 
   const now = new Date();
@@ -91,6 +93,10 @@ const ProjectPage: React.FC = () => {
     await dispatch(ActionCreator.deleteBet(id, user.token || ``));
   };
 
+  const deleteHandler = () => {
+    dispatch(ActionCreator.deleteProject(id, user.token));
+  };
+
   // there is still no data => show "loader"
   if (loading) {
     return <Loader />;
@@ -105,24 +111,25 @@ const ProjectPage: React.FC = () => {
       <Row>
         <Col lg={8}>
           <ProjectContent
+            isOwner={isOwner}
             hot={project.hot}
             title={project.title}
             price={project.price}
             isExpired={isExpired}
             remote={project.remote}
+            onDelete={deleteHandler}
             location={project.location}
             category={project.category}
             description={project.description}
           />
 
           {
-            possibleToBet && !isExpired ?
+            (possibleToBet && !isExpired) &&
               <ProjectAddBet
                 price={project.price}
                 onFormSubmit={formSubmitHandler}
                 inputChangeHandler={inputChangeHandler}
-              /> :
-              null
+              />
           }
 
           <ProjectBetsList
@@ -132,7 +139,6 @@ const ProjectPage: React.FC = () => {
         </Col>
 
         <ProjectSidebar
-          // category={category}
           date={project.date}
           views={project.views}
           isExpired={isExpired}

@@ -5,9 +5,11 @@ import ProjectContent from './project-content';
 describe(`ProjectContent tests`, () => {
   it(`ProjectContent renders corrects`, () => {
     const tree = renderer.create(<ProjectContent
+      isOwner={true}
       hot={false}
       price={100}
       title="title"
+      onDelete={() => {}}
       description="text"
       isExpired={false}
       location={{
@@ -16,10 +18,11 @@ describe(`ProjectContent tests`, () => {
         latitude: 432.32,
         longitude: 12.332,
       }}
-      category={{
+      category={[{
+        _id: `test`,
         title: `test`,
         url: `test`,
-      }}
+      }]}
       remote
     />).toJSON();
 

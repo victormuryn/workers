@@ -4,11 +4,15 @@ import './message.scss';
 
 type MessageProps = {
   text: string,
-  onClose: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+  onClose?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
   type?: `info` | `danger` | `warning` | `success`
 };
 
-const Message: React.FC<MessageProps> = ({text, onClose, type = `info`}) => {
+const Message: React.FC<MessageProps> = ({
+  text,
+  onClose = () => {},
+  type = `info`,
+}) => {
   return (
     <div className="msg-container">
       <div className={`xd-message msg-${type}`}>

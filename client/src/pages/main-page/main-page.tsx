@@ -11,8 +11,8 @@ import Footer from '../../components/footer';
 
 import './main-page.scss';
 
-// @ts-ignore
-import {WOW} from 'wowjs';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import {setPageMeta} from '../../utils/utils';
 
 const MainPage: React.FC = () => {
@@ -24,12 +24,14 @@ const MainPage: React.FC = () => {
   ];
 
   useEffect(() => {
-    new WOW({
-      live: false,
-      offset: 50,
-      mobile: false,
-    }).init();
-  });
+    AOS.init({
+      once: true,
+      delay: 200,
+      offset: 200,
+      duration: 1200,
+      disable: 'mobile',
+    });
+  }, []);
 
   return (
     <>
@@ -126,7 +128,11 @@ const MainPage: React.FC = () => {
         </Row>
       </Container>
 
-      <Container as="section" className="custom wow fadeIn text-center">
+      <Container
+        as="section"
+        data-aos="fade-up"
+        className="custom text-center"
+      >
         <h2 className="custom__title">Працюємо так, як зручно тобі</h2>
 
         <picture>
@@ -148,24 +154,27 @@ const MainPage: React.FC = () => {
 
         <ol className="how-it-works__list">
           <li
-            className="how-it-works__item how-it-works__item--create
-             wow slideInLeft">
+            data-aos="slide-left"
+            className="how-it-works__item how-it-works__item--create"
+          >
             <h4 className="how-it-works__item-title">1 Створіть проєкт</h4>
             <p className="how-it-works__item-text">Детально опишіть завдання та
               побажання для виконавців</p>
           </li>
 
           <li
-            className="how-it-works__item how-it-works__item--choose
-             wow slideInRight">
+            data-aos="slide-right"
+            className="how-it-works__item how-it-works__item--choose"
+          >
             <h4 className="how-it-works__item-title">2 Виберіть виконавця</h4>
             <p className="how-it-works__item-text">Оберіть виконавця за ціною,
               термінами, відгуками та портфоліо</p>
           </li>
 
           <li
-            className="how-it-works__item how-it-works__item--reserve
-             wow slideInLeft">
+            data-aos="slide-left"
+            className="how-it-works__item how-it-works__item--reserve"
+          >
             <h4 className="how-it-works__item-title">3 Зарезервуйте кошти</h4>
             <p className="how-it-works__item-text">Після вибору, зарезервуйте
               кошти та розпочніть роботу з
@@ -173,8 +182,9 @@ const MainPage: React.FC = () => {
           </li>
 
           <li
-            className="how-it-works__item how-it-works__item--follow
-            wow slideInRight">
+            data-aos="slide-right"
+            className="how-it-works__item how-it-works__item--follow"
+          >
             <h4 className="how-it-works__item-title">4 Слідкуйте за ходом
               роботи</h4>
             <p className="how-it-works__item-text">Відстежуйте виконання роботи,
@@ -183,8 +193,9 @@ const MainPage: React.FC = () => {
           </li>
 
           <li
-            className="how-it-works__item how-it-works__item--reviews
-             wow slideInLeft">
+            data-aos="slide-left"
+            className="how-it-works__item how-it-works__item--reviews"
+          >
             <h4 className="how-it-works__item-title">5 Завершіть виконаний
               проєкт</h4>
             <p className="how-it-works__item-text">Після закінчення роботи
@@ -193,17 +204,18 @@ const MainPage: React.FC = () => {
           </li>
 
           <li
-            className="how-it-works__item how-it-works__item--done
-             wow slideInRight">
+            data-aos="slide-right"
+            className="how-it-works__item how-it-works__item--done"
+          >
             <div className="visually-hidden">Кінець</div>
           </li>
         </ol>
       </Container>
 
-      <Container as="section" className="categories wow fadeIn">
+      <Container as="section" className="categories">
         <h2 className="categories__title">Найпопулярніші категорії</h2>
 
-        <Row lg={5}>
+        <Row lg={5} data-aos="fade-up">
           <Col xs={12} sm={6} lg={false} className="categories__item">
             <Link to="/category/plumbing">
               <img src="/img/pipeline.svg" alt="Сантехніка"

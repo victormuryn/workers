@@ -78,6 +78,7 @@ router.post(
         .status(201)
         .json({message: `Користувач успішно створений.`});
     } catch (e) {
+      console.log(e)
       response
         .status(500)
         .json({message: `Щось пішло не так, спробуйте знову.`});
@@ -101,7 +102,9 @@ router.post(
       }
 
       const {username, password} = request.body;
-      const user = await User.findOne({username});
+      const user = await User
+        .findOne({username})
+        .select(`name surname username image accountType password`);
 
       if (!user) {
         return response
@@ -128,8 +131,11 @@ router.post(
 
       response.json({
         token,
-        username: user.username,
         userId: user.id,
+        name: user.name,
+        image: user.image,
+        surname: user.surname,
+        username: user.username,
         accountType: user.accountType,
       });
     } catch (e) {

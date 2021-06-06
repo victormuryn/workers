@@ -21,10 +21,11 @@ describe(`ProjectItem tests`, () => {
           latitude: 3.23,
           longitude: 3214,
         }}
-        category={{
+        category={[{
+          _id: `test`,
           title: `test`,
           url: `test`,
-        }}
+        }]}
         remote
       />
     </Router>).toJSON();

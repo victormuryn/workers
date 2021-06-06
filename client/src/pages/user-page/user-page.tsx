@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Link, useParams} from 'react-router-dom';
 import {useForm} from '../../hooks/form.hook';
 import api from '../../utils/api';
@@ -32,6 +32,7 @@ import '@ckeditor/ckeditor5-build-classic/build/translations/uk';
 import {getPluralNoun, setPageMeta} from '../../utils/utils';
 import {State} from '../../redux/reducer';
 import {AccountTypes} from '../../types/types';
+import {ActionCreator} from '../../redux/action-creator';
 
 type Author = {
   cv: string,
@@ -46,7 +47,8 @@ type Author = {
   finished: number,
   categories: Array<string>,
   accountType: AccountTypes,
-  location: {
+  location?: {
+    _id: string,
     city: string,
     region: string,
     country: string,
@@ -86,6 +88,7 @@ const UserTypeToText = {
 const UserPage: React.FC = () => {
   const {username} = useParams<{ username: string }>();
   const loggedUser = useSelector((state: State) => state.user);
+  const dispatch = useDispatch();
 
   // all states
   const {form: response, setForm, inputChangeHandler} = useForm<Response>({
@@ -102,7 +105,6 @@ const UserPage: React.FC = () => {
       categories: [],
       accountType: `client`,
       online: `1970-01-01T00:00:00.000+00:00`,
-      location: {city: '', country: '', latitude: 0, longitude: 0, region: ''},
       social: {
         facebook: '',
         github: '',
@@ -148,14 +150,14 @@ const UserPage: React.FC = () => {
   const startsPercentage = stars * 100 / 5;
 
   // XX очків / ХХ завершених проєктів
-  const pointsText = `${user.rating} ${getPluralNoun(user.rating,
-    `очко`, `очка`, `очків`,
-  )} / ${user.finished} ${getPluralNoun(user.finished,
-    `завершений проєкт`, `завершені проєкти`, `завершених проєктів`,
-  )}`;
-  const starsText = `${stars} ${getPluralNoun(stars,
-    `зірка`, `зірки`, `зірок`,
-  )}`;
+  const pointsText = `${getPluralNoun(
+    user.rating,
+    [`очко`, `очка`, `очків`])
+  } / ${getPluralNoun(
+    user.finished,
+    [`завершений проєкт`, `завершені проєкти`, `завершених проєктів`])
+  }`;
+  const starsText = getPluralNoun(stars, [`зірка`, `зірки`, `зірок`]);
 
   const getData = async () => {
     setLoading(true);
@@ -252,6 +254,8 @@ const UserPage: React.FC = () => {
         .then((response) => {
           setSuccess(response.data.message);
           setAvatarName(` ` + avatarName);
+
+          dispatch(ActionCreator.setAvatar());
         })
         .catch((error) => {
           setError(error.response ?
@@ -265,6 +269,7 @@ const UserPage: React.FC = () => {
   const getGeolocation = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setWarning(``);
+    setSuccess(``);
     setLocationLoading(true);
 
     const options = {
@@ -291,10 +296,10 @@ const UserPage: React.FC = () => {
               'Authorization': `Bearer ${loggedUser.token}`,
             },
           })
-        .then((response) => {
+        .then(({data}) => {
           inputChangeHandler({
             name: `user.location`,
-            value: response.data.location,
+            value: data,
           });
 
           setSuccess(`Місцезнаходження оновлено!`);
@@ -306,6 +311,7 @@ const UserPage: React.FC = () => {
       code: number,
       message: string,
     }
+
     const error = (err: Err) => {
       switch (err.code) {
       case 1:
@@ -365,7 +371,9 @@ const UserPage: React.FC = () => {
               </div>
 
               <div className="mt-3">
-                <h4>
+                <h4
+                  className="d-flex justify-content-center align-items-center"
+                >
                   <OverlayTrigger
                     placement="top"
                     overlay={<Tooltip id="user-online">
@@ -377,7 +385,7 @@ const UserPage: React.FC = () => {
                     </Tooltip>}
                   >
                     <div
-                      className={`user-online bg-${isOnline ?
+                      className={`user-online me-1 bg-${isOnline ?
                         `success` :
                         `secondary`}`
                       }
@@ -419,13 +427,26 @@ const UserPage: React.FC = () => {
                   </div>
                 </OverlayTrigger>
 
-                <Button
-                  as={Link}
-                  variant="outline-primary"
-                  to={`/messages?user=${user.username}`}
-                >
-                  Написати
-                </Button>
+                {
+                  !isUsersPage && <Button
+                    as={Link}
+                    onClick={() => {
+                      dispatch(ActionCreator.addUser({
+                        more: false,
+                        name: user.name,
+                        userID: user._id,
+                        image: user.image,
+                        connected: isOnline,
+                        surname: user.surname,
+                        username: user.username,
+                      }));
+                    }}
+                    variant="outline-primary"
+                    to={`/messages?user=${user.username}`}
+                  >
+                    Написати
+                  </Button>
+                }
               </div>
             </div>
           </Card.Body>
@@ -518,7 +539,7 @@ const UserPage: React.FC = () => {
             </Row>
 
             {
-              (user.location.city || isUsersPage) &&
+              (user.location || isUsersPage) &&
               <>
                 <hr/>
                 <Row className="align-items-center mx-0">
@@ -526,10 +547,11 @@ const UserPage: React.FC = () => {
                     <h6 className="mb-0">Місцеположення</h6>
                   </Col>
                   <Col sm={9} className="text-secondary">
-                    {user.location.city &&
-                    <span>
-                      {user.location.city}, {user.location.country}{` `}
-                    </span>
+                    {
+                      user?.location &&
+                      <span>
+                        {user.location.city}, {user.location.country}{` `}
+                      </span>
                     }
 
                     {

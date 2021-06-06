@@ -4,6 +4,7 @@ env:
 
 extends:
   - 'plugin:react/recommended'
+  - 'plugin:react-hooks/recommended'
   - google
 
 parser: '@typescript-eslint/parser'
@@ -23,6 +24,6 @@ root: true
 rules: {
   "indent": [2, 2],
   "react/prop-types": "off",
-  "react/require-default-props": "off"
+  "react/require-default-props": "off",
 }
 

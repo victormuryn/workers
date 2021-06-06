@@ -92,6 +92,7 @@ router.patch(
       const minPrice = project.price;
       if (bet.updated.count >= 3) {
         return response.status(500).json({
+          bet,
           message: `Ви використали усі спроби для оновлення ставки.`,
         });
       }
@@ -113,7 +114,7 @@ router.patch(
 
         await bet.save();
 
-        return response.json({message: `Успішно оновлено!`});
+        return response.json({message: `Успішно оновлено!`, bet});
       }
 
       response
@@ -145,7 +146,7 @@ router.delete(`/:id`, auth, async (request: Request, response: Response) => {
     }
 
     response
-      .status(500)
+      .status(403)
       .json({message: `Ви не авторизовані.`});
   } catch (e) {
     response

@@ -1,41 +1,50 @@
 import {useState, useCallback, useEffect} from 'react';
-import {Action, Dispatch} from 'redux';
+
 import {ActionCreator} from '../redux/action-creator';
-import {User} from '../redux/types';
+
+import {Action, Dispatch} from 'redux';
+
+import {User} from '../redux/user/types';
 import {AccountTypes} from '../types/types';
 
 // logged user data keeps in localstorage
 const storageName = `user`;
 
 type Login = (
-  token: string,
-  userId: string,
-  accountType: AccountTypes,
-  username: string
+  data: {
+    name: string,
+    surname: string,
+    image: boolean,
+    token: string,
+    userId: string,
+    accountType: AccountTypes,
+    username: string,
+  }
 ) => void;
 
 export const useAuth = (dispatch: Dispatch<Action>) => {
   // have we checked is user logged
   const [ready, setReady] = useState(false);
 
-  const login = <Login>useCallback((
-    token, userId, accountType, username,
-  ) => {
+  const login = <Login>useCallback((data) => {
+    const {token, username} = data;
+
+    // @ts-ignore
+    dispatch(ActionCreator.initMessages(username, token));
+
     // set logged user data to redux state
-    dispatch(ActionCreator.login({token, userId, accountType, username}));
-    dispatch(ActionCreator.initMessages(username, token)(dispatch));
+    dispatch(ActionCreator.login(data));
 
     // set data to localstorage
-    localStorage.setItem(storageName, JSON.stringify({
-      token, userId, accountType, username,
-    }));
+    localStorage.setItem(storageName, JSON.stringify(data));
   }, []);
 
-  // const logout = useCallback((id: string | null, token: string | null) => {
   const logout = useCallback(() => {
+    // turn off messages (socket.io)
+    dispatch(ActionCreator.offSocket());
+
     // remove data from state
     dispatch(ActionCreator.logout());
-    dispatch(ActionCreator.offSocket());
 
     // remove data from localstorage
     localStorage.removeItem(storageName);
@@ -50,8 +59,7 @@ export const useAuth = (dispatch: Dispatch<Action>) => {
       if (data) {
         // parse and login user
         const parsedData: User = await JSON.parse(data);
-        const {token, userId, accountType, username} = parsedData;
-        login(token, userId, accountType, username);
+        login(parsedData);
       }
 
       // set that we checked if user logged

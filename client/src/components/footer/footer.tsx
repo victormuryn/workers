@@ -19,7 +19,6 @@ const Footer: React.FC<FooterProps> = ({color = `#fff`}) => {
       ${color} 45px,
       ${color} 100%
     )`;
-
   return (
     <Container className="footer" fluid style={{background}} as="footer">
       <Row xs={1} md={3} className="footer__wrapper">

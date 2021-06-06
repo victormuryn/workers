@@ -1,43 +1,9 @@
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-::-webkit-scrollbar-track {
-  width: 5px;
-  background: #f5f5f5;
-}
-
-::-webkit-scrollbar-thumb {
-  width: 1em;
-  background-color: #ddd;
-  outline: 1px solid slategrey;
-  border-radius: 1rem;
-}
-
-.text-small {
-  font-size: 0.9rem;
-}
-
-.messages-box,
-.chat-box {
-  max-height: 700px;
-  overflow-y: scroll;
-}
-
-.rounded-lg {
-  border-radius: 0.5rem;
-}
-
-input::placeholder {
-  font-size: 0.9rem;
-  color: #999;
-}
-
-.media {
+.users-container {
+  position: relative;
+  padding: 1rem 0;
+  border-right: 1px solid #e6ecf3;
+  height: 100%;
+  display: -ms-flexbox;
   display: flex;
-  align-items: flex-start;
-}
-
-.media-body {
-  flex: 1;
+  flex-direction: column;
 }

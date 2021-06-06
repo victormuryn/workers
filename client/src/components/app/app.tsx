@@ -4,7 +4,7 @@ import {BrowserRouter as Router, Link} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.scss';
 
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useAuth} from '../../hooks/auth.hook';
 import {useRoutes} from '../../hooks/routes';
 import AuthContext from '../../context/Auth.context';
@@ -13,7 +13,9 @@ import {ActionCreator} from '../../redux/action-creator';
 import Toast from 'react-bootstrap/Toast';
 
 import Loader from '../loader';
+import UserAvatar from '../user-avatar';
 import ScrollToTop from '../scroll-to-top';
+
 import {State} from '../../redux/reducer';
 
 const App: React.FC = () => {
@@ -23,28 +25,44 @@ const App: React.FC = () => {
   const {user, unread} = useSelector((state: State) => ({
     user: state.user,
     unread: state.messages.unread,
-  }));
+  }), shallowEqual);
+
   const {isAuthenticated, accountType} = user;
 
   const messages = unread.map(({message, from}, i) => (
-    <Toast key={from + i} className="my-2" autohide>
+    <Toast
+      autohide
+      animation
+      delay={10000}
+      key={from + i}
+      className="my-2"
+      onClose={() => dispatch(ActionCreator.closeUnreadMessage(i))}
+    >
       <Toast.Header closeLabel="Закрити">
         <Link
           to={`/user/${from}`}
           className="me-auto text-decoration-none text-dark"
         >
-          <img
-            alt={from}
+          <UserAvatar
             width={20}
+            image={true}
+            username={from}
             className="rounded-circle me-2"
-            src={`http://localhost:8080/img/users/${from}.webp`}
           />
           <strong>{from}</strong>
         </Link>
 
-        <small className="me-1">just now</small>
+        <small className="me-1">Тільки що</small>
       </Toast.Header>
-      <Toast.Body>{message}</Toast.Body>
+
+      <Link
+        to={`/messages?user=${from}`}
+        className="text-decoration-none"
+      >
+        <Toast.Body className="text-dark">
+          {message}
+        </Toast.Body>
+      </Link>
     </Toast>
   ));
 
@@ -55,6 +73,7 @@ const App: React.FC = () => {
   }, []);
 
   const router = useRoutes(isAuthenticated, accountType);
+
   if (!ready) {
     return (<Loader />);
   }

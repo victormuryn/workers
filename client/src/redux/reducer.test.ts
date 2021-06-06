@@ -1,5 +1,5 @@
 import {reducer} from './reducer';
-import {USER_LOGIN, USER_LOGOUT} from './types';
+import {USER_LOGIN, USER_LOGOUT} from './user/types';
 import {ActionCreator} from './action-creator';
 
 describe(`ActionCreator tests`, () => {
@@ -9,6 +9,9 @@ describe(`ActionCreator tests`, () => {
       userId: `test-user-id`,
       accountType: `freelancer`,
       username: `test-username`,
+      name: `text-name`,
+      surname: `test-surname`,
+      image: true,
     });
 
     expect(login).toEqual({
@@ -18,6 +21,9 @@ describe(`ActionCreator tests`, () => {
         userId: `test-user-id`,
         accountType: `freelancer`,
         username: `test-username`,
+        name: `text-name`,
+        surname: `test-surname`,
+        image: true,
       },
     });
   });

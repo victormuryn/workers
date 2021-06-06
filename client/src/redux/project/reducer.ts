@@ -1,17 +1,18 @@
 import {Project} from '../../types/types';
 import {
-  PROJECT_SET,
+  PROJECT_DELETE,
   PROJECT_ERROR,
   PROJECT_LOADING,
   PROJECT_REMOVE_BET,
+  PROJECT_SET,
   ProjectActionTypes,
-} from '../types';
+} from './types';
 
-export type State = {
+export interface State {
   project: Project,
   loading: boolean,
   error: string | null,
-};
+}
 
 const time = new Date().toLocaleString();
 
@@ -27,14 +28,17 @@ const initialState: State = {
     expire: time,
     remote: true,
     description: ``,
-    category: {
-      title: ``,
+    category: [{
+      _id: `none`,
+      title: `Не вказано`,
       url: ``,
-    },
+    }],
     location: {
+      _id: ``,
       city: ``,
       region: ``,
       latitude: 0,
+      country: ``,
       longitude: 0,
     },
     author: {
@@ -43,10 +47,6 @@ const initialState: State = {
       image: false,
       surname: ``,
       username: ``,
-      location: {
-        city: ``,
-        country: ``,
-      },
     },
   },
   error: null,
@@ -86,8 +86,21 @@ export default (
       project: {
         ...state.project,
         bets,
-      }
+      },
     };
+
+  case PROJECT_DELETE:
+    if (state.project._id === action.payload.id) {
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          expire: action.payload.expire,
+        },
+      };
+    }
+
+    return state;
   }
 
   return state;

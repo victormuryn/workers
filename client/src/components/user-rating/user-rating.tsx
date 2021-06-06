@@ -65,6 +65,7 @@ const UserRating: React.FC<Props> = ({
         {
           categories.map(({title, all, place, url, id}, i) =>
             <UserRatingItem
+              id={id}
               key={id + i}
               all={all}
               url={url}

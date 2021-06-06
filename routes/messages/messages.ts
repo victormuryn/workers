@@ -6,18 +6,18 @@ import * as config from 'config';
 import {Server, Socket} from 'socket.io';
 
 // import stores
-import InMemorySessionStore, {Session} from './sessionStore';
+import InMemorySessionStore from './sessionStore';
 import DBMessageStore from './messageStore';
 
 import User from '../../models/User';
-import {ChatType} from '../../models/Chat';
-import {LeanDocument} from 'mongoose';
+import Chat, {ChatType} from '../../models/Chat';
 
 // init all stores
 const sessionStore = new InMemorySessionStore();
 const messageStore = new DBMessageStore();
 
 export interface MessageUser {
+  more: boolean,
   userID: string,
   username: string,
   connected: boolean,
@@ -28,6 +28,12 @@ type Message = {
   from: string,
   to: string,
   content: string,
+  read: boolean,
+}
+
+interface MessagesPerUser {
+  more: boolean,
+  messages: ChatType[],
 }
 
 module.exports = (server: http.Server) => {
@@ -53,7 +59,6 @@ module.exports = (server: http.Server) => {
       socket.image = session.image;
       socket.surname = session.surname;
       socket.username = session.username;
-      socket.fullName = session.fullName;
     }
 
     return next();
@@ -82,7 +87,6 @@ module.exports = (server: http.Server) => {
       image: userModel.image,
       surname: userModel.surname,
       username: userModel.username,
-      fullName: `${userModel.name} ${userModel.surname}`,
     };
 
     // persist session
@@ -96,55 +100,102 @@ module.exports = (server: http.Server) => {
 
     // fetch existing users
     const users: Array<MessageUser> = [];
-    const messagesPerUser = new Map();
+    const messagesPerUser = new Map<string, MessagesPerUser>();
 
     await messageStore.findMessagesForUser(userID, (error, messages) => {
       if (error) return console.log(error);
 
-      messages.forEach((message: LeanDocument<ChatType>) => {
-        const from = message.from.toString();
-        const to = message.to.toString();
+      messages.forEach(({more, messages}) => {
+        messages.forEach((message) => {
+          const from = message.from.toString();
+          const to = message.to.toString();
 
-        const otherUser = userID === from ? to : from;
+          const otherUser = userID === from ? to : from;
 
-        const msg = {
-          ...message,
-          to, from,
-          fromSelf: userID === from,
-        };
+          const msg = {
+            ...message,
+            to, from,
+            fromSelf: userID === from,
+          };
 
-        if (messagesPerUser.has(otherUser)) {
-          return messagesPerUser.get(otherUser).push(msg);
-        }
+          if (messagesPerUser.has(otherUser)) {
+            return messagesPerUser.get(otherUser)!.messages.push(msg);
+          }
 
-        messagesPerUser.set(otherUser, [msg]);
+          messagesPerUser.set(otherUser, {more, messages: [msg]});
+        });
       });
     });
 
-    sessionStore
-      .findAllSessions()
-      .forEach((session: Session) => {
-        const messages = messagesPerUser.get(session.userID) || [];
+    const messagesPerUserKeys = messagesPerUser.keys();
+    for (let i = 0; i < messagesPerUser.size; i++) {
+      const key = messagesPerUserKeys.next().value;
+      const messages = messagesPerUser.get(key);
 
-        users.push({...session, messages});
+      socket.to(key).emit(`user connected`, user);
+
+      const newMessagesUser = sessionStore.findSession(key);
+      if (newMessagesUser) {
+        users.push({...newMessagesUser, ...messages});
+        continue;
+      }
+
+      const dbUser = await User
+        .findById(key)
+        .select(`-_id name username surname image`)
+        .lean();
+
+      if (!dbUser) continue;
+
+      // @ts-ignore - messages 100% in Map, 'cause we've been used .keys()
+      users.push({
+        ...dbUser,
+        ...messages,
+        userID: key,
+        connected: false,
       });
+    }
 
     socket.emit(`users`, users);
 
-    // notify existing users
-    socket.broadcast.emit(`user connected`, user);
-
     // forward the private message to the right recipient
     // (and to other tabs of the sender)
-    socket.on(`private message`, ({content, to}: Message) => {
+    socket.on(`private message`, async ({content, to}: Message) => {
       const message = {
         to, content,
+        read: false,
         from: userID,
         date: new Date(),
       };
 
-      socket.to(to).to(userID).emit('private message', message);
-      messageStore.saveMessage(message);
+      const isMessagesBetweenUsers = await messageStore
+        .isMessagesBetweenUsers(userID, to);
+
+      if (!isMessagesBetweenUsers) {
+        socket.to(to).emit(`user connected`, user);
+      }
+
+      socket.to(to).emit('private message', {
+        ...message,
+        _id: Math.random().toString(36).substr(2, 9),
+      });
+
+      await messageStore.saveMessage(message);
+    });
+
+    socket.on(`get_oldest_messages`, async (data) => {
+      const {ID, skip} = data as {ID: string, skip: number};
+      const messages = await messageStore.getMessagesForUsers(userID, ID, skip);
+
+      socket.emit(`load_oldest_messages`, {
+        ...messages,
+        userID: ID,
+      });
+    });
+
+    socket.on(`read`, ({from, to}) => {
+      messageStore.setReadStatus(from, to);
+      socket.to(to).emit(`updateRead`, from);
     });
 
     // notify users upon disconnection
@@ -154,7 +205,11 @@ module.exports = (server: http.Server) => {
 
       if (isDisconnected) {
         // notify other users
-        // socket.broadcast.emit(`user disconnected`, userID);
+        const messagesPerUserKeys = messagesPerUser.keys();
+        for (let i = 0; i < messagesPerUser.size; i++) {
+          const key = messagesPerUserKeys.next().value;
+          socket.to(key).emit(`user disconnected`, userID);
+        }
 
         // update the connection status of the session
         sessionStore.saveSession(userID, {
@@ -165,3 +220,44 @@ module.exports = (server: http.Server) => {
     });
   });
 };
+
+// const users = [
+//   `60324153305b700f1814c4ea`,
+//   `60324191fd8ae80638059282`,
+//   `60916593e2607517c4104f8b`,
+//   `605f6182d958d51c40911109`,
+//   `605ed54efcda34079808281a`,
+//   `60546a9470af6c18204ec560`,
+//   `603b46b19b27881858d4893e`,
+//   `60375dd52f79a9169854b66d`,
+// ];
+//
+// const sendMessages = (
+//   count: number,
+//   first: string,
+//   second: string,
+// ) => {
+//   let counter = 0;
+//
+//   const users = [first, second, first];
+//   const int = setInterval(async () => {
+//     counter++;
+//
+//     await new Chat({
+//       from: users[counter % 2],
+//       to: users[counter % 2 + 1],
+//       date: new Date(),
+//       content: counter + ` ` + users[counter % 2],
+//     }).save();
+//
+//     if (counter >= count) {
+//       clearInterval(int);
+//     }
+//   }, 1);
+// };
+//
+// users.forEach((user, i) => {
+//   for (let j = i + 1; j < users.length; j++) {
+//     sendMessages(1000, user, users[j]);
+//   }
+// });

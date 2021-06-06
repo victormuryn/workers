@@ -1,28 +1,23 @@
-import {Document, model, Model, Schema, Types} from 'mongoose';
+import {Document, model, Schema, Types} from 'mongoose';
 
 import {UserType} from './User';
 import {CategoryType} from './Category';
 import {BetType} from './Bet';
+import {CityDocument} from './City';
 
 export interface ProjectType extends Document {
+  date: Date,
+  expire: Date,
+  hot: boolean,
+  title: string,
   price: number,
   views: number,
-  date: Date,
-  hot: boolean,
-  expire: Date,
-  title: string,
   remote: boolean,
   description: string,
   author: UserType['_id'],
   bets: Array<BetType['_id']>,
-  category: CategoryType['_id'],
-  location: {
-    city: string,
-    region: string,
-    district: string,
-    latitude: number,
-    longitude: number,
-  }
+  location: CityDocument['_id'],
+  category: Array<CategoryType['_id']>,
 }
 
 const schema = new Schema<ProjectType>({
@@ -36,30 +31,8 @@ const schema = new Schema<ProjectType>({
   description: {type: String, required: true},
   bets: [{type: Types.ObjectId, ref: `Bet`, required: true}],
   author: {type: Types.ObjectId, ref: `User`, required: true},
-  category: {type: Types.ObjectId, ref: `Category`, required: true},
-  location: {
-    city: {
-      type: String,
-      default: ``,
-    },
-    region: {
-      type: String,
-      default: ``,
-    },
-    district: {
-      type: String,
-      default: ``,
-    },
-    latitude: {
-      type: Number,
-      default: 0,
-    },
-    longitude: {
-      type: Number,
-      default: 0,
-    },
-  },
-  // tags: {type: Types.ObjectId}
+  location: {type: Types.ObjectId, ref: `City`, default: null},
+  category: [{type: Types.ObjectId, ref: `Category`, required: true}],
 });
 
 export default model<ProjectType>(`Project`, schema);

@@ -1,9 +1,8 @@
 import {combineReducers} from 'redux';
 
-import userReducer, {State as UserState} from './reducers/user';
-import projectReducer, {State as ProjectState} from './reducers/project';
-import messagesReducer, {State as MessagesState} from './reducers/messages';
-
+import userReducer, {State as UserState} from './user/reducer';
+import projectReducer, {State as ProjectState} from './project/reducer';
+import messagesReducer, {State as MessagesState} from './messages/reducer';
 
 export type State = {
   user: UserState,

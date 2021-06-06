@@ -11,6 +11,5 @@ declare module 'socket.io-client' {
     image?: boolean;
     surname?: string;
     username?: string;
-    fullName?: string;
   }
 }

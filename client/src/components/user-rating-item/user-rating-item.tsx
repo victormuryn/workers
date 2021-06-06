@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import {useHttp} from '../../hooks/http.hook';
 
 import './user-rating-item.scss';
 
@@ -9,21 +8,25 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
 import InputAutocomplete from '../input-autocomplete';
+import api from '../../utils/api';
+import {ActionMeta, OptionsType} from 'react-select';
+import {Simulate} from "react-dom/test-utils";
 
-type Suggestions = Array<{
-  value: string,
-  text: string,
+type Suggestion = {
+  value: string | number,
+  label: string,
   group?: string,
-}>;
+};
 
-type Response = Array<{
+type Category = {
   _id: string,
-  title: string,
   url: string,
-  group?: string,
-}>;
+  title: string,
+  group: string,
+};
 
 type Props = {
+  id: string,
   all: number,
   url: string,
   title: string,
@@ -33,6 +36,7 @@ type Props = {
 }
 
 const UserRatingItem: React.FC<Props> = ({
+  id,
   all,
   url,
   title,
@@ -40,36 +44,57 @@ const UserRatingItem: React.FC<Props> = ({
   isOwner,
   onCategoryChange,
 }) => {
-  const [suggestions, setSuggestions] = useState<Suggestions>([]);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [value, setValue] = useState<string>(title);
-  const {request} = useHttp<Response>();
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const inputChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
+  const inputChangeHandler = (value: string, {action}: {
+    action: 'set-value' | 'input-change' | 'input-blur' | 'menu-close',
+  }) => {
+    if (action !== `input-change`) {
+      return;
+    }
 
-    const {value} = e.target;
     setValue(value);
 
-    const data = await request(`/api/categories/autofill/${value}`, `GET`);
-    const result = data.map(({_id, title: text, group}) => ({
-      text,
-      group,
-      value: `${_id}|${title}`,
-    }));
+    if (!value) {
+      setSuggestions([]);
+      onCategoryChange();
+      return;
+    }
 
-    setSuggestions(result);
+    setLoading(true);
+    api
+      .get<Category[]>(`/categories/autofill/${value}`)
+      .then(({data}) => {
+        const result = data.map(({_id: value, title: label, group}) => ({
+          group, label, value,
+        }));
+
+        setSuggestions(result);
+        setLoading(false);
+      });
   };
 
-  const selectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    e.preventDefault();
+  const selectChangeHandler = (
+    data: Suggestion | OptionsType<Suggestion> | null,
+    options: ActionMeta<Suggestion>,
+  ) => {
+    if (options.action === `clear`) {
+      onCategoryChange();
+      setValue(``);
+      setSuggestions([]);
+      return;
+    }
 
-    const {value} = e.target;
-    const [id, title] = value.split(`|`);
+    if (!data || Array.isArray(data)) return;
 
-    onCategoryChange(id);
+    // we could do this 'cause OptionsType<Suggestion> == Suggestion[]
+    const d = data as Suggestion;
+    onCategoryChange(d.value.toString());
 
     setSuggestions([]);
-    setValue(title);
+    setValue(d.label);
   };
 
   return (
@@ -78,13 +103,12 @@ const UserRatingItem: React.FC<Props> = ({
         {
           isOwner ?
             <InputAutocomplete
-              value={value}
+              loading={loading}
               className="text-center"
               suggestions={suggestions}
               placeholder="Виберіть категорію"
-              inputName={`rating-input-${url}`}
+              value={{label: value, value: id}}
               onInputChange={inputChangeHandler}
-              selectName={`rating-select-${url}`}
               onSelectChange={selectChangeHandler}
             /> :
             <>

@@ -21,7 +21,7 @@ module.exports = async (
     if (authHeader) {
       const token = authHeader.split(` `)[1];
 
-      if (token === `null` || token === null) {
+      if (!token || token === `null` || token === null) {
         return next();
       }
 
@@ -36,6 +36,7 @@ module.exports = async (
 
     return next();
   } catch (e) {
+    console.log(e)
     response
       .status(401)
       .json({message: `Не вдалося оновити статус`});

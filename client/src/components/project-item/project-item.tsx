@@ -24,9 +24,10 @@ type ProjectItemProps = {
     longitude: number,
   },
   category: {
+    _id: string,
     title: string,
     url: string,
-  }
+  }[],
 };
 
 const ProjectItem: React.FC<ProjectItemProps> = (props) => {
@@ -68,7 +69,7 @@ const ProjectItem: React.FC<ProjectItemProps> = (props) => {
           >
             <span className={`h4 ${hot && `text-danger`}`}>{title}</span>
             <p className="small text-muted mt-2 mb-md-0">
-              {category.title},{` `}
+              {category.map(({title}) => `${title}, `)}
               {
                 remote ?
                   <>віддалено</> :

@@ -28,8 +28,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 // Types
 import {State} from '../../redux/reducer';
 import {setPageMeta} from '../../utils/utils';
+import {ActionMeta, OptionsType} from 'react-select';
 
 type Location = {
+  _id: string,
   city: string,
   district: string,
   region: string,
@@ -43,11 +45,9 @@ type FormState = {
   title: string,
   price: number,
   remote: boolean,
-  category: string,
-  inputCity: string,
-  location: Location,
+  category: string[],
+  location: string | null,
   description: string,
-  categoryText: string,
 };
 
 type Categories = {
@@ -58,12 +58,13 @@ type Categories = {
 };
 
 type Autofill = {
-  text: string,
-  value: string | number,
+  label: string,
+  group?: string,
+  value: any,
 };
 
 type AutofillChangeType<T> = [
-  React.ChangeEvent<HTMLInputElement>,
+  string,
   string,
   (data: T[]) => void,
 ]
@@ -80,6 +81,13 @@ const CreatePage: React.FC = () => {
 
   const [error, setError] = useState<string>(``);
   const [loading, setLoading] = useState<boolean>(false);
+  const [inputLoading, setInputLoading] = useState<{
+    city: boolean,
+    category: boolean,
+  }>({
+    city: false,
+    category: false,
+  });
   const clearError = () => setError(``);
 
   const [catSuggestions, setCatSuggestions] = useState<Autofill[]>([]);
@@ -94,52 +102,49 @@ const CreatePage: React.FC = () => {
     price: 0,
     title: ``,
     hot: false,
-    category: ``,
+    category: [],
     remote: false,
-    inputCity: ``,
     description: ``,
-    categoryText: ``,
-    location: {city: ``, district: ``, region: ``, latitude: 0, longitude: 0},
+    location: null,
   });
 
   const inputChangeHandlerByValue = (value: any, name: string) => {
     inputChangeHandler({name, value});
   };
 
-  const selectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const {name} = e.target;
-    const inputName = e.target.dataset.inputName || `none`;
-
-    const nativeTarget = e.nativeEvent.target as HTMLSelectElement;
-
-    const index = nativeTarget.selectedIndex || -1;
-    const text = nativeTarget[index].textContent || `Пусто`;
-
-    let value: any;
-    try {
-      value = JSON.parse(e.target.value);
-    } catch (error) {
-      value = e.target.value;
+  const selectChangeHandler = (
+    value: Autofill | OptionsType<Autofill> | null,
+    options: ActionMeta<Autofill>,
+  ) => {
+    if (options.action === `clear`) {
+      return inputChangeHandler({
+        name: options.name || ``,
+        value: undefined,
+      });
     }
 
-    setSuggestions([]);
-    setCatSuggestions([]);
+    if (!value) return;
 
-    inputChangeHandler([{
-      name: inputName,
-      value: text,
-    }, {
-      name,
-      value,
-    }]);
+    if (Array.isArray(value)) {
+      const values = value.map((element) => element.value);
+
+      return inputChangeHandler({
+        name: options.name || ``,
+        value: values,
+      });
+    }
+
+    inputChangeHandler({
+      name: options.name || ``,
+      value: (value as Autofill).value,
+    });
   };
 
-  const onAutofillChange = async <T, >(...args: AutofillChangeType<T>) => {
-    const [e, url, onSuccess] = args;
-    inputChangeHandler(e);
+  const onAutofillChange = <T, >(...args: AutofillChangeType<T>) => {
+    const [text, url, onSuccess] = args;
 
     api
-      .get<T[]>(`${url}${e.target.value}`)
+      .get<T[]>(`${url}${text}`)
       .then(({data}) => {
         onSuccess(data);
       })
@@ -148,52 +153,76 @@ const CreatePage: React.FC = () => {
       });
   };
 
-  const categoryInputChangeHandler = async (
-    event: React.ChangeEvent<HTMLInputElement>,
+  const categoryInputChangeHandler = (
+    text: string,
+    options: {
+      action: 'set-value' | 'input-change' | 'input-blur' | 'menu-close',
+    },
   ) => {
-    await onAutofillChange<Categories>(
-      event,
+    if (options.action !== `input-change`) return;
+
+    if (!text) {
+      setCatSuggestions([]);
+      return;
+    }
+
+    setInputLoading((prev) => ({
+      ...prev,
+      category: true,
+    }));
+
+    onAutofillChange<Categories>(
+      text,
       `/categories/autofill/`,
       (result) => {
-        const response = result.map(({group, _id, title: text}) => ({
-          text,
-          group,
-          value: _id,
+        const response = result.map(({group, _id, title: label}) => ({
+          label, group, value: _id,
         }));
 
         setCatSuggestions(response);
+        setInputLoading((prev) => ({
+          ...prev,
+          category: false,
+        }));
       });
   };
 
-  const cityInputChangeEvent = async (
-    event: React.ChangeEvent<HTMLInputElement>,
+  const cityInputChangeEvent = (
+    text: string,
+    options: {
+      action: 'set-value' | 'input-change' | 'input-blur' | 'menu-close',
+    },
   ) => {
-    if (!event.target.value) {
-      inputChangeHandler(event);
+    if (options.action !== `input-change`) return;
+
+    if (!text) {
       setSuggestions([]);
       return;
     }
 
-    await onAutofillChange<Location>(
-      event,
+    setInputLoading((prev) => ({
+      ...prev,
+      city: true,
+    }));
+
+    onAutofillChange<Location>(
+      text,
       `/project/city/`,
       (result) => {
-        const suggestionsList = result.map((element) => {
-          const {
-            city, district, region,
-            latitude, longitude,
-          } = element;
-          const value = JSON.stringify({
-            city, district, region, latitude, longitude,
-          });
+        const suggestionsList = result.map((value) => {
+          const {city, district, region, _id} = value;
 
           return {
-            text: `${city}, ${district}, ${region}`,
-            value,
+            value: _id,
+            label: `${city}, ${district}, ${region}`,
           };
         });
 
         setSuggestions(suggestionsList);
+        setInputLoading((prev) => ({
+          ...prev,
+          city: false,
+        }));
       });
   };
 
@@ -276,11 +305,11 @@ const CreatePage: React.FC = () => {
         {/* category */}
         <CreateFormGroup title="Вкажіть категорію" lg={3}>
           <InputAutocomplete
-            selectName="category"
+            isMulti
+            name="category"
             placeholder="Категорія"
-            inputName="categoryText"
-            value={form.categoryText}
             suggestions={catSuggestions}
+            loading={inputLoading.category}
             onSelectChange={selectChangeHandler}
             onInputChange={categoryInputChangeHandler}
           />
@@ -303,11 +332,10 @@ const CreatePage: React.FC = () => {
         {/* city */}
         <CreateFormGroup title="Вкажіть місто" lg={3}>
           <InputAutocomplete
-            selectName="location"
-            inputName="inputCity"
-            value={form.inputCity}
+            name="location"
             disabled={form.remote}
             suggestions={suggestions}
+            loading={inputLoading.city}
             placeholder="Населений пункт"
             onInputChange={cityInputChangeEvent}
             onSelectChange={selectChangeHandler}
@@ -325,14 +353,8 @@ const CreatePage: React.FC = () => {
               inputChangeHandler([
                 event,
                 {
-                  name: `inputCity`,
-                  value: ``,
-                }, {
                   name: `location`,
-                  value: {
-                    city: ``, district: ``, region: ``,
-                    latitude: 0, longitude: 0,
-                  },
+                  value: null,
                 },
               ]);
             }}
