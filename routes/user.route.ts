@@ -294,6 +294,8 @@ router.patch(`/:username/avatar`,
             .resize({width: 200, height: 200, fit: `cover`})
             .toBuffer();
 
+          console.log(`cropped`)
+
           const pathToPhoto = path
             .join(pathToFolder, `${username}.${extension}`);
 
@@ -301,7 +303,9 @@ router.patch(`/:username/avatar`,
             pathToPhoto,
             croppedImg,
             async (error: NodeJS.ErrnoException | null ) => {
+              console.log(`written`)
               if (error) throw error;
+              console.log(`no error`)
 
               user.image = true;
               await user.save();

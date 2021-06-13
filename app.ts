@@ -39,7 +39,6 @@ const start = async () => {
       useCreateIndex: true,
     });
 
-    console.log(PORT)
     server.listen(PORT, () => {
       console.log(`
        ===========================
