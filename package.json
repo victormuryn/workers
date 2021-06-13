@@ -28,6 +28,7 @@
     "all-the-cities": "3.1.0",
     "bcrypt": "5.0.1",
     "config": "3.3.6",
+    "cross-env": "^7.0.3",
     "csv-parse": "4.15.3",
     "express": "4.17.1",
     "express-formidable": "1.2.0",
@@ -43,12 +44,11 @@
     "eslint": "eslint --ext .jsx --ext .js",
     "test": "npm run eslint",
     "server": "nodemon app.ts",
-    "dev": "cross-env NODE_ENV=development concurrently \"npm run client\" \"npm run server\"",
-    "start": "cross-env NODE_ENV=production npx ts-node app.ts",
+    "dev": "npx cross-env NODE_ENV=development concurrently \"npm run client\" \"npm run server\"",
+    "start": "npx cross-env NODE_ENV=production npx ts-node app.ts",
     "client": "npm start --prefix client",
-    "client:install": "npm install --prefix client",
     "client:build": "npm run build --prefix client",
-    "install": "npm i -g webpack concurrently cross-env ts-node & npm install & npm run client:install"
+    "install": "npm install & npm install --prefix client"
   },
   "repository": {
     "type": "git",
