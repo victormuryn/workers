@@ -10,7 +10,7 @@ import InMemorySessionStore from './sessionStore';
 import DBMessageStore from './messageStore';
 
 import User from '../../models/User';
-import Chat, {ChatType} from '../../models/Chat';
+import {ChatType} from '../../models/Chat';
 
 // init all stores
 const sessionStore = new InMemorySessionStore();
@@ -220,44 +220,3 @@ module.exports = (server: http.Server) => {
     });
   });
 };
-
-// const users = [
-//   `60324153305b700f1814c4ea`,
-//   `60324191fd8ae80638059282`,
-//   `60916593e2607517c4104f8b`,
-//   `605f6182d958d51c40911109`,
-//   `605ed54efcda34079808281a`,
-//   `60546a9470af6c18204ec560`,
-//   `603b46b19b27881858d4893e`,
-//   `60375dd52f79a9169854b66d`,
-// ];
-//
-// const sendMessages = (
-//   count: number,
-//   first: string,
-//   second: string,
-// ) => {
-//   let counter = 0;
-//
-//   const users = [first, second, first];
-//   const int = setInterval(async () => {
-//     counter++;
-//
-//     await new Chat({
-//       from: users[counter % 2],
-//       to: users[counter % 2 + 1],
-//       date: new Date(),
-//       content: counter + ` ` + users[counter % 2],
-//     }).save();
-//
-//     if (counter >= count) {
-//       clearInterval(int);
-//     }
-//   }, 1);
-// };
-//
-// users.forEach((user, i) => {
-//   for (let j = i + 1; j < users.length; j++) {
-//     sendMessages(1000, user, users[j]);
-//   }
-// });
