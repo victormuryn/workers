@@ -48,7 +48,7 @@
     "client": "npm start --prefix client",
     "client:install": "npm install --prefix client",
     "client:build": "npm run build --prefix client",
-    "install": "npm i -g webpack concurrently cross-end ts-node & npm install & npm run client:install"
+    "install": "npm i -g webpack concurrently cross-env ts-node & npm install & npm run client:install"
   },
   "repository": {
     "type": "git",
