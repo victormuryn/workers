@@ -29,10 +29,10 @@ const ActionCreator = {
   initMessages: (username: string, token: string) => {
     return async (dispatch: Dispatch) => {
       // @ts-ignore
-      const PORT = process?.env?.PORT || 5000;
-      const URL = `http://localhost:${PORT}`;
+      // const PORT = process?.env?.PORT || 5000;
+      // const URL = `http://localhost:${PORT}`;
 
-      const socket = io(URL, {auth: {token}});
+      const socket = io({auth: {token}});
 
       socket.onAny((event, ...args) => {
         console.log(event, args);
