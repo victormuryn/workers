@@ -48,6 +48,7 @@
     "start": "npx cross-env NODE_ENV=production npx ts-node app.ts",
     "client": "npm start --prefix client",
     "client:build": "npm run build --prefix client",
+    "build": "npm run client:build",
     "install": "npm install & npm install --prefix client"
   },
   "repository": {
