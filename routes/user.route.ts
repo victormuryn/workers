@@ -259,6 +259,7 @@ router.patch(`/:username/avatar`,
   auth,
   async (request: Request, response: Response) => {
     try {
+      console.log(1)
       const author = request.user;
       const {username} = request.params;
 
@@ -270,7 +271,10 @@ router.patch(`/:username/avatar`,
         });
       }
 
+
+      console.log(2)
       upload(request, response, async (err: any) => {
+        console.log(3)
         if (err) {
           return response
             .status(500)
@@ -282,6 +286,7 @@ router.patch(`/:username/avatar`,
             .status(500)
             .json({message: `Не вдалося завантажити файл.`});
         }
+        console.log(4)
 
         const avatar = request.file;
         const nameParts = avatar.originalname.split(`.`);
@@ -294,8 +299,6 @@ router.patch(`/:username/avatar`,
             .resize({width: 200, height: 200, fit: `cover`})
             .toBuffer();
 
-          console.log(`cropped`)
-
           const pathToPhoto = path
             .join(pathToFolder, `${username}.${extension}`);
 
@@ -303,9 +306,7 @@ router.patch(`/:username/avatar`,
             pathToPhoto,
             croppedImg,
             async (error: NodeJS.ErrnoException | null ) => {
-              console.log(`written`)
               if (error) throw error;
-              console.log(`no error`)
 
               user.image = true;
               await user.save();

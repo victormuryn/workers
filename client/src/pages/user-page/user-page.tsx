@@ -244,9 +244,11 @@ const UserPage: React.FC = () => {
     if (newAvatar) {
       closeAvatarModal();
 
+      console.log(newAvatar)
+
       api
         .patch<{message: string}>(`/user/${username}/avatar`, newAvatar, {
-          timeout: 30 * 1000, // 30 seconds
+          timeout: 60 * 1000, // 60 seconds
           headers: {
             'Authorization': `Bearer ${loggedUser.token}`,
           },
