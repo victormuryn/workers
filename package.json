@@ -46,8 +46,9 @@
     "dev": "cross-env NODE_ENV=development concurrently \"npm run client\" \"npm run server\"",
     "start": "cross-env NODE_ENV=production npx ts-node app.ts",
     "client": "npm start --prefix client",
-    "client:intall": "npm run install --prefix client",
-    "client:build": "npm run build --prefix client"
+    "client:install": "npm install --prefix client",
+    "client:build": "npm run build --prefix client",
+    "install": "npm i -g webpack concurrently cross-end ts-node & npm install & npm run client:install"
   },
   "repository": {
     "type": "git",
