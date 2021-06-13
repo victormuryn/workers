@@ -54,7 +54,7 @@ const Pagination: React.FC<Props> = ({
 
   useEffect(() => {
     onClick(page);
-  }, [onClick, page]);
+  }, [page]);
 
   const items = [];
   for (let i = -MAX_PAGES; i <= MAX_PAGES; i++) {

@@ -224,10 +224,6 @@ const SearchFilter: React.FC<State> = ({onSubmit}) => {
       });
   };
 
-  // useEffect(() => {
-  //   onSubmit(form);
-  // }, [form]);
-
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault();
     onSubmit(form);
