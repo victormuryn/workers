@@ -1,19 +1,22 @@
 import {Request, Response, Router} from 'express';
+import {LeanDocument} from 'mongoose';
 
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const {exec} = require('child_process');
 
+import City, {CityDocument} from '../models/City';
 import User, {UserType} from '../models/User';
+import Category from '../models/Category';
+import Project from '../models/Project';
+import Bet from '../models/Bet';
 
 import * as sharp from 'sharp';
 import * as multer from 'multer';
+import * as config from 'config';
 
 import auth from '../middlewares/auth.middleware';
-import {LeanDocument} from 'mongoose';
-import Category from '../models/Category';
-import City, {CityDocument} from '../models/City';
 
 const upload = multer({
   limits: {
@@ -30,6 +33,93 @@ const router = Router();
 const getPlace = <T extends {_id?: string}>(list: T[], id: string ) => {
   return list.findIndex(({_id}) => _id && _id.toString() === id);
 };
+
+router.get(
+  `/activities`,
+  [auth],
+  async (request: Request, response: Response) => {
+    const author = request.user;
+    const projectsPerPage = config.get<number>(`projectsPerPage`) || 12;
+
+
+    const reqPage = request.query.page;
+    const page = (reqPage && !isNaN(+reqPage)) ? +reqPage - 1 : 0;
+
+    if (!author) {
+      return response.status(500).json({
+        message: `Ви не увійшли в аккаунт`,
+      });
+    }
+
+    const user = await User.findById(author).select(`accountType`);
+
+    if (!user) {
+      return response.status(500).json({
+        message: `Не вдалося знайти користувача`,
+      });
+    }
+
+    if (user.accountType === `freelancer`) {
+      const data = await Bet
+        .find({author: user._id})
+        .skip(page * projectsPerPage)
+        .limit(projectsPerPage)
+        .sort({date: -1})
+        .populate({
+          path: `project`,
+          populate: [{
+            path: `location`,
+            select: `-_id city region`,
+          }, {
+            path: `category`,
+            select: `title`,
+          }],
+          select: `title price hot remote location category`,
+        })
+        .select(`project date price term`)
+        .lean();
+
+      const projectsCount = await Bet.countDocuments({author: user._id});
+
+      return response.json({
+        data,
+        type: user.accountType,
+        maxPage: Math.ceil(projectsCount / projectsPerPage),
+      });
+    }
+
+    if (user.accountType === `client`) {
+      const data = await Project
+        .find({author: user._id})
+        .sort({date: -1})
+        .skip(page * projectsPerPage)
+        .limit(projectsPerPage)
+        .populate({
+          path: `category`,
+          select: `title`,
+        })
+        .populate({
+          path: `location`,
+          select: `-_id city region`,
+        })
+        .select(`price title hot date category remote location bets`)
+        .lean();
+
+      const projectsCount = await Project.countDocuments({author: user._id});
+
+      return response.json({
+        data,
+        type: user.accountType,
+        maxPage: Math.ceil(projectsCount / projectsPerPage),
+      });
+    }
+
+    return response.json({
+      type: `freelancer`,
+      data: [],
+    });
+  },
+);
 
 router.get(`/:username`, async (request: Request, response: Response) => {
   try {

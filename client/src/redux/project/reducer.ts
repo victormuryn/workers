@@ -48,6 +48,10 @@ const initialState: State = {
       surname: ``,
       username: ``,
     },
+    updated: {
+      count: 0,
+      lastDate: time,
+    },
   },
   error: null,
   loading: false,

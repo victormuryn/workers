@@ -36,6 +36,10 @@ export interface Project {
     title: string,
     url: string,
   }[],
+  updated: {
+    count: number,
+    lastDate: string,
+  }
 }
 
 export type Bet = {

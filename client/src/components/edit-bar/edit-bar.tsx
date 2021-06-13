@@ -23,6 +23,11 @@ const EditBar: React.FC<Props> = ({
 }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
 
+  const deleteHandler = (event: React.MouseEvent) => {
+    setShowModal(false);
+    onDelete(event);
+  };
+
   return (
     <>
       <div className="mt-3 d-flex align-content-center justify-content-end">
@@ -67,7 +72,7 @@ const EditBar: React.FC<Props> = ({
               <Button variant="secondary" onClick={() => setShowModal(false)}>
                 Закрити
               </Button>
-              <Button variant="danger" onClick={onDelete}>
+              <Button variant="danger" onClick={deleteHandler}>
                 Видалити
               </Button>
             </Modal.Footer>

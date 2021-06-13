@@ -71,11 +71,23 @@ const Header: React.FC = () => {
                   </Nav.Link>
                   <NavDropdown
                     className="ms-2"
-                    title={user.username}
                     id="header-profile"
+                    title={user.username}
                   >
-                    <NavDropdown.Item as={Link} to={`/user/${user.username}`}>
+                    <NavDropdown.Item
+                      as={NavLink}
+                      activeClassName="active"
+                      to={`/user/${user.username}`}
+                    >
                       Профіль
+                    </NavDropdown.Item>
+
+                    <NavDropdown.Item
+                      as={NavLink}
+                      to="/activities"
+                      activeClassName="active"
+                    >
+                      Мої {user.accountType === `client` ? `проєкти` : `ставки`}
                     </NavDropdown.Item>
 
                     <NavDropdown.Divider/>

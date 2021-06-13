@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useParams} from 'react-router-dom';
 import {useForm} from '../../hooks/form.hook';
@@ -159,7 +159,7 @@ const UserPage: React.FC = () => {
   }`;
   const starsText = getPluralNoun(stars, [`зірка`, `зірки`, `зірок`]);
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     setLoading(true);
     api
       .get(`/user/${username}`, {
@@ -177,7 +177,7 @@ const UserPage: React.FC = () => {
       .then(() => {
         setLoading(false);
       });
-  };
+  }, [loggedUser.token, setForm, username]);
 
   const categoryChangeHandler = (
     newId: string | undefined = ``,
@@ -335,7 +335,7 @@ const UserPage: React.FC = () => {
     (async () => {
       await getData();
     })();
-  }, [username]);
+  }, [getData, username]);
 
   if (loading) {
     return <Loader/>;
@@ -573,68 +573,70 @@ const UserPage: React.FC = () => {
           </Card.Body>
         </Card>
 
-        {
-          (user.cv || isUsersPage) &&
-          <Row className="gutters-sm" as={`section`}>
-            <Col className="mb-3">
-              <h3 className="text-center mt-3 mb-4">
+        <Row className="gutters-sm" as={`section`}>
+          <Col className="mb-3">
+            <h3 className="text-center mt-3 mb-4">
+              {
+                isUsersPage ?
+                  `Інформація про вас` :
+                  `Резюме`
+              }
+            </h3>
+
+            <Card>
+              <Card.Body>
                 {
                   isUsersPage ?
-                    `Інформація про вас` :
-                    `Резюме`
-                }
-              </h3>
-
-              <Card>
-                <Card.Body>
-                  {
-                    isUsersPage ?
-                      <CKEditor
-                        name="cv"
-                        editor={ClassicEditor}
-                        data={user.cv}
-                        config={{
-                          toolbar: {
-                            items: [
-                              'heading', '|',
-                              'bold', 'italic', 'link', 'bulletedList',
-                              'numberedList', '|',
-                              'alignment:left', 'alignment:right',
-                              'alignment:center', 'alignment:justify', '|',
-                              'outdent', 'indent', '|',
-                              'imageUpload', 'blockQuote', 'undo', 'redo',
-                            ],
-                          },
-                          image: {
-                            toolbar: [
-                              'imageTextAlternative',
-                              'imageStyle:full',
-                              'imageStyle:side',
-                            ],
-                          },
-                          placeholder: `Опишіть детально ваші переваги,
-                            щоб замовник вибрав саме вас`,
-                          language: `uk`,
-                        }}
-                        onChange={
-                          (event: any, editor: any) => {
-                            inputChangeHandler({
-                              name: `user.cv`,
-                              value: editor.getData(),
-                            });
-                          }
+                    <CKEditor
+                      name="cv"
+                      editor={ClassicEditor}
+                      data={user.cv}
+                      config={{
+                        toolbar: {
+                          items: [
+                            'heading', '|',
+                            'bold', 'italic', 'link', 'bulletedList',
+                            'numberedList', '|',
+                            'alignment:left', 'alignment:right',
+                            'alignment:center', 'alignment:justify', '|',
+                            'outdent', 'indent', '|',
+                            'imageUpload', 'blockQuote', 'undo', 'redo',
+                          ],
+                        },
+                        image: {
+                          toolbar: [
+                            'imageTextAlternative',
+                            'imageStyle:full',
+                            'imageStyle:side',
+                          ],
+                        },
+                        placeholder: `Опишіть детально ваші переваги, щоб
+                        сподобатися іншим користувачам ;-)`,
+                        language: `uk`,
+                      }}
+                      onChange={
+                        (event: any, editor: any) => {
+                          inputChangeHandler({
+                            name: `user.cv`,
+                            value: editor.getData(),
+                          });
                         }
-                      /> :
-                      <p
-                        className="p-3"
-                        dangerouslySetInnerHTML={{__html: user.cv}}
-                      />
-                  }
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        }
+                      }
+                    /> :
+                    <p
+                      className="p-3 m-0"
+                      dangerouslySetInnerHTML={{
+                        __html: user.cv ||
+                          `<b class="text-center d-block">
+                            Користувач не надав інформації про себе
+                           </b>`,
+                      }}
+                    />
+                }
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
 
         {
           isUsersPage &&

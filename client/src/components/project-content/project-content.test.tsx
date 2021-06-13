@@ -12,6 +12,11 @@ describe(`ProjectContent tests`, () => {
       onDelete={() => {}}
       description="text"
       isExpired={false}
+      updated={{
+        count: 0,
+        lastDate: `123`,
+      }}
+      onProjectChange={() => {}}
       location={{
         city: ``,
         region: ``,

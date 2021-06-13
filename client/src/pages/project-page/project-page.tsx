@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -18,6 +18,9 @@ import {ActionCreator} from '../../redux/action-creator';
 import {State} from '../../redux/reducer';
 import {useForm} from '../../hooks/form.hook';
 import {setPageMeta} from '../../utils/utils';
+import Message from '../../components/message';
+import api from '../../utils/api';
+import {Project} from "../../types/types";
 
 type FormState = {
   text: string,
@@ -57,16 +60,16 @@ const ProjectPage: React.FC = () => {
     }
   }
 
-  const getProjectData = async () => {
+  const getProjectData = useCallback(async () => {
     await dispatch(ActionCreator.getProject(id, user.token));
-  };
+  }, [dispatch, id, user.token]);
 
   // get project data on component mount
   useEffect(() => {
     (async () => {
       await getProjectData();
     })();
-  }, [id]);
+  }, [id, getProjectData]);
 
   // on bet form submit
   const formSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -89,12 +92,19 @@ const ProjectPage: React.FC = () => {
 
   const deleteClickHandler = async (e: React.MouseEvent, id: string) => {
     e.preventDefault();
-
     await dispatch(ActionCreator.deleteBet(id, user.token || ``));
   };
 
-  const deleteHandler = () => {
+  const deleteProjectHandler = () => {
     dispatch(ActionCreator.deleteProject(id, user.token));
+  };
+
+  const projectChangeHandler = (form: {
+    title: string
+    description: string
+    price: number | undefined
+  }) => {
+    dispatch(ActionCreator.projectUpdate({...form, id}, user.token));
   };
 
   // there is still no data => show "loader"
@@ -102,14 +112,12 @@ const ProjectPage: React.FC = () => {
     return <Loader />;
   }
 
-  if (error) {
-    alert(error);
-  }
-
   return (
     <Container className="pt-5">
       <Row>
         <Col lg={8}>
+          {error && <Message text={error} type="danger" />}
+
           <ProjectContent
             isOwner={isOwner}
             hot={project.hot}
@@ -117,10 +125,12 @@ const ProjectPage: React.FC = () => {
             price={project.price}
             isExpired={isExpired}
             remote={project.remote}
-            onDelete={deleteHandler}
+            updated={project.updated}
             location={project.location}
             category={project.category}
+            onDelete={deleteProjectHandler}
             description={project.description}
+            onProjectChange={projectChangeHandler}
           />
 
           {

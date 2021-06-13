@@ -10,6 +10,13 @@ import {
   ProjectActionTypes,
 } from './types';
 
+interface UpdateArgs {
+  id: string,
+  title: string,
+  description: string,
+  price: number | undefined
+}
+
 const ActionCreator = {
   getProject: (id: string, token: string | null) => {
     return async (dispatch: Dispatch<Action>) => {
@@ -101,6 +108,25 @@ const ActionCreator = {
     type: PROJECT_REMOVE_BET,
     payload: id,
   }),
+
+  projectUpdate: (data: UpdateArgs, token: string) => {
+    return async (dispatch: Dispatch<Action>) => {
+      interface Response {
+        project: Project,
+        messages: string,
+      }
+
+      return api
+        .patch<Response>(`/project/${data.id}`, data, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        })
+        .then(({data}) => {
+          dispatch(ActionCreator.setProject(data.project));
+        });
+    };
+  },
 };
 
 export default ActionCreator;

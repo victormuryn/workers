@@ -18,6 +18,10 @@ export interface ProjectType extends Document {
   bets: Array<BetType['_id']>,
   location: CityDocument['_id'],
   category: Array<CategoryType['_id']>,
+  updated: {
+    count: number,
+    lastDate: Date,
+  }
 }
 
 const schema = new Schema<ProjectType>({
@@ -33,6 +37,15 @@ const schema = new Schema<ProjectType>({
   author: {type: Types.ObjectId, ref: `User`, required: true},
   location: {type: Types.ObjectId, ref: `City`, default: null},
   category: [{type: Types.ObjectId, ref: `Category`, required: true}],
+  updated: {
+    count: {
+      default: 0,
+      type: Number,
+    },
+    lastDate: {
+      type: Date,
+    },
+  },
 });
 
 export default model<ProjectType>(`Project`, schema);

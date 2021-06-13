@@ -3,9 +3,10 @@ import React, {useState} from 'react';
 import './project-content.scss';
 import Badge from 'react-bootstrap/Badge';
 
-import {formatPrice} from '../../utils/utils';
+import {formatPrice, getPluralNoun} from '../../utils/utils';
 import {Link} from 'react-router-dom';
 import EditBar from '../edit-bar';
+import EditProject from '../edit-project';
 
 interface Project {
   hot: boolean,
@@ -26,16 +27,34 @@ interface Project {
     latitude: number,
     longitude: number,
   },
+  updated: {
+    count: number,
+    lastDate: string,
+  }
   onDelete: () => void,
+  onProjectChange: (form: {
+    title: string
+    description: string
+    price: number | undefined
+  }) => void,
 }
 
 const ProjectContent: React.FC<Project> = (props) => {
   const {
-    title, price, description, isOwner = false,
-    isExpired, hot, remote, location, category, onDelete,
+    title, price, description, isOwner = false, onProjectChange,
+    isExpired, hot, remote, location, category, onDelete, updated,
   } = props;
 
   const [editing, setEditing] = useState<boolean>(false);
+
+  const projectChangeHandler = (form: {
+    title: string
+    description: string
+    price: number | undefined
+  }) => {
+    setEditing(false);
+    onProjectChange(form);
+  };
 
   return (
     <div className="project__content">
@@ -111,7 +130,29 @@ const ProjectContent: React.FC<Project> = (props) => {
       </h3>
 
       <hr/>
-      <div dangerouslySetInnerHTML={{__html: description}}/>
+
+      {
+        editing ?
+          <EditProject
+            title={title}
+            price={price}
+            description={description}
+            onSubmit={projectChangeHandler}
+          /> :
+          <div dangerouslySetInnerHTML={{__html: description}}/>
+      }
+
+      {
+        updated.count ?
+          <p className="text-end">
+            <em>
+              Оновлено{` `}
+              {getPluralNoun(updated.count, [`раз`, `рази`, `разів`])},{` `}
+              останій о {new Date(updated.lastDate).toLocaleString()}
+            </em>
+          </p> :
+          null
+      }
 
       {
         isOwner && <EditBar

@@ -5,7 +5,6 @@ import './pagination.scss';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import BsPagination from 'react-bootstrap/pagination';
-import {makeLogger} from "ts-loader/dist/logger";
 
 interface Props {
   initialPage?: number,
@@ -55,7 +54,7 @@ const Pagination: React.FC<Props> = ({
 
   useEffect(() => {
     onClick(page);
-  }, [page]);
+  }, [onClick, page]);
 
   const items = [];
   for (let i = -MAX_PAGES; i <= MAX_PAGES; i++) {

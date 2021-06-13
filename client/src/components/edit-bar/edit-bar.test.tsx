@@ -4,7 +4,9 @@ import EditBar from './edit-bar';
 
 describe(`EditBar tests`, () => {
   it(`EditBar renders corrects`, () => {
-    const tree = renderer.create(<EditBar />).toJSON();
+    const tree = renderer.create(<EditBar
+      modalText="123"
+    />).toJSON();
 
     expect(tree).toMatchSnapshot();
   });

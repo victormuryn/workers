@@ -28,7 +28,7 @@ import {
 const ActionCreator = {
   initMessages: (username: string, token: string) => {
     return async (dispatch: Dispatch) => {
-      const URL = 'http://localhost:8080';
+      const URL = 'http://localhost:5000';
 
       const socket = io(URL, {auth: {token}});
 

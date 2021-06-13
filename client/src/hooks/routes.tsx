@@ -9,6 +9,7 @@ import CreatePage from '../pages/create-page';
 import ProjectPage from '../pages/project-page';
 import ProjectsPage from '../pages/projects-page';
 import CategoryPage from '../pages/category-page';
+import ActivitiesPage from '../pages/activities-page';
 
 import Header from '../components/header';
 import Footer from '../components/footer';
@@ -25,18 +26,19 @@ export const useRoutes = (
       <>
         <Header/>
         <Switch>
-          <Route path="/projects" exact component={ProjectsPage} />
+          <Route path="/projects" component={ProjectsPage} exact />
           <Route path="/project/:id" component={ProjectPage} />
 
           <Route path="/category/:name" component={CategoryPage} />
 
           <Route path="/user/:username" component={UserPage} />
+          <Route path="/activities" component={ActivitiesPage} exact />
 
           <Route path="/messages/" component={ChatPage} />
 
           {
             accountType === `client` && (
-              <Route path="/create" exact component={CreatePage} />
+              <Route path="/create" component={CreatePage} exact />
             )
           }
 

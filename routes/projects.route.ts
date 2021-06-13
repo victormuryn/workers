@@ -202,6 +202,86 @@ router.get(`/:id`, async (request, response) => {
   }
 });
 
+router.patch(`/:id`, [
+  auth,
+  check(`title`, `Введіть заголовок`)
+    .isString()
+    .exists({checkFalsy: true}),
+  check(`description`, `Введіть опис`)
+    .isString()
+    .exists({checkFalsy: true}),
+  check(`price`, `Введіть ціну`)
+    .custom((value) => !value || +value >= 200),
+], async (request: Request, response: Response) => {
+  try {
+    // if there are errors in request.body
+    if (handleErrors(
+      request,
+      response,
+      `Некоректні данні при заповненні форми:`,
+    )) return;
+
+    const {id} = request.params;
+
+    if (!Types.ObjectId.isValid(id)) {
+      return response
+        .status(404)
+        .json({
+          message: `Неправильний ідентифікатор проєкту, спробуйте знову.`,
+        });
+    }
+
+    const author = request.user;
+    const project = await Project
+      .findById(id)
+      .populate(`category location`)
+      .populate({
+        path: `bets`,
+        populate: {
+          path: `author`,
+          select: `name surname username image`,
+        },
+      })
+      .populate({
+        path: `author`,
+        populate: {
+          path: `location`,
+        },
+        select: `name surname username image location`,
+      });
+
+    if (!project) {
+      return response
+        .status(404)
+        .json({message: `Проєкт не знайдений, спробуйте знову.`});
+    }
+
+    if (project.author._id.toString() !== author) {
+      return response
+        .status(403)
+        .json({message: `Ви не авторизовані.`});
+    }
+
+    const {title, description, price} = request.body;
+
+    project.title = title;
+    project.description = description;
+    project.price = price;
+    project.updated = {
+      count: project.updated.count + 1,
+      lastDate: new Date(),
+    };
+
+    await project.save();
+
+    return response.json({message: `Успішно оновлено!`, project});
+  } catch (e) {
+    response
+      .status(500)
+      .json({message: `Щось пішло не так, спробуйте знову.`});
+  }
+});
+
 router.delete(`/:id`, auth, async (request, response) => {
   try {
     const author = request.user;
