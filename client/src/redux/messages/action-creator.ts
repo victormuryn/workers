@@ -28,7 +28,9 @@ import {
 const ActionCreator = {
   initMessages: (username: string, token: string) => {
     return async (dispatch: Dispatch) => {
-      const URL = 'http://localhost:5000';
+      // @ts-ignore
+      const PORT = process?.env?.PORT || 5000;
+      const URL = `http://localhost:${PORT}`;
 
       const socket = io(URL, {auth: {token}});
 

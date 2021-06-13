@@ -10,7 +10,7 @@ const server = new http.Server(app);
 
 require(`./routes/messages/messages`)(server);
 
-const PORT = config.get(`port`) || 5000;
+const PORT = process.env.PORT || config.get(`port`) || 5000;
 
 app.use(express.json());
 
