@@ -51,7 +51,7 @@
     "client": "npm start --prefix client",
     "client:build": "npm run build --prefix client",
     "build": "npm run client:build",
-    "heroku-install": "npm i -g webpack webpack-cli && npm i && npm i --prefix client"
+    "heroku-prebuild": "npm i -g webpack webpack-cli && npm i && npm i --prefix client"
   },
   "repository": {
     "type": "git",
