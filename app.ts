@@ -3,7 +3,7 @@ import * as http from 'http';
 import * as path from 'path';
 import * as config from 'config';
 import * as mongoose from 'mongoose';
-import {Request, Response} from "express";
+import {Request, Response} from 'express';
 
 const app = express();
 const server = new http.Server(app);
@@ -39,7 +39,7 @@ const start = async () => {
     });
 
     server.listen(PORT, () => {
-      console.log(`\x1b[32m%s\x1b[0m`, `
+      console.log(`
        ===========================
 =========================================
 ===== Server's running on port ${PORT} =====
@@ -48,7 +48,7 @@ const start = async () => {
       `);
     });
   } catch (e) {
-    console.log(`\x1b[31m%s\x1b[0m`, `Server Error: ${e.message}`);
+    console.log(`Server Error: ${e.message}`);
     process.exit(1);
   }
 };
