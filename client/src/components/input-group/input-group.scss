@@ -6,7 +6,6 @@
 
 .auth-form__label-text {
   margin-bottom: 1rem;
-  text-align: right;
 }
 
 div.auth-page__input-group {
@@ -69,4 +68,10 @@ div.auth-page__input-group {
 
 .auth-page__input-underlined > input:focus + .auth-page__input-label {
   color: var(--main-color);
+}
+
+@media screen and (min-width: 768px) {
+  .auth-form__label-text {
+    text-align: right;
+  }
 }

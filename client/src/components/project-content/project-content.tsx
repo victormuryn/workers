@@ -62,7 +62,7 @@ const ProjectContent: React.FC<Project> = (props) => {
 
       <h1 className="h2">{title}</h1>
 
-      <h3 className="py-2">
+      <h3 className="py-2 lh-base">
         {
           !!price &&
             <Badge

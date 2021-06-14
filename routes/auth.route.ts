@@ -78,7 +78,6 @@ router.post(
         .status(201)
         .json({message: `Користувач успішно створений.`});
     } catch (e) {
-      console.log(e)
       response
         .status(500)
         .json({message: `Щось пішло не так, спробуйте знову.`});
@@ -131,8 +130,8 @@ router.post(
 
       response.json({
         token,
-        userId: user.id,
         name: user.name,
+        userId: user.id,
         image: user.image,
         surname: user.surname,
         username: user.username,

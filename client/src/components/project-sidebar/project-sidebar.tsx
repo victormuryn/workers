@@ -38,7 +38,7 @@ const ProjectSidebar: React.FC<Props> = (props) => {
   const now = new Date();
 
   return (
-    <Col lg={3} className="project__sidebar ps-5">
+    <Col lg={3} className="project__sidebar ps-lg-5">
       <Card>
         <Card.Header>Автор</Card.Header>
         <Card.Body>
@@ -46,24 +46,20 @@ const ProjectSidebar: React.FC<Props> = (props) => {
             to={`/user/${username}`}
             className="project__user-link"
           >
-            <Row className="align-items-center">
-              <Col sm={3}>
-                <UserAvatar
-                  alt={username}
-                  buffer={image.buffer}
-                  extension={image.extension}
-                />
-              </Col>
-              <Col>
-                <span>
-                  {name} {surname} { location &&
-                    <>
-                      <br/>
-                      {location.city}, {location.country}</>
-                  }
-                </span>
-              </Col>
-            </Row>
+            <div className="d-flex align-items-center">
+              <UserAvatar
+                alt={username}
+                className="me-2"
+                buffer={image.buffer}
+                extension={image.extension}
+              />
+              <span>
+                {name} {surname} {
+                  location &&
+                    <><br/> {location.city}, {location.country}</>
+                }
+              </span>
+            </div>
           </Link>
         </Card.Body>
       </Card>
@@ -82,10 +78,7 @@ const ProjectSidebar: React.FC<Props> = (props) => {
           >
             <p>{formatDate(date, now)} тому</p>
           </OverlayTrigger>
-          <p>{getPluralNoun(
-            views,
-            [`перегляд`, `перегляди`, `переглядів`],
-          )}</p>
+          <p>{getPluralNoun(views, [`перегляд`, `перегляди`, `переглядів`])}</p>
         </Card.Body>
       </Card>
 
@@ -97,8 +90,7 @@ const ProjectSidebar: React.FC<Props> = (props) => {
             placement="top-start"
             overlay={
               <Tooltip id="expires">
-                Закриття <br/>
-                {(new Date(expire)).toLocaleDateString()}
+                Закриття <br/> {(new Date(expire)).toLocaleDateString()}
               </Tooltip>
             }
           >

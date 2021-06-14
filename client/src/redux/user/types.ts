@@ -1,4 +1,4 @@
-import {AccountTypes} from '../../types/types';
+import {AccountTypes, Image} from '../../types/types';
 
 export const USER_LOGIN = `USER/LOGIN`;
 export const USER_LOGOUT = `USER/LOGOUT`;
@@ -28,10 +28,7 @@ interface UserLogoutAction {
 
 interface UserSetAvatar {
   type: typeof USER_SET_AVATAR,
-  payload: {
-    extension: string,
-    buffer: string,
-  }
+  payload: Image,
 }
 
 export type UserActionTypes =

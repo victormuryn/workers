@@ -8,6 +8,7 @@ import {
   User,
   UserActionTypes,
 } from './types';
+import {Image} from '../../types/types';
 
 const ActionCreator = {
   login: (data: User): UserActionTypes => ({
@@ -19,8 +20,9 @@ const ActionCreator = {
     type: USER_LOGOUT,
   }),
 
-  setAvatar: () => ({
+  setAvatar: (data: Image): UserActionTypes => ({
     type: USER_SET_AVATAR,
+    payload: data,
   }),
 };
 

@@ -7,7 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import {Bet} from "../../types/types";
+import {Bet} from '../../types/types';
 
 type ProjectItemProps = {
   bets: Bet[],
@@ -59,16 +59,13 @@ const ProjectItem: React.FC<ProjectItemProps> = (props) => {
   return (
     <li className="projects__item">
       <Row className={`align-items-center ${hot && `projects__item--hot`}`}>
-        <Col md={{
-          offset: 1,
-          span: 7,
-        }}>
+        <Col md={{offset: 1, span: 7}} className="px-4">
           <Link
             to={`/project/${_id}`}
             className="project__item-link"
           >
             <span className={`h4 ${hot && `text-danger`}`}>{title}</span>
-            <p className="small text-muted mt-2 mb-md-0">
+            <p className="small text-muted mt-2 mb-0">
               {category.map(({title}) => `${title}, `)}
               {
                 remote ?
@@ -79,36 +76,32 @@ const ProjectItem: React.FC<ProjectItemProps> = (props) => {
           </Link>
         </Col>
 
-        <Col md={1}>
+        {/* price */}
+        <Col className="d-none d-md-block" md={1}>
           <OverlayTrigger
             placement="top"
-            overlay={
-              <Tooltip id={`price-${_id}`}>
-                Ціна
-              </Tooltip>
-            }
+            overlay={<Tooltip id={`price-${_id}`}>Ціна</Tooltip>}
           >
             <p className="project__item-text text-success fw-bold m-md-0">
-              {price ?
-                `${new Intl.NumberFormat(`uk`, {
-                  style: 'currency',
-                  currency: 'UAH',
-                  maximumFractionDigits: 0,
-                  minimumFractionDigits: 0,
-                }).format(price)}` :
-                null}
+              {
+                price ?
+                  `${new Intl.NumberFormat(`uk`, {
+                    style: 'currency',
+                    currency: 'UAH',
+                    maximumFractionDigits: 0,
+                    minimumFractionDigits: 0,
+                  }).format(price)}` :
+                  null
+              }
             </p>
           </OverlayTrigger>
         </Col>
 
-        <Col md={1}>
+        {/* bets count */}
+        <Col className="d-none d-md-block" md={1}>
           <OverlayTrigger
             placement="top"
-            overlay={
-              <Tooltip id={`count-${_id}`}>
-                Кількість ставок
-              </Tooltip>
-            }
+            overlay={<Tooltip id={`count-${_id}`}>Кількість ставок</Tooltip>}
           >
             <p className="project__item-text text-danger m-md-0">
               {bets.length}
@@ -116,19 +109,13 @@ const ProjectItem: React.FC<ProjectItemProps> = (props) => {
           </OverlayTrigger>
         </Col>
 
-        <Col md={1}>
+        {/* expire date */}
+        <Col className="d-none d-md-block" md={1}>
           <OverlayTrigger
             placement="top"
-            overlay={
-              <Tooltip id={`date-${_id}`}>
-                Дата публікації
-              </Tooltip>
-            }
+            overlay={<Tooltip id={`date-${_id}`}>Дата публікації</Tooltip>}
           >
-
-            <p className="project__item-text m-md-0">
-              {formatDate(date)}
-            </p>
+            <p className="project__item-text m-md-0">{formatDate(date)}</p>
           </OverlayTrigger>
         </Col>
       </Row>

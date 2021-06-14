@@ -235,8 +235,8 @@ const SearchFilter: React.FC<State> = ({onSubmit}) => {
   };
 
   return (
-    <Form onSubmit={submitHandler} onReset={resetHandler}>
-      <Form.Group className="mb-3" controlId="category">
+    <Form onSubmit={submitHandler} onReset={resetHandler} className="mb-4">
+      <Form.Group className="mx-auto mb-3" controlId="category">
         <Form.Label>Категорії</Form.Label>
         <InputAutocomplete
           isMulti
@@ -250,7 +250,7 @@ const SearchFilter: React.FC<State> = ({onSubmit}) => {
         />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="location">
+      <Form.Group className="mx-auto mb-3" controlId="location">
         <Form.Label>Міста</Form.Label>
         <InputAutocomplete
           isMulti
@@ -264,7 +264,7 @@ const SearchFilter: React.FC<State> = ({onSubmit}) => {
         />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="remote">
+      <Form.Group className="mx-auto mb-3" controlId="remote">
         <Form.Check
           name="remote"
           type="checkbox"
@@ -274,7 +274,7 @@ const SearchFilter: React.FC<State> = ({onSubmit}) => {
         />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="only_hot">
+      <Form.Group className="mx-auto mb-3" controlId="only_hot">
         <Form.Check
           name="hot"
           type="checkbox"
@@ -286,7 +286,7 @@ const SearchFilter: React.FC<State> = ({onSubmit}) => {
 
       <Row>
         <Col xs={{
-          'offset': 1,
+          'offset': 2,
           'span': 4,
         }}>
           <Button variant="outline-secondary" type="reset">

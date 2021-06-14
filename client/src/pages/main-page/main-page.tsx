@@ -67,19 +67,23 @@ const MainPage: React.FC = () => {
             </h1>
 
             <div className="header__btns-wrapper">
-              <Link to="#">
-                <Button variant="success" className="header__main-btn
-                header__btn header__main-btn--get-master">
-                  Знайти спеціаліста
-                </Button>
-              </Link>
+              <Button
+                as={Link}
+                to="/auth"
+                variant="success"
+                className="header__main-btn
+              header__btn header__main-btn--get-master">
+                Знайти спеціаліста
+              </Button>
 
-              <Link to="#">
-                <Button variant="success" className="header__main-btn
-                header__btn header__main-btn--get-work">
-                  Знайти роботу
-                </Button>
-              </Link>
+              <Button
+                as={Link}
+                to="/auth"
+                variant="success"
+                className="header__main-btn
+              header__btn header__main-btn--get-work">
+                Знайти роботу
+              </Button>
             </div>
           </div>
         </Container>
@@ -157,7 +161,7 @@ const MainPage: React.FC = () => {
             data-aos="slide-left"
             className="how-it-works__item how-it-works__item--create"
           >
-            <h4 className="how-it-works__item-title">1 Створіть проєкт</h4>
+            <h4 className="how-it-works__item-title">1. Створіть проєкт</h4>
             <p className="how-it-works__item-text">Детально опишіть завдання та
               побажання для виконавців</p>
           </li>
@@ -166,7 +170,7 @@ const MainPage: React.FC = () => {
             data-aos="slide-right"
             className="how-it-works__item how-it-works__item--choose"
           >
-            <h4 className="how-it-works__item-title">2 Виберіть виконавця</h4>
+            <h4 className="how-it-works__item-title">2. Виберіть виконавця</h4>
             <p className="how-it-works__item-text">Оберіть виконавця за ціною,
               термінами, відгуками та портфоліо</p>
           </li>
@@ -175,7 +179,7 @@ const MainPage: React.FC = () => {
             data-aos="slide-left"
             className="how-it-works__item how-it-works__item--reserve"
           >
-            <h4 className="how-it-works__item-title">3 Зарезервуйте кошти</h4>
+            <h4 className="how-it-works__item-title">3. Зарезервуйте кошти</h4>
             <p className="how-it-works__item-text">Після вибору, зарезервуйте
               кошти та розпочніть роботу з
               виконавцем</p>
@@ -185,7 +189,7 @@ const MainPage: React.FC = () => {
             data-aos="slide-right"
             className="how-it-works__item how-it-works__item--follow"
           >
-            <h4 className="how-it-works__item-title">4 Слідкуйте за ходом
+            <h4 className="how-it-works__item-title">4. Слідкуйте за ходом
               роботи</h4>
             <p className="how-it-works__item-text">Відстежуйте виконання роботи,
               контролюйте деталі у чаті з
@@ -196,7 +200,7 @@ const MainPage: React.FC = () => {
             data-aos="slide-left"
             className="how-it-works__item how-it-works__item--reviews"
           >
-            <h4 className="how-it-works__item-title">5 Завершіть виконаний
+            <h4 className="how-it-works__item-title">5. Завершіть виконаний
               проєкт</h4>
             <p className="how-it-works__item-text">Після закінчення роботи
               підтвердіть виконання та обміняйтеся

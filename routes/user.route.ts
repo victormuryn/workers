@@ -285,22 +285,26 @@ router.patch(`/:username/avatar`,
         }
 
         const avatar = request.file;
-        const nameParts = avatar.originalname.split(`.`);
-        const extension = nameParts[nameParts.length - 1];
+        // const nameParts = avatar.originalname.split(`.`);
+        // const extension = nameParts[nameParts.length - 1];
 
         // const pathToFolder = `client/dist/img/users/`;
 
         if (user._id.toString() === author) {
           const croppedImg = await sharp(avatar.buffer)
             .resize({width: 200, height: 200, fit: `cover`})
+            .toFormat(`jpeg`)
+            .jpeg({
+              quality: 100,
+              force: true,
+            })
             .toBuffer();
 
           // const pathToPhoto = path
           //   .join(pathToFolder, `${username}.${extension}`);
 
           user.image = {
-            extension,
-            exists: true,
+            extension: `jpeg`,
             buffer: croppedImg.toString(`base64`),
           };
 

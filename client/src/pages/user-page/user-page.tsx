@@ -273,7 +273,10 @@ const UserPage: React.FC = () => {
             value: data.buffer,
           }]);
 
-          dispatch(ActionCreator.setAvatar());
+          dispatch(ActionCreator.setAvatar({
+            buffer: data.buffer,
+            extension: data.extension,
+          }));
         })
         .catch((error) => {
           setError(error.response ?

@@ -1,7 +1,6 @@
 export interface Session {
   name: string,
   image: {
-    exists: boolean,
     extension: string,
     buffer: string,
   },

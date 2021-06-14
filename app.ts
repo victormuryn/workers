@@ -32,7 +32,6 @@ if (process.env.NODE_ENV === `production`) {
 
 const start = async () => {
   try {
-    console.log(config.get(`mongoUri`))
     await mongoose.connect(config.get(`mongoUri`), {
       useNewUrlParser: true,
       useUnifiedTopology: true,

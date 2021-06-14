@@ -12,7 +12,6 @@ export interface UserType extends Document{
   email: string,
   phone: string,
   image: {
-    exists: boolean,
     extension: string,
     buffer: string,
     // webp: Buffer,
