@@ -235,7 +235,11 @@ const SearchFilter: React.FC<State> = ({onSubmit}) => {
   };
 
   return (
-    <Form onSubmit={submitHandler} onReset={resetHandler} className="mb-4">
+    <Form
+      onReset={resetHandler}
+      onSubmit={submitHandler}
+      className="mb-4 projects__filter"
+    >
       <Form.Group className="mx-auto mb-3" controlId="category">
         <Form.Label>Категорії</Form.Label>
         <InputAutocomplete

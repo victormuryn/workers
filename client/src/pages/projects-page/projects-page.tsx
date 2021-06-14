@@ -112,13 +112,13 @@ const ProjectsPage: React.FC = () => {
         />
       }
 
-      <Container as="ul" className="projects__list">
+      <Container className="mt-5">
         <Row>
-          <Col md={3} className="projects__filter">
+          <Col md={3} className="order-1 order-md-0 mt-4 mt-md-0">
             <SearchFilter onSubmit={onFilterSubmit} />
           </Col>
 
-          <Col md={9}>
+          <Col md={9} as="ul" className="projects__list">
             {
               loading ?
                 <Message text={`loading`} /> :

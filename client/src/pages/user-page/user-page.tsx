@@ -498,7 +498,7 @@ const UserPage: React.FC = () => {
               <Col sm={3}>
                 <h6 className="mb-0">Ім&apos;я</h6>
               </Col>
-              <Col sm={9} className="text-secondary">
+              <Col sm={9} className="text-secondary mt-2 mt-sm-0">
                 {
                   isUsersPage ?
                     <Form.Control
@@ -522,7 +522,7 @@ const UserPage: React.FC = () => {
               <Col sm={3}>
                 <h6 className="mb-0">Прізвище</h6>
               </Col>
-              <Col sm={9} className="text-secondary">
+              <Col sm={9} className="text-secondary mt-2 mt-sm-0">
                 {
                   isUsersPage ?
                     <Form.Control
@@ -546,7 +546,9 @@ const UserPage: React.FC = () => {
               <Col sm={3}>
                 <h6 className="mb-0">Ім&apos;я користувача</h6>
               </Col>
-              <Col sm={9} className="text-secondary">{user.username}</Col>
+              <Col sm={9} className="text-secondary mt-2 mt-sm-0">
+                {user.username}
+              </Col>
             </Row>
 
             <hr/>
@@ -554,7 +556,7 @@ const UserPage: React.FC = () => {
               <Col sm={3}>
                 <h6 className="mb-0">Тип профілю</h6>
               </Col>
-              <Col sm={9} className="text-secondary">
+              <Col sm={9} className="text-secondary mt-2 mt-sm-0">
                 {UserTypeToText[user.accountType]}
               </Col>
             </Row>
@@ -567,7 +569,7 @@ const UserPage: React.FC = () => {
                   <Col sm={3}>
                     <h6 className="mb-0">Місцеположення</h6>
                   </Col>
-                  <Col sm={9} className="text-secondary">
+                  <Col sm={9} className="text-secondary mt-2 mt-sm-0">
                     {
                       user?.location &&
                       <span>
@@ -579,10 +581,9 @@ const UserPage: React.FC = () => {
                       isUsersPage &&
                       <Button
                         type="primary"
-                        className="ms-sm-2"
+                        className="ms-sm-2 mt-1 mt-sm-0"
                         onClick={getGeolocation}
-                        disabled={locationLoading}
-                      >
+                        disabled={locationLoading}>
                         Оновити розташування
                       </Button>
                     }
