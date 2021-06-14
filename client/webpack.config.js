@@ -4,6 +4,8 @@ const CopyWebpackPlugin = require(`copy-webpack-plugin`);
 const HtmlWebpackPlugin = require(`html-webpack-plugin`);
 const WebpackBuildNotifierPlugin = require('webpack-build-notifier');
 
+const isProd = process.env.NODE_ENV === 'production';
+
 module.exports = {
   entry: `./src/index.tsx`,
   output: {
@@ -56,7 +58,7 @@ module.exports = {
         { // css-loader
           loader: `css-loader`,
           options: {
-            sourceMap: true,
+            sourceMap: !isProd,
             url: false,
           },
         },
@@ -66,7 +68,7 @@ module.exports = {
         { // sass-loader
           loader: `sass-loader`,
           options: {
-            sourceMap: true,
+            sourceMap: !isProd,
           },
         },
       ],
@@ -77,7 +79,7 @@ module.exports = {
         { // css-loader
           loader: `css-loader`,
           options: {
-            sourceMap: true,
+            sourceMap: !isProd,
             url: false,
           },
         },
@@ -87,7 +89,7 @@ module.exports = {
     }],
   },
 
-  devtool: `eval-source-map`,
+  devtool: isProd ? false : `eval-source-map`,
   resolve: {
     extensions: [`.ts`, `.tsx`, `.js`, `.jsx`],
   },
@@ -106,6 +108,7 @@ module.exports = {
         {from: `./public/img/`, to: `./img/`},
         {from: `./public/fonts/`, to: `./css/fonts/`},
         {from: `./public/favicon.ico`, to: `./favicon.ico`},
+        {from: `./public/message.mp3`, to: `./message.mp3`},
       ],
     }),
 

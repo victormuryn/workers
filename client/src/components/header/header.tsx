@@ -36,7 +36,7 @@ const Header: React.FC = () => {
 
   const onLogoutClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    
+
     logout();
     onItemClick();
     history.push(`/`);
