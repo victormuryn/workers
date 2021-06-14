@@ -9,7 +9,7 @@
   "license": "ISC",
   "scripts": {
     "build": "npx webpack --mode production",
-    "start": "webpack serve --mode development --open",
+    "start": "npx webpack serve --mode development --open",
     "eslint": "eslint --ext .tsx --ext .ts --ext .jsx --ext .js src/",
     "test": "npm run eslint && npx jest"
   },
