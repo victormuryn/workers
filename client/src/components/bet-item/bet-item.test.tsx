@@ -9,7 +9,10 @@ describe(`BetItem tests`, () => {
       price={200}
       author={{
         _id: `string`,
-        image: true,
+        image: {
+          buffer: ``,
+          extension: ``,
+        },
         name: `string`,
         surname: `string`,
         username: `string`,

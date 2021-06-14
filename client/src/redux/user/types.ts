@@ -7,7 +7,10 @@ export const USER_SET_AVATAR = `USER/SET_AVATAR`;
 export interface User {
   name: string
   token: string
-  image: boolean
+  image: {
+    extension: string,
+    buffer: string,
+  }
   userId: string
   surname: string
   username: string
@@ -25,6 +28,10 @@ interface UserLogoutAction {
 
 interface UserSetAvatar {
   type: typeof USER_SET_AVATAR,
+  payload: {
+    extension: string,
+    buffer: string,
+  }
 }
 
 export type UserActionTypes =

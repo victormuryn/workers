@@ -21,7 +21,10 @@ import {setPageMeta} from '../../utils/utils';
 type Response = {
   name: string,
   token: string,
-  image: boolean,
+  image: {
+    extension: string,
+    buffer: string,
+  },
   userId: string,
   surname: string,
   username: string,

@@ -2,7 +2,10 @@ export type AccountTypes = `freelancer` | `client`;
 export interface MinUser {
   _id: string,
   name: string,
-  image: boolean,
+  image: {
+    buffer: string,
+    extension: string,
+  },
   surname: string,
   username: string,
   location?: {
@@ -62,4 +65,9 @@ export type UserBet = {
   token: string,
   author: string,
   project: string,
+};
+
+export type Image = {
+  extension: string,
+  buffer: string,
 };

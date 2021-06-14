@@ -7,7 +7,10 @@ import {AccountTypes} from '../../types/types';
 export type State = {
   name: string,
   token: string,
-  image: boolean,
+  image: {
+    extension: string,
+    buffer: string,
+  },
   userId: string,
   surname: string,
   username: string,
@@ -20,7 +23,10 @@ const initialState: State = {
   token: ``,
   userId: ``,
   surname: ``,
-  image: false,
+  image: {
+    extension: ``,
+    buffer: ``,
+  },
   username: ``,
   accountType: null,
   isAuthenticated: false,
@@ -55,13 +61,13 @@ export default (
 
     if (typeof storage === `string`) {
       const parsedStorage = JSON.parse(storage);
-      parsedStorage.image = true;
+      parsedStorage.image = action.payload;
       localStorage.setItem(`user`, JSON.stringify(parsedStorage));
     }
 
     return {
       ...state,
-      image: true,
+      image: action.payload,
     };
   }
   }

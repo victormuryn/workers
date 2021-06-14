@@ -9,7 +9,10 @@ describe(`ChatMessage tests`, () => {
         content: '',
         date: new Date(),
         fromSelf: false,
-        image: false,
+        image: {
+          extension: `png`,
+          buffer: ``,
+        },
         name: 'tester',
         username: 'tester',
         showAvatar: false,

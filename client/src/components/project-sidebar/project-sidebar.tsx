@@ -16,7 +16,10 @@ type Props = {
   name: string,
   date: string,
   views: number,
-  image: boolean,
+  image: {
+    buffer: string,
+    extension: string,
+  },
   expire: string,
   surname: string,
   username: string,
@@ -46,8 +49,9 @@ const ProjectSidebar: React.FC<Props> = (props) => {
             <Row className="align-items-center">
               <Col sm={3}>
                 <UserAvatar
-                  username={username}
-                  image={image}
+                  alt={username}
+                  buffer={image.buffer}
+                  extension={image.extension}
                 />
               </Col>
               <Col>

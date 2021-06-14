@@ -29,7 +29,7 @@ const App: React.FC = () => {
 
   const {isAuthenticated, accountType} = user;
 
-  const messages = unread.map(({message, from}, i) => (
+  const messages = unread.map(({message, from, image}, i) => (
     <Toast
       autohide
       animation
@@ -45,8 +45,9 @@ const App: React.FC = () => {
         >
           <UserAvatar
             width={20}
-            image={true}
-            username={from}
+            alt={from}
+            buffer={image.buffer}
+            extension={image.extension}
             className="rounded-circle me-2"
           />
           <strong>{from}</strong>

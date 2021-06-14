@@ -51,8 +51,9 @@ const ChatUsersList: React.FC<Props> = ({
               <div className="position-relative me-3">
                 <UserAvatar
                   width={50}
-                  image={image}
-                  username={username}
+                  alt={username}
+                  buffer={image.buffer}
+                  extension={image.extension}
                 />
 
                 <span

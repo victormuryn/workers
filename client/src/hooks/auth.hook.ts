@@ -14,7 +14,10 @@ type Login = (
   data: {
     name: string,
     surname: string,
-    image: boolean,
+    image: {
+      extension: string,
+      buffer: string,
+    },
     token: string,
     userId: string,
     accountType: AccountTypes,

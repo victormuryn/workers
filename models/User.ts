@@ -2,7 +2,7 @@ import {Document, Schema, model, Types} from 'mongoose';
 
 import {CategoryType} from './Category';
 import * as bcrypt from 'bcrypt';
-import {CityDocument} from "./City";
+import {CityDocument} from './City';
 
 export interface UserType extends Document{
   cv: string,
@@ -11,7 +11,12 @@ export interface UserType extends Document{
   quote: string,
   email: string,
   phone: string,
-  image: boolean,
+  image: {
+    exists: boolean,
+    extension: string,
+    buffer: string,
+    // webp: Buffer,
+  },
   rating: number,
   surname: string,
   finished: number,
@@ -35,7 +40,12 @@ const schema = new Schema<UserType>({
   rating: {type: Number, default: 0},
   name: {type: String, required: true},
   finished: {type: Number, default: 0},
-  image: {type: Boolean, default: false},
+  image: {
+    exists: {type: Boolean, default: false},
+    extension: {type: String, default: ``},
+    buffer: {type: String, default: ``},
+    // webp: {type: Buffer, default: ``},
+  },
   surname: {type: String, required: true},
   password: {type: String, required: true},
   accountType: {type: String, required: true},

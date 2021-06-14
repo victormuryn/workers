@@ -19,8 +19,6 @@ import {State} from '../../redux/reducer';
 import {useForm} from '../../hooks/form.hook';
 import {setPageMeta} from '../../utils/utils';
 import Message from '../../components/message';
-import api from '../../utils/api';
-import {Project} from "../../types/types";
 
 type FormState = {
   text: string,

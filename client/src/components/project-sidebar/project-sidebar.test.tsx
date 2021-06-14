@@ -5,7 +5,10 @@ import ProjectSidebar from './project-sidebar';
 describe(`ProjectSidebar tests`, () => {
   it(`ProjectSidebar renders corrects`, () => {
     const tree = renderer.create(<ProjectSidebar
-      image={true}
+      image={{
+        buffer: ``,
+        extension: `jpg`
+      }}
       views={100}
       name="tester"
       surname="test"

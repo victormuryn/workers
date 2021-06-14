@@ -8,9 +8,12 @@ declare module 'socket.io' {
     token?: string;
     name?: string;
     userID?: string;
-    image?: boolean;
+    image?: {
+      exitsts: boolean
+      extension: string,
+      buffer: string,
+    };
     surname?: string;
     username?: string;
-    fullName?: string;
   }
 }

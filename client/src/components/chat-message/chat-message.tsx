@@ -9,7 +9,10 @@ interface Props {
   message: {
     date: Date,
     name: string,
-    image: boolean,
+    image: {
+      extension: string,
+      buffer: string,
+    },
     content: string,
     username: string,
     fromSelf: boolean,
@@ -29,8 +32,9 @@ const ChatMessage: React.FC<Props> = ({message}) => {
           <Link className="chat-avatar" to={`/user/${username}`}>
             <UserAvatar
               width={48}
-              image={image}
-              username={username}
+              alt={username}
+              buffer={image.buffer}
+              extension={image.extension}
             />
             <p className="chat-name">{name}</p>
           </Link>

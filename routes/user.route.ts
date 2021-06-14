@@ -1,10 +1,10 @@
 import {Request, Response, Router} from 'express';
 import {LeanDocument} from 'mongoose';
 
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 const https = require('https');
-const {exec} = require('child_process');
+// const {exec} = require('child_process');
 
 import City, {CityDocument} from '../models/City';
 import User, {UserType} from '../models/User';
@@ -288,39 +288,53 @@ router.patch(`/:username/avatar`,
         const nameParts = avatar.originalname.split(`.`);
         const extension = nameParts[nameParts.length - 1];
 
-        const pathToFolder = `client/dist/img/users/`;
+        // const pathToFolder = `client/dist/img/users/`;
 
         if (user._id.toString() === author) {
           const croppedImg = await sharp(avatar.buffer)
             .resize({width: 200, height: 200, fit: `cover`})
             .toBuffer();
 
-          const pathToPhoto = path
-            .join(pathToFolder, `${username}.${extension}`);
+          // const pathToPhoto = path
+          //   .join(pathToFolder, `${username}.${extension}`);
 
-          return fs.writeFile(
-            pathToPhoto,
-            croppedImg,
-            async (error: NodeJS.ErrnoException | null ) => {
-              if (error) throw error;
+          user.image = {
+            extension,
+            exists: true,
+            buffer: croppedImg.toString(`base64`),
+          };
 
-              user.image = true;
-              await user.save();
+          await user.save();
+          return response.json({
+            message: `Фото успішно оновлене!`,
+            buffer: user.image.buffer,
+            extension: user.image.extension,
+          });
 
-              // optimize with squoosh
-              // eslint-disable-next-line max-len
-              exec(`npx @squoosh/cli ${pathToPhoto} --webp '{"quality":90}' -d ${pathToFolder}`,
-                (err: NodeJS.ErrnoException | null) => {
-                  if (err) throw err;
 
-                  // eslint-disable-next-line max-len
-                  exec(`npx @squoosh/cli ${pathToPhoto} --mozjpeg '{"quality":90,"progressive":true}' -d ${pathToFolder}`,
-                    (err1: NodeJS.ErrnoException | null) => {
-                      if (err1) throw err1;
-                      return response.json({message: `Фото успішно оновлене!`});
-                    });
-                });
-            });
+          // return fs.writeFile(
+          //   pathToPhoto,
+          //   croppedImg,
+          //   async (error: NodeJS.ErrnoException | null ) => {
+          //     if (error) throw error;
+
+          // user.image = true;
+          // await user.save();
+
+          // optimize with squoosh
+          // eslint-disable-next-line max-len
+          // exec(`npx @squoosh/cli ${pathToPhoto} --webp '{"quality":90}' -d ${pathToFolder}`,
+          //   (err: NodeJS.ErrnoException | null) => {
+          //     if (err) throw err;
+
+          // eslint-disable-next-line max-len
+          // exec(`npx @squoosh/cli ${pathToPhoto} --mozjpeg '{"quality":90,"progressive":true}' -d ${pathToFolder}`,
+          //   (err1: NodeJS.ErrnoException | null) => {
+          //     if (err1) throw err1;
+          //     return response.json({message: `Фото успішно оновлене!`});
+          //   });
+          // });
+          // });
         }
 
         return response

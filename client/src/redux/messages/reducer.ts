@@ -18,6 +18,7 @@ import {
 
 import {Socket} from 'socket.io-client';
 import {last, spreadAndAdd} from '../../utils/utils';
+import {Image} from '../../types/types';
 
 export type State = {
   selectedUser: MessageUser | null;
@@ -25,6 +26,7 @@ export type State = {
   socket: Socket | null;
   unread: Array<{
     from: string,
+    image: Image,
     message: string,
   }>,
 }
@@ -262,6 +264,7 @@ export default (
           user.hasNewMessages = true;
 
           unread.push({
+            image: user.image,
             from: user.username,
             message: content.length > 90 ?
               `${content.slice(0, 87)}...` :

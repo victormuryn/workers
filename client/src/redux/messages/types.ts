@@ -32,7 +32,10 @@ export interface Message {
 export interface UserData {
   name: string
   more: boolean
-  image: boolean
+  image: {
+    extension: string,
+    buffer: string,
+  }
   userID: string
   surname: string
   username: string

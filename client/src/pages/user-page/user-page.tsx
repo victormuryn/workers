@@ -39,7 +39,10 @@ type Author = {
   _id: string,
   name: string,
   quote: string,
-  image: boolean,
+  image: {
+    extension: string,
+    buffer: string,
+  },
   rating: number,
   online: string,
   surname: string,
@@ -101,7 +104,10 @@ const UserPage: React.FC = () => {
       surname: ``,
       finished: 0,
       username: ``,
-      image: false,
+      image: {
+        extension: ``,
+        buffer: ``,
+      },
       categories: [],
       accountType: `client`,
       online: `1970-01-01T00:00:00.000+00:00`,
@@ -244,18 +250,28 @@ const UserPage: React.FC = () => {
     if (newAvatar) {
       closeAvatarModal();
 
-      console.log(newAvatar)
-
       api
-        .patch<{message: string}>(`/user/${username}/avatar`, newAvatar, {
+        .patch<{
+          message: string,
+          buffer: string,
+          extension: string,
+        }>(`/user/${username}/avatar`, newAvatar, {
           timeout: 60 * 1000, // 60 seconds
           headers: {
             'Authorization': `Bearer ${loggedUser.token}`,
           },
         })
-        .then((response) => {
-          setSuccess(response.data.message);
+        .then(({data}) => {
+          setSuccess(data.message);
           setAvatarName(` ` + avatarName);
+
+          inputChangeHandler([{
+            name: `user.image.extension`,
+            value: data.extension,
+          }, {
+            name: `user.image.buffer`,
+            value: data.buffer,
+          }]);
 
           dispatch(ActionCreator.setAvatar());
         })
@@ -354,9 +370,9 @@ const UserPage: React.FC = () => {
               <div className="user__avatar">
                 <UserAvatar
                   width={150}
-                  get={avatarName}
-                  image={user.image}
-                  username={username}
+                  alt={user.username}
+                  buffer={user.image.buffer}
+                  extension={user.image.extension}
                 />
 
                 {isUsersPage &&

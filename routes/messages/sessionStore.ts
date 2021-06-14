@@ -1,6 +1,10 @@
 export interface Session {
   name: string,
-  image: boolean,
+  image: {
+    exists: boolean,
+    extension: string,
+    buffer: string,
+  },
   userID: string,
   surname: string,
   username: string,

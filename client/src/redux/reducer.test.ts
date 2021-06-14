@@ -11,7 +11,10 @@ describe(`ActionCreator tests`, () => {
       username: `test-username`,
       name: `text-name`,
       surname: `test-surname`,
-      image: true,
+      image: {
+        extension: ``,
+        buffer: ``,
+      },
     });
 
     expect(login).toEqual({
@@ -23,7 +26,10 @@ describe(`ActionCreator tests`, () => {
         username: `test-username`,
         name: `text-name`,
         surname: `test-surname`,
-        image: true,
+        image: {
+          extension: ``,
+          buffer: ``,
+        },
       },
     });
   });

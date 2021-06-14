@@ -3,32 +3,31 @@ import React from 'react';
 import './user-avatar.scss';
 
 type Props = {
-  image: boolean,
-  username: string,
   alt?: string,
-  get?: string,
   width?: number,
   className?: string,
+  buffer?: string,
+  extension?: string
 }
 
 const UserAvatar: React.FC<Props> = (props) => {
-  const {image, username, alt = username, width, className, get} = props;
+  const {alt, width, className, buffer, extension} = props;
 
-  if (image) {
+  if (buffer && extension) {
     return (
       <picture>
-        <source
-          type="image/webp"
-          srcSet={`/img/users/${username}.webp${get ? `?${get}` : ``}`}
-        />
-        <source
-          type="image/jpeg"
-          srcSet={`/img/users/${username}.jpg${get ? `?${get}` : ``}`}
-        />
+        {/* <source*/}
+        {/*  type="image/webp"*/}
+        {/*  srcSet={`/img/users/${username}.webp${get ? `?${get}` : ``}`}*/}
+        {/* />*/}
+        {/* <source*/}
+        {/*  type="image/jpeg"*/}
+        {/*  srcSet={`/img/users/${username}.jpg${get ? `?${get}` : ``}`}*/}
+        {/* />*/}
         <img
           alt={alt}
           width={width}
-          src={`/img/users/${username}.jpg${get ? `?${get}` : ``}`}
+          src={`data:image/${extension};base64,${buffer}`}
           className={`rounded-circle ${className}`}
         />
       </picture>
@@ -39,7 +38,7 @@ const UserAvatar: React.FC<Props> = (props) => {
     <img
       alt={alt}
       width={width}
-      src={`/img/default.svg${get ? `?${get}` : ``}`}
+      src="/img/default.svg"
       className={`rounded-circle ${className}`}
     />
   );

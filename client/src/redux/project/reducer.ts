@@ -44,7 +44,10 @@ const initialState: State = {
     author: {
       _id: ``,
       name: ``,
-      image: false,
+      image: {
+        extension: ``,
+        buffer: ``,
+      },
       surname: ``,
       username: ``,
     },

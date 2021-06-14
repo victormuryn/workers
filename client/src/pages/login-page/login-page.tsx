@@ -21,7 +21,10 @@ type Response = {
   userId: string,
   surname: string,
   name: string,
-  image: boolean,
+  image: {
+    buffer: string,
+    extension: string,
+  },
   accountType: AccountTypes,
   username: string,
 };

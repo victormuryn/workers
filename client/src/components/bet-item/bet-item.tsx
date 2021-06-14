@@ -106,8 +106,9 @@ const BetItem: React.FC<Props> = (props) => {
         <div className="bet__author-line d-flex align-content-center">
           <Link to={`/user/${author.username}`} className="project__user-link">
             <UserAvatar
-              image={author.image}
-              username={author.username}
+              alt={author.username}
+              buffer={author.image.buffer}
+              extension={author.image.extension}
             /> {author.name} {author.surname}
           </Link>
 

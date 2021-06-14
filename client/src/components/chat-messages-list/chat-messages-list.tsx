@@ -30,7 +30,10 @@ const ChatMessagesList: React.FC<Props> = ({selectedUser}) => {
     name = ``,
     more = false,
     username = ``,
-    image = false,
+    image = {
+      extension: ``,
+      buffer: ``,
+    },
     messages = [],
     userID = ``,
     moreSent = false,
