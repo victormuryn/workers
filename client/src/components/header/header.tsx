@@ -66,14 +66,13 @@ const Header: React.FC = () => {
         />
 
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="ms-auto me-0">
+          <Nav className="ms-auto me-0 align-items-md-center">
             <Nav.Link
               onClick={onItemClick}
               as={NavLink}
               to="/projects"
               className="ms-2"
-              activeClassName="active"
-            >
+              activeClassName="active">
               Проєкти
             </Nav.Link>
 
@@ -85,14 +84,14 @@ const Header: React.FC = () => {
                     as={NavLink}
                     to="/messages"
                     className="ms-2"
-                    activeClassName="active"
-                  >
+                    activeClassName="active">
                     Повідомлення
                     {
                       unread !== 0 ?
                         <Badge variant="light" className="align-middle">
                           {unread}
-                        </Badge> : undefined
+                        </Badge> :
+                        undefined
                     }
                   </Nav.Link>
                   <NavDropdown
@@ -104,8 +103,7 @@ const Header: React.FC = () => {
                       as={NavLink}
                       onClick={onItemClick}
                       activeClassName="active"
-                      to={`/user/${user.username}`}
-                    >
+                      to={`/user/${user.username}`}>
                       Профіль
                     </NavDropdown.Item>
 
@@ -113,8 +111,7 @@ const Header: React.FC = () => {
                       as={NavLink}
                       onClick={onItemClick}
                       to="/activities"
-                      activeClassName="active"
-                    >
+                      activeClassName="active">
                       Мої {user.accountType === `client` ? `проєкти` : `ставки`}
                     </NavDropdown.Item>
 
@@ -148,16 +145,17 @@ const Header: React.FC = () => {
             }
 
             {/* if user is client => show 'create project' button */}
-            {user.accountType === `client` && (
-              <Button
-                to="/create"
-                variant="success"
-                className="ms-md-5 my-2"
-                as={Link}
-              >
-                Створити проєкт
-              </Button>
-            )}
+            {
+              user.accountType === `client` &&
+                <Button
+                  as={Link}
+                  to="/create"
+                  variant="success"
+                  className="ms-md-5 my-2 my-md-1"
+                >
+                  Створити проєкт
+                </Button>
+            }
           </Nav>
         </Navbar.Collapse>
       </Container>

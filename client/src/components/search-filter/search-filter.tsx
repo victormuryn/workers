@@ -238,7 +238,7 @@ const SearchFilter: React.FC<State> = ({onSubmit}) => {
     <Form
       onReset={resetHandler}
       onSubmit={submitHandler}
-      className="mb-4 projects__filter"
+      className="mb-5 projects__filter"
     >
       <Form.Group className="mx-auto mb-3" controlId="category">
         <Form.Label>Категорії</Form.Label>

@@ -10,7 +10,7 @@ import InMemorySessionStore from './sessionStore';
 import DBMessageStore from './messageStore';
 
 import User from '../../models/User';
-import {ChatType} from '../../models/Chat';
+import Chat, {ChatType} from '../../models/Chat';
 
 // init all stores
 const sessionStore = new InMemorySessionStore();
@@ -220,3 +220,21 @@ module.exports = (server: http.Server) => {
     });
   });
 };
+
+// let i = 1;
+// const interval = setInterval(() => {
+//   const user = Math.random() > 0.5;
+//   const from = user ? `60916593e2607517c4104f8b` : `60324191fd8ae80638059282`;
+//   const to = user ? `60324191fd8ae80638059282` : `60916593e2607517c4104f8b`;
+//
+//   new Chat({
+//     from, to, content: i,
+//     date: new Date(),
+//   }).save();
+//
+//   i++;
+//
+//   if (i >= 100) {
+//     clearInterval(interval);
+//   }
+// }, 5);

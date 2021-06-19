@@ -7,49 +7,45 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import {Bet} from '../../types/types';
 
 type ProjectItemProps = {
-  bets: Bet[],
   _id: string,
   hot: boolean,
   date: string,
-  price: number,
+  price?: number,
   title: string,
   remote: boolean,
+  isEven?: boolean,
   location: {
     city: string,
     region: string,
-    latitude: number,
-    longitude: number,
   },
   category: {
     _id: string,
     title: string,
-    url: string,
   }[],
 };
 
 const ProjectItem: React.FC<ProjectItemProps> = (props) => {
   const {
-    _id, title, price, date, bets, hot,
-    remote, location, category,
+    _id, title, price, date, children, hot,
+    remote, location, category, isEven = false,
   } = props;
 
   const now = new Date();
   const months = [`січня`, `лютого`, `березня`, `квітня`, `травня`, `червня`,
     `липня`, `серпня`, `вересня`, `жовтня`, `листопада`, `грудня`];
 
-  const formatDate = (projectDate: string): string => {
+  const formatDate = (projectDate: string) => {
     const date = new Date(projectDate);
 
     const setZero = (number: number): string => {
       return number < 10 ? `0${number}` : number.toString();
     };
 
-    const day: string = setZero(date.getDate());
-    const hours: string = setZero(date.getHours());
-    const minutes: string = setZero(date.getMinutes());
+    const day = setZero(date.getDate());
+    const hours = setZero(date.getHours());
+    const minutes = setZero(date.getMinutes());
 
     return date.getDate() === now.getDate() ?
       `${hours}:${minutes}` :
@@ -57,9 +53,12 @@ const ProjectItem: React.FC<ProjectItemProps> = (props) => {
   };
 
   return (
-    <li className="projects__item">
+    <li
+      className={`projects__item`}
+      style={{backgroundColor: isEven ? `#F5F5F5` : ``}}
+    >
       <Row className={`align-items-center ${hot && `projects__item--hot`}`}>
-        <Col md={{offset: 1, span: 7}} className="px-4">
+        <Col md={{offset: 1, span: 6}} className="px-4">
           <Link
             to={`/project/${_id}`}
             className="project__item-link"
@@ -98,15 +97,8 @@ const ProjectItem: React.FC<ProjectItemProps> = (props) => {
         </Col>
 
         {/* bets count */}
-        <Col className="d-none d-md-block" md={1}>
-          <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip id={`count-${_id}`}>Кількість ставок</Tooltip>}
-          >
-            <p className="project__item-text text-danger m-md-0">
-              {bets.length}
-            </p>
-          </OverlayTrigger>
+        <Col md={2} className="d-none d-md-flex justify-content-center">
+          {children}
         </Col>
 
         {/* expire date */}

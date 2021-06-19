@@ -18,9 +18,8 @@ const ChatUserTopPanel: React.FC<Props> = ({
     <div className="selected-user">
       <span>Кому: <Link
         to={`/user/${username}`}
-        className="name text-dark text-decoration-none fw-bold">
-        {name} {surname}
-      </Link>
+        className="name text-decoration-none text-dark fw-bolder"
+      >{name} {surname}</Link>
       </span>
     </div>
   );

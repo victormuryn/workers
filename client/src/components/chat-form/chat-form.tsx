@@ -38,8 +38,15 @@ const ChatForm: React.FC<Props> = ({
     resetForm();
   }, [selectedUserID]);
 
+  {/*<div className="chat-container">*/}
+  {/*  <div className="form-group mt-3 mb-0">*/}
+  {/*    <textarea className="form-control" rows={3}*/}
+  {/*      placeholder="Type your message here..."/>*/}
+  {/*  </div>*/}
+  {/*</div>*/}
+
   return (
-    <Form onSubmit={onSubmit} className="mt-3 mb-0">
+    <Form onSubmit={onSubmit} className="mt-3 mb-0 chat-container">
       <fieldset disabled={disabled} className="chat-form">
         <Form.Control
           name="text"
@@ -50,7 +57,7 @@ const ChatForm: React.FC<Props> = ({
           autoComplete="off"
           onChange={inputChangeHandler}
           placeholder="Введіть повідомлення"
-          className="border-0 py-4 bg-light me-4"
+          className="chat-input border-0 py-4 me-md-4"
         />
 
         <Button type="submit" variant="primary">Відправити</Button>

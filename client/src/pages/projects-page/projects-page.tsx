@@ -1,23 +1,24 @@
 import React, {useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import api from '../../utils/api';
 
 import './projects-page.scss';
 
+import Message from '../../components/message';
 import Pagination from '../../components/pagination';
 import ProjectItem from '../../components/project-item';
-
+import SearchFilter from '../../components/search-filter';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Tooltip from 'react-bootstrap/Tooltip';
 import Container from 'react-bootstrap/Container';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
 import {State} from '../../redux/reducer';
 import {addToSearch, setPageMeta} from '../../utils/utils';
 import {Project} from '../../types/types';
-import {useHistory} from 'react-router-dom';
-import SearchFilter from '../../components/search-filter';
-import Message from '../../components/message';
 
 interface Form {
   categories: string[],
@@ -114,7 +115,7 @@ const ProjectsPage: React.FC = () => {
 
       <Container className="mt-5">
         <Row>
-          <Col md={3} className="order-1 order-md-0 mt-4 mt-md-0">
+          <Col md={3}>
             <SearchFilter onSubmit={onFilterSubmit} />
           </Col>
 
@@ -123,8 +124,25 @@ const ProjectsPage: React.FC = () => {
               loading ?
                 <Message text={`loading`} /> :
                 projects.length ?
-                  projects.map((project) => (
-                    <ProjectItem key={project._id} {...project} />
+                  projects.map((project, i) => (
+                    <ProjectItem
+                      {...project}
+                      key={project._id}
+                      isEven={!!(i % 2)}
+                    >
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={
+                          <Tooltip id={`count-${project._id}`}>
+                            Кількість ставок
+                          </Tooltip>
+                        }
+                      >
+                        <p className="project__item-text text-danger m-md-0">
+                          {project.bets.length}
+                        </p>
+                      </OverlayTrigger>
+                    </ProjectItem>
                   )) :
                   <h2 className="text-center">
                     Не вдалося знайти жодного проєкту

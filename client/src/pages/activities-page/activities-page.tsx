@@ -13,6 +13,8 @@ import './activities-page.scss';
 
 import ActivityItem from '../../components/activity-item';
 import Pagination from '../../components/pagination';
+import ProjectItem from '../../components/project-item';
+
 
 import {State} from '../../redux/reducer';
 import {
@@ -117,12 +119,13 @@ const ActivitiesPage: React.FC = () => {
       <ul className="list-unstyled">
         {
           data.type === `freelancer` ?
-            data.data.map(({project, price, term, _id, date}) => (
-              <ActivityItem
+            data.data.map(({project, price, term, _id, date}, i) => (
+              <ProjectItem
                 key={_id}
                 date={date}
-                id={project._id}
+                _id={project._id}
                 hot={project.hot}
+                isEven={!!(i % 2)}
                 price={project.price}
                 title={project.title}
                 remote={project.remote}
@@ -143,13 +146,14 @@ const ActivitiesPage: React.FC = () => {
                     {formatPrice(price)}
                   </Badge>
                 </div>
-              </ActivityItem>
+              </ProjectItem>
             )) :
-            data.data.map((project) => (
-              <ActivityItem
-                id={project._id}
+            data.data.map((project, i) => (
+              <ProjectItem
+                _id={project._id}
                 key={project._id}
                 hot={project.hot}
+                isEven={!!(i % 2)}
                 date={project.date}
                 price={project.price}
                 title={project.title}
@@ -169,7 +173,7 @@ const ActivitiesPage: React.FC = () => {
                     {project.bets.length}
                   </p>
                 </OverlayTrigger>
-              </ActivityItem>
+              </ProjectItem>
             ))
         }
       </ul>

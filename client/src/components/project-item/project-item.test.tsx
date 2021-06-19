@@ -11,23 +11,19 @@ describe(`ProjectItem tests`, () => {
         title="Title"
         price={123}
         _id="111"
-        bets={[]}
         hot={false}
         date={`Wed Feb 17 2021 19:52:02 GMT+0200
         (Eastern European Standard Time)`}
         location={{
           city: `Lviv`,
           region: `Lviv Oblast'`,
-          latitude: 3.23,
-          longitude: 3214,
         }}
         category={[{
           _id: `test`,
           title: `test`,
-          url: `test`,
         }]}
         remote
-      />
+      >234234</ProjectItem>
     </Router>).toJSON();
 
     expect(tree).toMatchSnapshot();

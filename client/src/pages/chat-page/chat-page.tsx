@@ -15,6 +15,7 @@ import {MessageUser} from '../../redux/messages/types';
 
 import {ActionCreator} from '../../redux/action-creator';
 import {getPluralNoun, setPageMeta} from '../../utils/utils';
+import {Col} from "react-bootstrap";
 
 const ChatPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -63,21 +64,39 @@ const ChatPage: React.FC = () => {
   }, [name]);
 
   return (
-    <Container className="mt-4 bg-white g-0">
-      <Row className="border g-0">
-        {/* Users box*/}
-        <ChatUsersSidebar
-          users={users}
-          onUserSelect={setSelectedUser}
-          selectedUserID={selectedUser?.userID}
-        />
+    <Container className="chat-page">
+      {/* Content wrapper start */}
+      <div className="content-wrapper">
 
-        {/* Chat Box*/}
-        <ChatBox
-          selectedUser={selectedUser}
-          onMessageSubmit={onMessageSubmit}
-        />
-      </Row>
+        {/* Row start */}
+        <Row className="gutters">
+
+          <Col xs={12}>
+
+            <div className="card m-0">
+
+              {/* Row start */}
+              <Row className="no-gutters">
+                <Col xs={3} md={4}>
+                  <ChatUsersSidebar
+                    users={users}
+                    onUserSelect={setSelectedUser}
+                    selectedUserID={selectedUser?.userID}
+                  />
+                </Col>
+
+                <Col xs={9} md={8}>
+                  {/* Chat Box*/}
+                  <ChatBox
+                    selectedUser={selectedUser}
+                    onMessageSubmit={onMessageSubmit}
+                  />
+                </Col>
+              </Row>
+            </div>
+          </Col>
+        </Row>
+      </div>
     </Container>
   );
 };
