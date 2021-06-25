@@ -1,5 +1,4 @@
 .project__item {
-  width: 50%;
   max-width: 450px;
   margin: 0 auto 5%;
 }
@@ -61,7 +60,7 @@
 }
 
 .project__data-item {
-  width: 50%;
+  margin-right: 2%;
 }
 
 .project__data-item:last-of-type {
@@ -98,10 +97,11 @@
 
 @media screen and (min-width: 1024px) {
   .project__item {
+    width: 49%;
     margin-bottom: 2%;
   }
 
   .project__data-item {
-    width: 33.3%;
+    margin-right: 4%;
   }
 }
