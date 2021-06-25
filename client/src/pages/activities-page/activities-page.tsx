@@ -5,13 +5,10 @@ import {useHistory} from 'react-router-dom';
 import api from '../../utils/api';
 
 import Badge from 'react-bootstrap/Badge';
-import Tooltip from 'react-bootstrap/Tooltip';
 import Container from 'react-bootstrap/Container';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
 import './activities-page.scss';
 
-import ActivityItem from '../../components/activity-item';
 import Pagination from '../../components/pagination';
 import ProjectItem from '../../components/project-item';
 
@@ -35,6 +32,7 @@ interface DataClient {
     hot: boolean,
     bets: string[],
     date: string,
+    description: string,
     category: {
       _id: string,
       title: string
@@ -58,6 +56,7 @@ interface DataFreelancer {
       price?: number,
       title: string,
       hot: boolean,
+      description: string,
       category: {
         _id: string,
         title: string
@@ -116,64 +115,36 @@ const ActivitiesPage: React.FC = () => {
     <Container>
       <h1 className="text-center my-5 py-3">{title}</h1>
 
-      <ul className="list-unstyled">
+      <ul className="projects__list">
         {
           data.type === `freelancer` ?
-            data.data.map(({project, price, term, _id, date}, i) => (
+            data.data.map(({project, price, term, _id, date}) => (
               <ProjectItem
                 key={_id}
                 date={date}
                 _id={project._id}
                 hot={project.hot}
-                isEven={!!(i % 2)}
                 price={project.price}
                 title={project.title}
                 remote={project.remote}
                 location={project.location}
                 category={project.category}
-              >
-                <div className="me-1 bet__badge-wrapper">
-                  <Badge
-                    className="bg-primary"
-                    variant="primary">
-                    {getPluralNoun(term, [`день`, `дні`, `днів`])}
-                  </Badge>
-                </div>
-                <div className="me-1 bet__badge-wrapper">
-                  <Badge
-                    className="bg-success"
-                    variant="success">
-                    {formatPrice(price)}
-                  </Badge>
-                </div>
-              </ProjectItem>
+                description={project.description}
+              />
             )) :
             data.data.map((project, i) => (
               <ProjectItem
                 _id={project._id}
                 key={project._id}
                 hot={project.hot}
-                isEven={!!(i % 2)}
                 date={project.date}
                 price={project.price}
                 title={project.title}
                 remote={project.remote}
                 location={project.location}
                 category={project.category}
-              >
-                <OverlayTrigger
-                  placement="top"
-                  overlay={
-                    <Tooltip id={`count-${project._id}`}>
-                      Кількість ставок
-                    </Tooltip>
-                  }
-                >
-                  <p className="project__item-text text-danger m-md-0">
-                    {project.bets.length}
-                  </p>
-                </OverlayTrigger>
-              </ProjectItem>
+                description={project.description}
+              />
             ))
         }
       </ul>

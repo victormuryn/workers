@@ -74,10 +74,17 @@ router.get(
             path: `category`,
             select: `title`,
           }],
-          select: `title price hot remote location category`,
+          select: `title price hot remote location category description`,
         })
         .select(`project date price term`)
         .lean();
+
+      data.forEach((item) => {
+        item.project.description = item.project.description
+          .replace(/(<([^>]+)>)/gi, ` `)
+          .replace(/  +/g, ` `)
+          .substring(0, 130);
+      });
 
       const projectsCount = await Bet.countDocuments({author: user._id});
 
@@ -102,8 +109,16 @@ router.get(
           path: `location`,
           select: `-_id city region`,
         })
-        .select(`price title hot date category remote location bets`)
+        .select(`price title hot date category remote location
+         bets description`)
         .lean();
+
+      data.forEach((item) => {
+        item.description = item.description
+          .replace(/(<([^>]+)>)/gi, ` `)
+          .replace(/  +/g, ` `)
+          .substring(0, 130);
+      });
 
       const projectsCount = await Project.countDocuments({author: user._id});
 

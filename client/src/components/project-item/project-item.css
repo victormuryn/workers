@@ -1,4 +1,5 @@
 .project__item {
+  width: 50%;
   max-width: 450px;
   margin: 0 auto 5%;
 }
@@ -55,11 +56,12 @@
 
   flex-wrap: wrap;
   align-items: center;
+
+  text-align: center;
 }
 
 .project__data-item {
-  width: 49%;
-  margin-right: 2%;
+  width: 50%;
 }
 
 .project__data-item:last-of-type {
@@ -100,7 +102,6 @@
   }
 
   .project__data-item {
-    width: 30%;
-    margin-right: 3%;
+    width: 33.3%;
   }
 }

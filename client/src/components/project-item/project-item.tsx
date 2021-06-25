@@ -5,14 +5,15 @@ import './project-item.css';
 
 import {formatDate, formatPrice} from '../../utils/utils';
 import Badge from '../badge';
-import Button from "../button";
+import {Bet} from '../../types/types';
 
 type ProjectItemProps = {
   _id: string,
   hot: boolean,
   date: string,
-  price?: number,
   title: string,
+  bets?: Bet[],
+  price?: number,
   remote: boolean,
   isEven?: boolean,
   description?: string,
@@ -29,7 +30,7 @@ type ProjectItemProps = {
 const ProjectItem: React.FC<ProjectItemProps> = (props) => {
   const {
     _id, title, price, date, hot, description,
-    remote, location, category,
+    remote, location, category, bets,
   } = props;
 
   const now = new Date();
@@ -45,19 +46,17 @@ const ProjectItem: React.FC<ProjectItemProps> = (props) => {
         <p className="project__item-date">
           {isNew && <Badge variant="secondary">Новий</Badge>}
           {hot && <Badge variant="danger">Терміново</Badge>}
-          Опубліковано {formatDate(date)} тому
+          {
+            remote ?
+              `Віддалено` :
+              `${location.city}, ${location.region}`
+          }
         </p>
 
         <div className="project__data">
           <div className="project__data-item">
-            <h5 className="project__data-item-title">Локація</h5>
-            <p className="project__data-item-text">
-              {
-                remote ?
-                  `Віддалено` :
-                  `${location.city}, ${location.region}`
-              }
-            </p>
+            <h5 className="project__data-item-title">Опубліковано</h5>
+            <p className="project__data-item-text">{formatDate(date)} тому</p>
           </div>
 
           {
@@ -65,6 +64,14 @@ const ProjectItem: React.FC<ProjectItemProps> = (props) => {
               <div className="project__data-item">
                 <h5 className="project__data-item-title">Ціна</h5>
                 <p className="project__data-item-text">{formatPrice(price)}</p>
+              </div> : null
+          }
+
+          {
+            bets ?
+              <div className="project__data-item">
+                <h5 className="project__data-item-title">Ставок</h5>
+                <p className="project__data-item-text">{bets.length}</p>
               </div> : null
           }
         </div>

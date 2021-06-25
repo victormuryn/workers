@@ -12,9 +12,7 @@ import SearchFilter from '../../components/search-filter';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Tooltip from 'react-bootstrap/Tooltip';
 import Container from 'react-bootstrap/Container';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
 import {State} from '../../redux/reducer';
 import {addToSearch, setPageMeta} from '../../utils/utils';
