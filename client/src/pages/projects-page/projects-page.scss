@@ -5,3 +5,11 @@
 .projects__filter .form-group {
   max-width: 90%;
 }
+
+@media screen and (min-width: 768px) {
+  .projects__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}

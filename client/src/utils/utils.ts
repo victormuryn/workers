@@ -167,6 +167,7 @@ export const formatPrice = (price: number) => {
   }).format(price);
 };
 
+
 /**
  * Set all pages meta data
  * @param {string} title - Title of the page

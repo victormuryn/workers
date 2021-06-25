@@ -115,34 +115,20 @@ const ProjectsPage: React.FC = () => {
 
       <Container className="mt-5">
         <Row>
-          <Col md={3}>
+          <Col lg={3}>
             <SearchFilter onSubmit={onFilterSubmit} />
           </Col>
 
-          <Col md={9} as="ul" className="projects__list">
+          <Col lg={9} as="ul" className="projects__list">
             {
               loading ?
                 <Message text={`loading`} /> :
                 projects.length ?
-                  projects.map((project, i) => (
+                  projects.map((project) => (
                     <ProjectItem
                       {...project}
                       key={project._id}
-                      isEven={!!(i % 2)}
-                    >
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={
-                          <Tooltip id={`count-${project._id}`}>
-                            Кількість ставок
-                          </Tooltip>
-                        }
-                      >
-                        <p className="project__item-text text-danger m-md-0">
-                          {project.bets.length}
-                        </p>
-                      </OverlayTrigger>
-                    </ProjectItem>
+                    />
                   )) :
                   <h2 className="text-center">
                     Не вдалося знайти жодного проєкту

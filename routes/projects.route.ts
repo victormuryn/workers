@@ -139,8 +139,16 @@ router.get(`/`, async (request: Request, response: Response) => {
       .skip(page * projectsPerPage)
       .limit(projectsPerPage)
       .populate(`category location`)
-      .select(`title price date hot location remote category bets`)
+      .select(`title price date hot location remote category bets description`)
       .lean();
+
+    // delete html from preview description
+    projects.forEach((project) => {
+      project.description = project.description
+        .replace(/(<([^>]+)>)/gi, ` `)
+        .replace(/  +/g, ` `)
+        .substring(0, 130);
+    });
 
     const projectsCount = await Project.countDocuments(query);
 
@@ -149,6 +157,7 @@ router.get(`/`, async (request: Request, response: Response) => {
       pages: Math.ceil(projectsCount / projectsPerPage),
     });
   } catch (e) {
+    console.log(e);
     response
       .status(500)
       .json({message: `Щось пішло не так, спробуйте знову.`});

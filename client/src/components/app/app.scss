@@ -1,89 +1,110 @@
 :root {
-  --bs-font-sans-serif: "Rubik", system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --bs-font-sans-serif: 'Rubik', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
   --animate-duration: 1.5s;
   --animate-delay: 1s;
   --animate-repeat: 1;
+
   --main-color: #198754;
+  --primary-color: #264653;
+  --secondary-color: #2A9D8F;
+  --danger-color: #E76F51;
+  --success-color: #157347;
+
+  --warning-color: #E9C46A;
+  --text-light-color: #FFF;
+  --text-secondary-color: #ADB5BD;
 }
 
 @font-face {
   font-family: 'Rubik';
-  src: local('Rubik Bold'), local('Rubik-Bold'),
-  url('./fonts/Rubik-Bold.woff2') format('woff2'),
-  url('./fonts/Rubik-Bold.woff') format('woff'),
-  url('./fonts/Rubik-Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
+
+  src: local('Rubik Bold'), local('Rubik-Bold'),
+    url('./fonts/Rubik-Bold.woff2') format('woff2'),
+    url('./fonts/Rubik-Bold.woff') format('woff'),
+    url('./fonts/Rubik-Bold.ttf') format('truetype');
   font-display: swap;
 }
 
 @font-face {
   font-family: 'Rubik';
-  src: local('Rubik Medium'), local('Rubik-Medium'),
-  url('./fonts/Rubik-Medium.woff2') format('woff2'),
-  url('./fonts/Rubik-Medium.woff') format('woff'),
-  url('./fonts/Rubik-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
+
+  src: local('Rubik Medium'), local('Rubik-Medium'),
+    url('./fonts/Rubik-Medium.woff2') format('woff2'),
+    url('./fonts/Rubik-Medium.woff') format('woff'),
+    url('./fonts/Rubik-Medium.ttf') format('truetype');
   font-display: swap;
 }
 
 @font-face {
   font-family: 'Rubik';
-  src: local('Rubik Light'), local('Rubik-Light'),
-  url('./fonts/Rubik-Light.woff2') format('woff2'),
-  url('./fonts/Rubik-Light.woff') format('woff'),
-  url('./fonts/Rubik-Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
+
+  src: local('Rubik Light'), local('Rubik-Light'),
+    url('./fonts/Rubik-Light.woff2') format('woff2'),
+    url('./fonts/Rubik-Light.woff') format('woff'),
+    url('./fonts/Rubik-Light.ttf') format('truetype');
   font-display: swap;
 }
 
 @font-face {
   font-family: 'Rubik';
-  src: local('Rubik Regular'), local('Rubik-Regular'),
-  url('./fonts/Rubik-Regular.woff2') format('woff2'),
-  url('./fonts/Rubik-Regular.woff') format('woff'),
-  url('./fonts/Rubik-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
+
+  src: local('Rubik Regular'), local('Rubik-Regular'),
+    url('./fonts/Rubik-Regular.woff2') format('woff2'),
+    url('./fonts/Rubik-Regular.woff') format('woff'),
+    url('./fonts/Rubik-Regular.ttf') format('truetype');
   font-display: swap;
 }
 
 *,
 ::after,
 ::before {
-  box-sizing: border-box
+  box-sizing: border-box;
 }
 
 body {
   font-family: var(--bs-font-sans-serif);
+
   overflow-x: hidden;
+
   padding: 0;
+
   background: #fafafa !important;
 }
 
 #root {
   display: flex;
   flex-direction: column;
+
   min-height: 100vh;
 }
 
 .sr-only,
 .visually-hidden {
   position: absolute !important;
+
   overflow: hidden !important;
   clip: rect(0, 0, 0, 0) !important;
+
   width: 1px !important;
   height: 1px !important;
   margin: -1px !important;
   padding: 0 !important;
+
   white-space: nowrap !important;
-  border: 0 !important
+
+  border: 0 !important;
 }
 
 img {
   max-width: 100%;
-  height: auto
+  height: auto;
 }

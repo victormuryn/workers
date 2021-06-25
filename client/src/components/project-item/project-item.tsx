@@ -1,12 +1,11 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 
-import './project-item.scss';
+import './project-item.css';
 
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Tooltip from 'react-bootstrap/Tooltip';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import {formatDate, formatPrice} from '../../utils/utils';
+import Badge from '../badge';
+import Button from "../button";
 
 type ProjectItemProps = {
   _id: string,
@@ -16,6 +15,7 @@ type ProjectItemProps = {
   title: string,
   remote: boolean,
   isEven?: boolean,
+  description?: string,
   location: {
     city: string,
     region: string,
@@ -28,89 +28,57 @@ type ProjectItemProps = {
 
 const ProjectItem: React.FC<ProjectItemProps> = (props) => {
   const {
-    _id, title, price, date, children, hot,
-    remote, location, category, isEven = false,
+    _id, title, price, date, hot, description,
+    remote, location, category,
   } = props;
 
   const now = new Date();
-  const months = [`січня`, `лютого`, `березня`, `квітня`, `травня`, `червня`,
-    `липня`, `серпня`, `вересня`, `жовтня`, `листопада`, `грудня`];
 
-  const formatDate = (projectDate: string) => {
-    const date = new Date(projectDate);
-
-    const setZero = (number: number): string => {
-      return number < 10 ? `0${number}` : number.toString();
-    };
-
-    const day = setZero(date.getDate());
-    const hours = setZero(date.getHours());
-    const minutes = setZero(date.getMinutes());
-
-    return date.getDate() === now.getDate() ?
-      `${hours}:${minutes}` :
-      `${day} ${months[date.getMonth()]}`;
-  };
+  // less than day
+  const isNew = +now - (+new Date(date)) < 1000 * 60 * 60 * 24;
 
   return (
-    <li
-      className={`projects__item`}
-      style={{backgroundColor: isEven ? `#F5F5F5` : ``}}
-    >
-      <Row className={`align-items-center ${hot && `projects__item--hot`}`}>
-        <Col md={{offset: 1, span: 6}} className="px-4">
-          <Link
-            to={`/project/${_id}`}
-            className="project__item-link"
-          >
-            <span className={`h4 ${hot && `text-danger`}`}>{title}</span>
-            <p className="small text-muted mt-2 mb-0">
-              {category.map(({title}) => `${title}, `)}
+    <li className={`project__item ${hot && `project__item--hot`}`}>
+      <Link to={`/project/${_id}`} className="project__item-link">
+        <h3 className="project__item-title">{title}</h3>
+
+        <p className="project__item-date">
+          {isNew && <Badge variant="secondary">Новий</Badge>}
+          {hot && <Badge variant="danger">Терміново</Badge>}
+          Опубліковано {formatDate(date)} тому
+        </p>
+
+        <div className="project__data">
+          <div className="project__data-item">
+            <h5 className="project__data-item-title">Локація</h5>
+            <p className="project__data-item-text">
               {
                 remote ?
-                  <>віддалено</> :
-                  <>{location.city}, {location.region}</>
+                  `Віддалено` :
+                  `${location.city}, ${location.region}`
               }
             </p>
-          </Link>
-        </Col>
+          </div>
 
-        {/* price */}
-        <Col className="d-none d-md-block" md={1}>
-          <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip id={`price-${_id}`}>Ціна</Tooltip>}
-          >
-            <p className="project__item-text text-success fw-bold m-md-0">
-              {
-                price ?
-                  `${new Intl.NumberFormat(`uk`, {
-                    style: 'currency',
-                    currency: 'UAH',
-                    maximumFractionDigits: 0,
-                    minimumFractionDigits: 0,
-                  }).format(price)}` :
-                  null
-              }
-            </p>
-          </OverlayTrigger>
-        </Col>
+          {
+            price ?
+              <div className="project__data-item">
+                <h5 className="project__data-item-title">Ціна</h5>
+                <p className="project__data-item-text">{formatPrice(price)}</p>
+              </div> : null
+          }
+        </div>
 
-        {/* bets count */}
-        <Col md={2} className="d-none d-md-flex justify-content-center">
-          {children}
-        </Col>
+        <p className="project__description">{description}...</p>
 
-        {/* expire date */}
-        <Col className="d-none d-md-block" md={1}>
-          <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip id={`date-${_id}`}>Дата публікації</Tooltip>}
-          >
-            <p className="project__item-text m-md-0">{formatDate(date)}</p>
-          </OverlayTrigger>
-        </Col>
-      </Row>
+        <ul className="project__categories-list">
+          {
+            category.map(({_id, title}) => (
+              <li key={_id}><Badge>{title}</Badge></li>
+            ))
+          }
+        </ul>
+      </Link>
     </li>
   );
 };

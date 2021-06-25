@@ -71,3 +71,6 @@ export type Image = {
   extension: string,
   buffer: string,
 };
+
+export type Variants = `primary` | `warning` | `danger` | `secondary` |
+  `success`;

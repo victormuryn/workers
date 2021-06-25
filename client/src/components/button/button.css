@@ -1,0 +1,45 @@
+.button {
+  display: inline-block;
+
+  color: var(--text-light-color);
+
+  background-color: var(--text-secondary-color);
+  border: 0;
+  width: auto;
+
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: .375rem .75rem;
+  cursor: pointer;
+  user-select: none;
+  transition: color .15s ease-in-out,
+  background-color .15s ease-in-out,
+  border-color .15s ease-in-out,
+  box-shadow .15s ease-in-out;
+
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  border-radius: .25rem;
+}
+
+.button--primary {
+  background-color: var(--primary-color);
+}
+
+.button--secondary {
+  background-color: var(--secondary-color);
+}
+
+.button--danger {
+  background-color: var(--danger-color);
+}
+
+.button--warning {
+  background-color: var(--warning-color);
+}
+
+.button--success {
+  background-color: var(--success-color);
+}
