@@ -57,7 +57,7 @@ const Header: React.FC = () => {
           className="nav__logo"
           onClick={onItemClick}
         >
-          <img src="/img/logo.svg" alt="Workers" width="134" height="30"/>
+          <img src="/img/logo.svg" alt="Workers" width="92.6" height="30" />
         </Link>
 
         {
