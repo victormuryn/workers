@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {BrowserRouter as Router, Link} from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './app.scss';
+import './app.css';
 
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useAuth} from '../../hooks/auth.hook';

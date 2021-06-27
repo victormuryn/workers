@@ -6,15 +6,17 @@ import {Variants} from '../../types/types';
 interface Props {
   variant?: Variants
   className?: string
+  as?: React.ElementType
 }
 
 const Badge: React.FC<Props> = (props) => {
-  const {children, variant = `primary`, className = ``} = props;
+  const {children, variant = `primary`, className = ``, as = 'span'} = props;
+  const Component = as;
 
   return (
-    <span className={`badge badge--${variant} ${className}`}>
+    <Component className={`badge badge--${variant} ${className}`}>
       {children}
-    </span>
+    </Component>
   );
 };
 

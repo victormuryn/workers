@@ -1,14 +1,20 @@
 .badge {
+  font-size: .75em;
+  font-weight: 700;
+  line-height: 1;
+
   display: inline-block;
 
-  color: var(--text-light-color);
+  margin: 0 .25rem;
+  padding: .35em .65em;
 
-  margin: 0 .25rem 0 0;
-  padding: .3rem .4rem;
-  background-color: var(--text-secondary-color);
-
-
+  text-align: center;
   vertical-align: middle;
+  white-space: nowrap;
+
+  color: var(--text-light-color);
+  border-radius: .25rem;
+  background-color: var(--text-secondary-color);
 }
 
 .badge--primary {

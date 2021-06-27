@@ -3,8 +3,9 @@ import {Link} from 'react-router-dom';
 
 import './project-item.css';
 
-import {formatDate, formatPrice} from '../../utils/utils';
 import Badge from '../badge';
+
+import {formatDate, formatPrice} from '../../utils/utils';
 import {Bet} from '../../types/types';
 
 type ProjectItemProps = {

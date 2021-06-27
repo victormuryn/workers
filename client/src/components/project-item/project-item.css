@@ -11,12 +11,13 @@
   height: 100%;
   padding: 1.5rem;
 
-  transition: border-color .3s;
+  transition: border-color .3s, box-shadow .3s;
   text-decoration: none;
 
   color: inherit;
   border: 1px solid var(--text-secondary-color);
   border-radius: 12px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, .1);
 
   justify-content: center;
 }
@@ -28,6 +29,7 @@
 .project__item-link:hover {
   color: inherit;
   border-color: var(--secondary-color);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, .2);
 }
 
 .project__item-title {
@@ -53,14 +55,14 @@
 .project__data {
   display: flex;
 
+  text-align: center;
+
   flex-wrap: wrap;
   align-items: center;
-
-  text-align: center;
 }
 
 .project__data-item {
-  margin-right: 2%;
+  margin-right: 5%;
 }
 
 .project__data-item:last-of-type {
@@ -99,9 +101,5 @@
   .project__item {
     width: 49%;
     margin-bottom: 2%;
-  }
-
-  .project__data-item {
-    margin-right: 4%;
   }
 }
