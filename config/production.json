@@ -1,6 +1,0 @@
-{
-  "port": 5000,
-  "mongoUri": "mongodb+srv://user:86z5FaJM5xc3X3r@workers.5mq69.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-  "jwtPhrase": "zlatka alpaca bike summer",
-  "projectsPerPage": 12
-}
